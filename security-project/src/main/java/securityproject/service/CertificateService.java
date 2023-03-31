@@ -31,19 +31,6 @@ import java.util.Date;
 @Service
 public class CertificateService {
 
-    private String getSerialNumber() {
-        // Generate a unique serial number
-        SecureRandom random = null;
-        try {
-            random = SecureRandom.getInstance("SHA256PRNG");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] serialNumber = new byte[20];
-        random.nextBytes(serialNumber);
-        BigInteger serial = new BigInteger(1, serialNumber);
-        return String.valueOf(serial); // internally calls BigInteger.toString()
-    }
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
