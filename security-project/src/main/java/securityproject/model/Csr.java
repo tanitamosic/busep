@@ -1,21 +1,12 @@
 package securityproject.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.bouncycastle.asn1.x500.X500Name;
+import securityproject.model.enums.RequestStatus;
 
 import javax.persistence.Column;
-import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "certificates")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class CertificateData {
+public class Csr {
     @Column(name="given_name")
     private String givenName;
     @Column(name = "surname")
@@ -28,19 +19,12 @@ public class CertificateData {
     private String country;
     @Column(name = "email")
     private String email;
-    @Column(name = "UID")
-    private String UID;
-    @Column(name = "public_key")
-    private String publicKey;
-    @Column(name = "issuer")
-    private X500Name issuer;
     @Column(name = "start_date")
     private Date startDate;
     @Column(name = "end_date")
     private Date endDate;
     @Column(name = "valid")
     private Boolean valid;
-
-    //TODO: add extensions
-
+    @Column(name = "status")
+    private RequestStatus status;
 }
