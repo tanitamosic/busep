@@ -8,6 +8,7 @@ import securityproject.pki.data.IssuerData;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -17,6 +18,9 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import static securityproject.util.Constants.KEYSTORE_PASSWORD;
+import static securityproject.util.Constants.KEYSTORE_PATH;
+
 @Component
 public class KeyStoreReader {
     // KeyStore je Java klasa za citanje specijalizovanih datoteka koje se koriste za cuvanje kljuceva
@@ -24,7 +28,6 @@ public class KeyStoreReader {
     // - Sertifikati koji ukljucuju javni kljuc
     // - Privatni kljucevi
     // - Tajni kljucevi, koji se koriste u simetricnima siframa
-    @Autowired
     private KeyStore keyStore;
 
     public KeyStoreReader() {
@@ -135,4 +138,39 @@ public class KeyStoreReader {
             return null;
         }
     }
+
+    public PrivateKey getRenterCaPK(){
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance("JKS", "SUN");
+
+            // ucitavamo podatke
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(KEYSTORE_PATH));
+            ks.load(in, KEYSTORE_PASSWORD.toCharArray());
+
+            PrivateKey key = (PrivateKey) ks.getKey("renterca (rootca)", KEYSTORE_PASSWORD.toCharArray());
+            return key;
+        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
+                 CertificateException | UnrecoverableKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public PrivateKey getOwnerCaPK(){
+        KeyStore ks = null;
+        try {
+            ks = KeyStore.getInstance("JKS", "SUN");
+
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(KEYSTORE_PATH));
+            ks.load(in, KEYSTORE_PASSWORD.toCharArray());
+
+            PrivateKey key = (PrivateKey) ks.getKey("ownerca (rootca)", KEYSTORE_PASSWORD.toCharArray());
+            return key;
+        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
+                 CertificateException | UnrecoverableKeyException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

@@ -1,11 +1,15 @@
 package securityproject.pki.keystore;
 
+import org.bouncycastle.openssl.PEMParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import securityproject.pki.data.IssuerData;
 import securityproject.pki.data.SubjectData;
 import securityproject.service.CertificateService;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -26,13 +30,34 @@ public class KeyTool {
         }
     }
 
+    public static Object getObjectFromPem(String pem){
+        pem = pem.replace("-----BEGIN CERTIFICATE-----\n", "");
+        pem = pem.replace("-----END CERTIFICATE-----", "");
+
+        // Decode the base64-encoded data
+        byte[] decoded = Base64.getDecoder().decode(pem);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(decoded);
+        InputStreamReader reader = new InputStreamReader(inputStream);
+        PEMParser pemParser = new PEMParser(reader);
+        try {
+            Object obj = pemParser.readObject();
+
+            pemParser.close();
+            reader.close();
+            inputStream.close();
+            return obj;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 
     private void createNewSelfSignedCertificate(SubjectData subjectData) {
 
     }
 
-    private X509Certificate createNewIssuedCertificate(SubjectData subjectData, IssuerData issuerData) {
+    public X509Certificate createNewIssuedCertificate(SubjectData subjectData, IssuerData issuerData) {
 
         X509Certificate cert = service.generateCertificate(subjectData, issuerData);
         return cert;
@@ -44,7 +69,7 @@ public class KeyTool {
     static public KeyPair generateKeyPair() {
         try {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-            SecureRandom random = SecureRandom.getInstance("SHA256PRNG", "SUN");
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
             keyGen.initialize(2048, random);
             return keyGen.generateKeyPair();
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {

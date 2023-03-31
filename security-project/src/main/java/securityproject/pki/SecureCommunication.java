@@ -155,8 +155,4 @@ public class SecureCommunication {
         return false;
     }
 
-    public static void main(String[] args) {
-        SecureCommunication sec = new SecureCommunication();
-        sec.testIt();
-    }
 }

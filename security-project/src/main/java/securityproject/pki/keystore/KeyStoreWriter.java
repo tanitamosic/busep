@@ -10,6 +10,9 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
+import static securityproject.util.Constants.KEYSTORE_PASSWORD;
+import static securityproject.util.Constants.KEYSTORE_PATH;
+
 @Component
 public class KeyStoreWriter {
     // KeyStore je Java klasa za citanje specijalizovanih datoteka koje se koriste za cuvanje kljuceva
@@ -17,7 +20,7 @@ public class KeyStoreWriter {
     // - Sertifikati koji ukljucuju javni kljuc
     // - Privatni kljucevi
     // - Tajni kljucevi, koji se koriste u simetricnima siframa
-    @Autowired
+
     private KeyStore keyStore;
 
     public KeyStoreWriter() {
@@ -51,6 +54,7 @@ public class KeyStoreWriter {
 
     public void write(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
         try {
+            loadKeyStore(KEYSTORE_PATH,KEYSTORE_PASSWORD.toCharArray());
             keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
         } catch (KeyStoreException e) {
             e.printStackTrace();
