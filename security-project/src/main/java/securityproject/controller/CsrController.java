@@ -12,7 +12,7 @@ import securityproject.service.CrfService;
 
 @RestController
 @RequestMapping(value = "/csr")
-public class CrfController {
+public class CsrController {
     @Autowired
     private CrfService service;
 
