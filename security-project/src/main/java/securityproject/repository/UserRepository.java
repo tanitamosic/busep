@@ -1,4 +1,4 @@
-package securityproject.repostiroy;
+package securityproject.repository;
 
 import securityproject.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

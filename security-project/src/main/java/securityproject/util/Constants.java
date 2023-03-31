@@ -6,5 +6,5 @@ public class Constants {
     public static final String HASH_ALGORITHM = "SHA256PRNG";
     public static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
     public static final String KEYSTORE_PASSWORD = "rootpassword";
-    public static final String KEYSTORE_PATH = ""; //TODO: upisi path
+    public static final String KEYSTORE_PATH = "../../oneks.jks"; //TODO: upisi path
 }
