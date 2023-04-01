@@ -19,7 +19,6 @@ import securityproject.pki.keystore.KeyStoreWriter;
 import securityproject.pki.keystore.KeyTool;
 import securityproject.repository.CsrRepository;
 
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -54,15 +53,19 @@ public class CsrService {
 
     public Boolean acceptRequest(CertificateDto dto) {
         Optional<Csr> opt = csrRepository.findByEmail(dto.email);
-        if (opt.isPresent()) {
-            Csr csr = opt.get();
-            csr.setStatus(RequestStatus.APPROVED);
-            csrRepository.saveAndFlush(csr);
-
-            certificateService.createCertificateData(dto);
-            return true;
+        try{
+            if (opt.isPresent()) {
+                Csr csr = opt.get();
+                csr.setStatus(RequestStatus.APPROVED);
+                csrRepository.saveAndFlush(csr);
+                certificateService.registerCertificate(dto);
+                return true;
+            }
+            return false;
+        } catch (Exception e){
+             e.printStackTrace();
+             return false;
         }
-        return false;
     }
 
     public Boolean rejectRequest(Long id) {
@@ -97,9 +100,8 @@ public class CsrService {
     public String makeOwnerCrf(RequestDto dto) {
         try {
             PKCS10CertificationRequest csr = createCertificateRequest(dto);
-            String csrPEM = new String(Base64.getEncoder().encode(csr.getEncoded()), StandardCharsets.UTF_8);
-            fileService.writeCsrPem(dto.email, csrPEM);
-            String pem = fileService.readCsrPem(dto.email);
+            fileService.writeCsrFile(dto.email, csr);
+            String pem = fileService.readCsrFile(dto.email);
             PKCS10CertificationRequest read = (PKCS10CertificationRequest) KeyTool.getObjectFromPem(pem);
 
             userService.registerOwner(dto);  // save user
@@ -113,11 +115,10 @@ public class CsrService {
     public String makeRenterCrf(RequestDto dto) {
         try {
             PKCS10CertificationRequest csr = createCertificateRequest(dto);
-            String csrPEM = new String(Base64.getEncoder().encode(csr.getEncoded()), StandardCharsets.UTF_8);
-            fileService.writeCsrPem(dto.email, csrPEM);
+            fileService.writeCsrFile(dto.email, csr);
 
             userService.registerRenter(dto);  // save user
-            return fileService.readCsrPem(dto.email);
+            return fileService.readCsrFile(dto.email);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -132,7 +133,7 @@ public class CsrService {
         SubjectData sub = generateSubjectData(keyPair.getPublic(),x500Name,1);
         IssuerData is = new IssuerData(keyPair.getPrivate(),x500Name);
         X509Certificate cert = certificateService.generateCertificate(sub, is);
-        keyStoreWriter.write(dto.email,keyPair.getPrivate(),KEYSTORE_PASSWORD.toCharArray(),cert);
+        keyStoreWriter.writeKeys(dto.email,keyPair.getPrivate(),KEYSTORE_PASSWORD.toCharArray(),cert);
         //TODO: tanita - pravi fajl ali ne nalazi ks
 
         //napravi CRF objekat i sacuvaj u repo/bazu - DONE

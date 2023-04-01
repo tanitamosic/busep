@@ -21,10 +21,10 @@ public class AdminController {
     3. odobravanje zahteva - post
     4. odbijanje zahteva - post
 
-     5. prikaz svih sertifikata
-     6. prikaz jednog -||-
-     7. provera validnosti/verifikacija (unutar prikaza jednog)
-     8. povlacenje
+    5. prikaz svih sertifikata
+    6. prikaz jednog -||-
+    7. provera validnosti/verifikacija (unutar prikaza jednog)
+    8. povlacenje
 
      */
 

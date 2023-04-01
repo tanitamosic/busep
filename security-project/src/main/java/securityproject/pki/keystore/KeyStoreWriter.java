@@ -1,6 +1,5 @@
 package securityproject.pki.keystore;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.FileInputStream;
@@ -9,9 +8,9 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
-import static securityproject.util.Constants.KEYSTORE_PASSWORD;
-import static securityproject.util.Constants.KEYSTORE_PATH;
+import static securityproject.util.Constants.*;
 
 @Component
 public class KeyStoreWriter {
@@ -52,7 +51,7 @@ public class KeyStoreWriter {
         }
     }
 
-    public void write(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
+    public void writeKeys(String alias, PrivateKey privateKey, char[] password, Certificate certificate) {
         try {
             loadKeyStore(KEYSTORE_PATH,KEYSTORE_PASSWORD.toCharArray());
             keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
@@ -61,4 +60,15 @@ public class KeyStoreWriter {
             e.printStackTrace();
         }
     }
+
+    public void writeCertificate(String alias, X509Certificate certificate) {
+        try {
+            loadKeyStore(KEYSTORE_PATH,KEYSTORE_PASSWORD.toCharArray());
+            keyStore.setCertificateEntry(alias + CERTIFICATE_SUFFIX,certificate);
+            saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
