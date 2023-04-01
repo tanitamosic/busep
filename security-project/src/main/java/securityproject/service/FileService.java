@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 @Service
 public class FileService {
-    public void writeCrsPem(String alias,String pem){
+    public void writeCsrPem(String alias, String pem){
         String filename = "src/main/resources/data/crs/" + alias + ".crs";
         try {
             File file = new File(filename);
@@ -35,7 +35,7 @@ public class FileService {
 
     }
 
-    public String readCrsPem(String alias){
+    public String readCsrPem(String alias){
         String filename = "src/main/resources/data/crs/" + alias + ".crs";
         byte[] encoded = new byte[0];
         try {

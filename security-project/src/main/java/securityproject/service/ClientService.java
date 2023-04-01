@@ -1,10 +1,14 @@
 package securityproject.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import securityproject.repository.UserRepository;
 
 @Service
 public class ClientService {
+    @Autowired
+    UserRepository userRepository;
     public boolean isIdentityConfirmed(String email){
-        return true; //TODO: treba da vuce enabled iz baze
+        return userRepository.isEmailConfirmed(email);
     }
 }

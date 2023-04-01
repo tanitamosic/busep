@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import securityproject.dto.RequestDto;
-import securityproject.service.CrfService;
+import securityproject.service.CsrService;
 
 @RestController
 @RequestMapping(value = "/csr")
 public class CsrController {
     @Autowired
-    private CrfService service;
+    private CsrService service;
 
     @PostMapping(value = "/request")
     public ResponseEntity<String> sendCsr(@RequestBody RequestDto dto){

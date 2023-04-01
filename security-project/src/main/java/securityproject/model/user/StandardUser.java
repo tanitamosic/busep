@@ -1,4 +1,4 @@
-package securityproject.model;
+package securityproject.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +11,6 @@ import javax.persistence.Entity;
 @Setter
 @AllArgsConstructor
 @Entity
-@DiscriminatorValue("SuperAdmin")
-public class SuperAdmin extends User {
+@DiscriminatorValue("StandardUser")
+public class StandardUser extends User{
 }

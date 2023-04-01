@@ -1,4 +1,4 @@
-package securityproject.model;
+package securityproject.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,8 +34,6 @@ public abstract class User {
     private String surname;
     @Column(name = "password", nullable = true)
     private String password;
-    @Column(name = "username", nullable = true)
-    private String username;
     @Column(name = "email", nullable = true)
     private String email;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

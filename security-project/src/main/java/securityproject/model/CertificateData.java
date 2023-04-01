@@ -4,18 +4,24 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bouncycastle.asn1.x500.X500Name;
+import securityproject.dto.CertificateDto;
 
-import javax.persistence.Column;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
+
+@Entity
 @Table(name = "certificates")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CertificateData {
+    @Id
+    @Column(name="cert_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(name="given_name")
     private String givenName;
     @Column(name = "surname")
@@ -28,12 +34,14 @@ public class CertificateData {
     private String country;
     @Column(name = "email")
     private String email;
-    @Column(name = "UID")
-    private String UID;
+    @Column(name = "serial_number")
+    private String serialNumber;
     @Column(name = "public_key")
     private String publicKey;
+
     @Column(name = "issuer")
-    private X500Name issuer;
+    private String issuer; // issuer alias TODO: sta treba biti identifikator issueru?
+
     @Column(name = "start_date")
     private Date startDate;
     @Column(name = "end_date")
@@ -41,6 +49,19 @@ public class CertificateData {
     @Column(name = "valid")
     private Boolean valid;
 
-    //TODO: add extensions
+    @ManyToMany(cascade = CascadeType.ALL)
+    private List<Extension> extensions;
 
+
+    public CertificateData(CertificateDto dto, Date endDate, String serialNumber) {
+        this.givenName = dto.givenName;
+        this.surname = dto.surname;
+        this.organization = dto.organization;
+        this.organizationUnit = dto.orgUnit;
+        this.country = dto.country;
+        this.email = dto.email;
+        this.startDate = dto.startDate;
+        this.endDate = endDate;
+        this.serialNumber = serialNumber;
+    }
 }

@@ -10,10 +10,16 @@ import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import securityproject.dto.CertificateDto;
+import securityproject.model.CertificateData;
 import securityproject.pki.data.IssuerData;
 import securityproject.pki.data.SubjectData;
 import securityproject.pki.keystore.KeyTool;
+import securityproject.repository.CertificateRepository;
+import securityproject.util.Helper;
 
 import java.math.BigInteger;
 import java.security.KeyPair;
@@ -31,6 +37,8 @@ import java.util.Date;
 @Service
 public class CertificateService {
 
+    @Autowired
+    CertificateRepository certificateRepository;
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
@@ -68,5 +76,16 @@ public class CertificateService {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public void save(CertificateData data) {
+        certificateRepository.saveAndFlush(data);
+    }
+
+    public void createCertificateData(CertificateDto dto) {
+        Date endDate = Helper.addYears(dto.startDate, dto.duration);
+        CertificateData certData = new CertificateData(dto, endDate, Helper.generateSerialNumber());
+        save(certData);
     }
 }

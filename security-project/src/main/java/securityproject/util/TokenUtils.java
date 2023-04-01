@@ -4,10 +4,9 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import securityproject.model.MyUserDetails;
-import securityproject.model.User;
+import securityproject.model.user.MyUserDetails;
+import securityproject.model.user.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;

@@ -1,10 +1,8 @@
 package securityproject.service;
-
-import com.fasterxml.jackson.databind.DatabindException;
+import securityproject.util.Helper;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
@@ -12,30 +10,27 @@ import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequest;
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import securityproject.dto.CertificateDto;
 import securityproject.dto.RequestDto;
+import securityproject.model.Csr;
+import securityproject.model.enums.RequestStatus;
 import securityproject.pki.data.IssuerData;
 import securityproject.pki.data.SubjectData;
 import securityproject.pki.keystore.KeyStoreReader;
 import securityproject.pki.keystore.KeyStoreWriter;
 import securityproject.pki.keystore.KeyTool;
+import securityproject.repository.CsrRepository;
 
-import javax.xml.crypto.Data;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.time.Instant;
 import java.util.*;
 
 import static securityproject.util.Constants.KEYSTORE_PASSWORD;
 import static securityproject.util.Constants.SIGNATURE_ALGORITHM;
 
 @Service
-public class CrfService {
+public class CsrService {
 
     @Autowired
     KeyStoreReader keyStoreReader;
@@ -45,6 +40,43 @@ public class CrfService {
     FileService fileService;
     @Autowired
     CertificateService certificateService;
+    @Autowired
+    CsrRepository csrRepository;
+    @Autowired
+    UserService userService;
+
+    public List<Csr> getAllCsrs() {
+        return csrRepository.findAll();
+    }
+
+    public Csr getCsrById(Long id) {
+        Optional<Csr> opt = csrRepository.findById(id);
+        return opt.orElse(null);
+    }
+
+    public Boolean acceptRequest(CertificateDto dto) {
+        Optional<Csr> opt = csrRepository.findByEmail(dto.email);
+        if (opt.isPresent()) {
+            Csr csr = opt.get();
+            csr.setStatus(RequestStatus.APPROVED);
+            csrRepository.saveAndFlush(csr);
+
+            certificateService.createCertificateData(dto);
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean rejectRequest(Long id) {
+        Optional<Csr> opt = csrRepository.findById(id);
+        if (opt.isPresent()) {
+            Csr csr = opt.get();
+            csr.setStatus(RequestStatus.REJECTED);
+            csrRepository.saveAndFlush(csr);
+            return true;
+        }
+        return false;
+    }
 
     public X500Name buildX500Name (String givenName, String surname, String org,
                                    String orgUnit, String country, String email){
@@ -66,7 +98,7 @@ public class CrfService {
     private IssuerData generateIssuerData(PrivateKey issuerKey, String givenName,
                                           String surname, String org, String orgUnit,
                                           String country, String email, String UID) {
-        X500Name x500Name = buildX500Name(givenName, surname,org,orgUnit,country,email);
+        X500Name x500Name = buildX500Name(givenName, surname, org, orgUnit, country, email);
 
         // Kreiraju se podaci za issuer-a, sto u ovom slucaju ukljucuje:
         // - privatni kljuc koji ce se koristiti da potpise sertifikat koji se izdaje
@@ -76,38 +108,21 @@ public class CrfService {
 
     private SubjectData generateSubjectData(PublicKey key, X500Name name, Integer duration){
         Date startDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(startDate);
-        c.add(Calendar.YEAR, duration);
-        Date endDate = c.getTime();
-        String sn = getSerialNumber();
+        Date endDate = Helper.addYears(startDate, duration);
+        String sn = Helper.generateSerialNumber();
         return new SubjectData(key,name,sn,startDate,endDate);
-    }
-
-    private String getSerialNumber() {
-        // Generate a unique serial number
-        SecureRandom random = null;
-        try {
-            random = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] serialNumber = new byte[20];
-        random.nextBytes(serialNumber);
-        BigInteger serial = new BigInteger(1, serialNumber);
-        return String.valueOf(serial); // internally calls BigInteger.toString()
     }
 
     public String makeOwnerCrf(RequestDto dto) {
         try {
             PKCS10CertificationRequest csr = createCertificateRequest(dto);
             String csrPEM = new String(Base64.getEncoder().encode(csr.getEncoded()), StandardCharsets.UTF_8);
-            fileService.writeCrsPem(dto.email, csrPEM);
-            String pem = fileService.readCrsPem(dto.email);
+            fileService.writeCsrPem(dto.email, csrPEM);
+            String pem = fileService.readCsrPem(dto.email);
             PKCS10CertificationRequest read = (PKCS10CertificationRequest) KeyTool.getObjectFromPem(pem);
 
+            userService.registerOwner(dto);  // save user
             return pem;
-            //TODO: repo.saveUser
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -118,16 +133,16 @@ public class CrfService {
         try {
             PKCS10CertificationRequest csr = createCertificateRequest(dto);
             String csrPEM = new String(Base64.getEncoder().encode(csr.getEncoded()), StandardCharsets.UTF_8);
-            fileService.writeCrsPem(dto.email, csrPEM);
-            return fileService.readCrsPem(dto.email);
-            //TODO: repo.saveUser
+            fileService.writeCsrPem(dto.email, csrPEM);
+
+            userService.registerRenter(dto);  // save user
+            return fileService.readCsrPem(dto.email);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
-    private PKCS10CertificationRequest createCertificateRequest(
-            RequestDto dto) {
+    private PKCS10CertificationRequest createCertificateRequest(RequestDto dto) {
         KeyPair keyPair = KeyTool.generateKeyPair();
         X500Name x500Name = buildX500Name(
                 dto.givenName,dto.surname, dto.organization, dto.orgUnit, dto.country, dto.email);
@@ -138,7 +153,10 @@ public class CrfService {
         X509Certificate cert = certificateService.generateCertificate(sub, is);
         keyStoreWriter.write(dto.email,keyPair.getPrivate(),KEYSTORE_PASSWORD.toCharArray(),cert);
         //TODO: tanita - pravi fajl ali ne nalazi ks
-        //TODO: mihajlo - napravi CRF objekat i sacuvaj u repo/bazu
+
+        //napravi CRF objekat i sacuvaj u repo/bazu - DONE
+        Csr csr = getCsr(dto);
+        csrRepository.saveAndFlush(csr);
 
         JcaPKCS10CertificationRequestBuilder p10Builder =
                 new JcaPKCS10CertificationRequestBuilder(x500Name, keyPair.getPublic());
@@ -151,5 +169,26 @@ public class CrfService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private Csr getCsr(RequestDto dto) {
+
+        Date currentDate = new Date();
+
+        Date oneYearLater = Helper.addYears(currentDate, 1);
+
+        Csr csr = new Csr();
+        csr.setGivenName(dto.givenName);
+        csr.setSurname(dto.surname);
+        csr.setOrganization(dto.organization);
+        csr.setOrganizationUnit(dto.orgUnit);
+        csr.setEmail(dto.email);
+        csr.setCountry(dto.country);
+        csr.setValid(true);
+        csr.setStatus(RequestStatus.PENDING);
+        csr.setStartDate(currentDate);
+        csr.setEndDate(oneYearLater);
+        csr.setIsOwner(dto.owner);
+        return csr;
     }
 }

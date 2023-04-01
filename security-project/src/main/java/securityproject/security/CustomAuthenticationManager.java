@@ -1,7 +1,7 @@
 package securityproject.security;
 
 
-import securityproject.model.MyUserDetails;
+import securityproject.model.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.authentication.*;
@@ -47,11 +47,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String enteredUsername = (String) authentication.getPrincipal();
+        String enteredEmail = (String) authentication.getPrincipal();
         String enteredPassword = (String) authentication.getCredentials();
 
         Authentication auth = null;
-        MyUserDetails details = (MyUserDetails) userService.loadUserByUsername(enteredUsername);
+        MyUserDetails details = (MyUserDetails) userService.loadUserByUsername(enteredEmail);
 
         if (null != details) {
             String encodedPassword = details.getPassword();

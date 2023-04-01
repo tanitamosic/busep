@@ -56,6 +56,7 @@ public class KeyStoreWriter {
         try {
             loadKeyStore(KEYSTORE_PATH,KEYSTORE_PASSWORD.toCharArray());
             keyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
+            saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }
