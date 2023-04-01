@@ -1,16 +1,11 @@
 import {useState, useEffect, useRef, useCallback} from 'react';
 import {checkLettersInput, checkEmailInput, checkPasswordInput } from '../../services/utils/InputValidation';
-// import React, { useContext } from "react";
 import { Form, Button, Container, Col, Row} from 'react-bootstrap';
 import { sendRegistrationRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
-import LabeledTextarea from './LabeledTextarea';
-import { useNavigate  } from "react-router-dom";
 import '../../assets/styles/buttons.css';
 
 export function RegistrationForm() {
-    const navigate = useNavigate ();
-
     const [givenName, setName] = useState("");
     const [surname, setLastame] = useState("");
     const [email, setEmail] = useState("");
@@ -26,12 +21,11 @@ export function RegistrationForm() {
         postRegistrationRequest(e);
       } else {
         console.log("Invalid input")
-        // alert("Invalid input")
+        alert("Invalid input")
       }
     }
 
     const validateInput = () => {
-      console.log(checkPasswordInput(password))
       let valid = (checkLettersInput(givenName) && givenName.length > 0 ) && 
                   (checkLettersInput(surname) && surname.length > 0 ) && 
                   (checkEmailInput(email) && email.length > 0 ) && 
@@ -49,17 +43,16 @@ export function RegistrationForm() {
         (e) => {
             e.preventDefault();
             const userJson = {givenName, surname, email, password, organization, orgUnit, country, owner}
-            console.log(userJson)
+            // console.log(userJson)
             sendRegistrationRequest(userJson).then(
                 (response) => {
-                    alert("Thank you for registering! Check your email often for further steps.")
+                    console.log(response);
+                    alert("Thank you for registering! Check your email often for further steps.");
                 }, (error) => {
                   console.log(error);
                 }
             );
         }, [givenName, surname, email, password, organization, orgUnit, country, owner]
-        //  address, description, rules, numOfPeople, cancelationFee, 
-        //     boatType, length, numOfMotor, motorPower, maxSpeed, navigationEquipment, fishingEquipment, price]
     )
 
     return (<>
@@ -90,7 +83,7 @@ export function RegistrationForm() {
                         <Col sm={4} align='center'>
                         <Form.Check 
                             type="checkbox"
-                            label="Is owner"
+                            label="Are you the owner of the property?"
                             checked={owner}
                             onChange={(e) => setIsOwner(e.target.checked)}
                           />
@@ -107,15 +100,6 @@ export function RegistrationForm() {
                         </Col>
                         <Col sm={4}/>
                   </Row> 
-
-                  <Row className='mt-2'>
-                        <Col sm={4}/>
-                        <Col sm={4} align='center'>
-                          
-                        </Col>
-                        <Col sm={4}/>
-                  </Row> 
-                    
                 </Form>
             </Col>
         </div>

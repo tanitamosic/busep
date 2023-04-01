@@ -8,27 +8,6 @@ import { RegistrationForm } from './components/forms/RegistrationForm';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/style.css';
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
 function App() {
   // const resortForm = <Container><CreateForm userType={user} /></Container>
   // const resortView = <Container><AssetDetailedView /></Container>
@@ -53,8 +32,12 @@ function App() {
                 <Route path='/user' element={"<h1>user</h1>"}>
 
                 </Route>
+                <Route path='/admin/certificates/:id' element={"<h1>:id certificate</h1>"}/> {/* preview, validate, remove - 6, 7, 8*/}
+                <Route path='/admin/certificates' element={"<h1>all certificates</h1>"}/> {/* list all, button for detailed view - 5 */}
+                <Route path='/admin/requests/:id' element={"<h1>:id request</h1>"}/> {/* preview, accept, decline - 2, 3, 4*/} 
+                <Route path='/admin/requests' element={"<h1>all requests</h1>"}/> {/* list all, button for detailed view - 1*/}
                 <Route path='/admin' element={"<h1>admin</h1>"}>
-                  
+
                 </Route>
                 {/* <Route path="login" element={login} />
                 <Route path="verify/:code" element={confirmation} />
