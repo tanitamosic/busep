@@ -4,10 +4,14 @@ package securityproject.util;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -55,5 +59,24 @@ public class Helper {
         // builder.addRDN(BCStyle.UID, UID);
 
         return builder.build();
+    }
+
+    public static String toPemFormat(X509Certificate cert){
+        StringWriter sw = new StringWriter();
+        try (JcaPEMWriter pw = new JcaPEMWriter(sw)) {
+            pw.writeObject(cert);
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return sw.toString();
+    }
+    public static String toPemFormat(PKCS10CertificationRequest cert) {
+        StringWriter sw = new StringWriter();
+        try (JcaPEMWriter pw = new JcaPEMWriter(sw)) {
+            pw.writeObject(cert);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return sw.toString();
     }
 }

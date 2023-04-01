@@ -7,7 +7,7 @@ public class Constants {
     public static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
     public static final String KEYSTORE_PASSWORD = "rootpassword";
     public static final String KEYSTORE_PATH = "../../oneks.jks"; //TODO: upisi path
-
     public static final String OWNER_ALIAS = "ownerca (rootca)";
     public static final String RENTER_ALIAS = "renterca (rootca)";
+    public static final String CERTIFICATE_SUFFIX = "_cer";
 }
