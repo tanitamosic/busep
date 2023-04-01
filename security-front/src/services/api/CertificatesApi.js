@@ -21,4 +21,14 @@ export async function getRequests(){
         return err.message
     }
   }
-  
+
+  export async function acceptRequest(acceptRequest){
+    try {
+        // TODO fix url
+        const responseData = await getApiCall().post(`/csr/requests/accept/`, acceptRequest);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }

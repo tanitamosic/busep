@@ -4,7 +4,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import { declineRequest } from '../../services/api/CertificatesApi';
+import { declineRequest, acceptRequest } from '../../services/api/CertificatesApi';
 import LabeledTextarea from '../forms/LabeledTextarea';
 
 export default function RequestPreview(){
@@ -87,6 +87,41 @@ export default function RequestPreview(){
         }
       ]
 
+    const acceptButtonPressed = (e) => {
+        // if (true) {
+            postAcceptRequest(e);
+        // } else {
+            // alert("")
+        // }
+    }
+
+    const postAcceptRequest = useCallback(
+        (e) => {
+            e.preventDefault();
+            // TODO should not send and receive password
+            const acceptJson = {
+                "givenName": request.givenName,
+                "surname": request.surname,
+                "email": request.email,
+                "password": request.password,
+                "organization": request.organization,
+                "orgUnit": request.orgUnit,
+                "country": request.country,
+                "owner": request.owner,
+                "extensions": extensions
+            }
+            console.log(acceptJson)
+            acceptRequest(acceptJson).then(
+                (response) => {
+                    console.log(response);
+                    alert("Request has been accepted.");
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+        }, [request, extensions]
+    )
+
     const declineButtonPressed = (e) => {
         if (declineReason.length > 0) {
             postDeclineRequest(e);
@@ -99,7 +134,7 @@ export default function RequestPreview(){
         (e) => {
             e.preventDefault();
             const declineJson = {email, declineReason}
-            // console.log(userJson)
+            console.log(declineJson)
             declineRequest(declineJson).then(
                 (response) => {
                     console.log(response);
@@ -151,7 +186,7 @@ export default function RequestPreview(){
                 <Row className='mt-2'>
                         <Col sm={4}/>
                         <Col sm={4} align='center'>
-                            <Button className='formButton' onClick={declineButtonPressed}>
+                            <Button className='formButton' onClick={acceptButtonPressed}>
                                 Accept
                             </Button>
                         </Col>
