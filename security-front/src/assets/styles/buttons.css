@@ -11,7 +11,11 @@
   }
 
 .fixedWidthButton {
-    width: 250px !important;
+    width: 150px !important;
+}
+
+.minusMarginButton {
+  margin-top: -50px !important;
 }
 
 .alertFixedWidthButton {
