@@ -30,7 +30,7 @@ public class Csr {
     private String organizationUnit;
     @Column(name = "country")
     private String country;
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
     @Column(name = "start_date")
     private Date startDate;

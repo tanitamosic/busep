@@ -32,11 +32,11 @@ public class CertificateData {
     private String organizationUnit;
     @Column(name = "country")
     private String country;
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
-    @Column(name = "serial_number")
+    @Column(name = "serial_number", unique = true)
     private String serialNumber;
-    @Column(name = "public_key")
+    @Column(name = "public_key", unique = true)
     private String publicKey;
 
     @Column(name = "issuer")
