@@ -11,3 +11,14 @@ export async function getRequests(){
     }
   }
 
+  export async function declineRequest(declineRequest){
+    try {
+        // TODO fix url and where email? in body or just url (now in body)
+        const responseData = await getApiCall().post(`/csr/requests/decline/`, declineRequest);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+  

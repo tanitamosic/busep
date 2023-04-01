@@ -8,6 +8,7 @@ import { RegistrationForm } from './components/forms/RegistrationForm';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/style.css';
 import RequestsList from './components/business/RequestsList';
+import RequestPreview from './components/business/RequestPreview';
 
 function App() {
   // const resortForm = <Container><CreateForm userType={user} /></Container>
@@ -17,6 +18,7 @@ function App() {
   // const resortForm = <Container><CreateForm userType={user} /></Container>
   const registrationForm = <Container><RegistrationForm /></Container>
   const requestsList = <Container><RequestsList /></Container>
+  const requestPreview = <Container><RequestPreview /></Container>
   // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
 
   return  (<Router>
@@ -36,7 +38,7 @@ function App() {
                 </Route>
                 <Route path='/admin/certificates/:id' element={"<h1>:id certificate</h1>"}/> {/* preview, validate, remove - 6, 7, 8*/}
                 <Route path='/admin/certificates' element={"<h1>all certificates</h1>"}/> {/* list all, button for detailed view - 5 */}
-                <Route path='/admin/requests/:id' element={"<h1>:id request</h1>"}/> {/* preview, accept, decline - 2, 3, 4*/} 
+                <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
                 <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
                 <Route path='/admin' element={"<h1>admin</h1>"}>
 
