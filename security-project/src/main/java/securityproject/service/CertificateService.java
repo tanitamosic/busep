@@ -20,7 +20,6 @@ import securityproject.repository.CertificateRepository;
 import securityproject.util.Constants;
 import securityproject.util.Helper;
 
-import java.io.File;
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -101,23 +100,28 @@ public class CertificateService {
     }
 
     private X509Certificate createCertificateObject(CertificateData data, Boolean isOwner) {
-        X500Name name = Helper.buildX500Name(data.getGivenName(), data.getSurname(), data.getOrganization(),
-                data.getOrganizationUnit(),data.getCountry(),data.getEmail());
-        Certificate cert;
-        PrivateKey privateKey;
-        if (isOwner) {
-            cert = keyStoreReader.readCertificate(Constants.KEYSTORE_PATH,
-                    Constants.KEYSTORE_PASSWORD, Constants.OWNER_ALIAS);
-            privateKey = keyStoreReader.getOwnerCaPK();
-        } else {
-            cert = keyStoreReader.readCertificate(Constants.KEYSTORE_PATH, Constants.KEYSTORE_PASSWORD, Constants.RENTER_ALIAS);
-            privateKey = keyStoreReader.getRenterCaPK();
-        }
-        PublicKey publicKey = cert.getPublicKey();
-        SubjectData subjectData = new SubjectData(publicKey, name, data.getSerialNumber(),data.getStartDate(), data.getEndDate());
+        X500Name name = Helper.buildX500Name(data.getGivenName(), data.getSurname(),
+                data.getOrganization(),data.getOrganizationUnit(),data.getCountry(),data.getEmail());
 
-        IssuerData issuerData = new IssuerData(privateKey, name);
+        PublicKey publicKey = keyStoreReader.readCertificate(data.getEmail()).getPublicKey();
+
+        SubjectData subjectData = new SubjectData(publicKey, name, data.getSerialNumber(),
+                data.getStartDate(), data.getEndDate());
+        IssuerData issuerData = getIssuerData(isOwner);
 
         return generateCertificate(subjectData, issuerData);
+    }
+
+    private IssuerData getIssuerData(Boolean isOwner) {
+        PrivateKey privateKey;
+        X500Name name;
+        if (isOwner){
+            privateKey = keyStoreReader.getOwnerCaPk();
+            name = keyStoreReader.getOwnerCaName();
+        } else {
+            privateKey = keyStoreReader.getRenterCaPk();
+            name = keyStoreReader.getRenterCaName();
+        }
+        return new IssuerData(privateKey, name);
     }
 }

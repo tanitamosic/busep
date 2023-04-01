@@ -2,13 +2,11 @@ package securityproject.pki.keystore;
 
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import securityproject.pki.data.IssuerData;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
@@ -18,8 +16,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-import static securityproject.util.Constants.KEYSTORE_PASSWORD;
-import static securityproject.util.Constants.KEYSTORE_PATH;
+import static securityproject.util.Constants.*;
 
 @Component
 public class KeyStoreReader {
@@ -34,6 +31,18 @@ public class KeyStoreReader {
         try {
             keyStore = KeyStore.getInstance("JKS", "SUN");
         } catch (KeyStoreException | NoSuchProviderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadKeyStore(String fileName, char[] password) {
+        try {
+            if (fileName != null) {
+                keyStore.load(new FileInputStream(fileName), password);
+            } else {
+                keyStore.load(null, password);
+            }
+        } catch (NoSuchAlgorithmException | CertificateException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -72,20 +81,14 @@ public class KeyStoreReader {
     /**
      * Ucitava sertifikat is KS fajla
      */
-    public Certificate readCertificate(String keyStoreFile, String keyStorePass, String alias) {
+    public Certificate readCertificate(String alias) {
         try {
-            // kreiramo instancu KeyStore
-            KeyStore ks = KeyStore.getInstance("JKS", "SUN");
-            // ucitavamo podatke
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
-            ks.load(in, keyStorePass.toCharArray());
-
-            if (ks.isKeyEntry(alias)) {
-                Certificate cert = ks.getCertificate(alias);
+            loadKeyStore(KEYSTORE_PATH,KEYSTORE_PASSWORD.toCharArray());
+            if (keyStore.isKeyEntry(alias)) {
+                Certificate cert = keyStore.getCertificate(alias);
                 return cert;
             }
-        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException
-                 | CertificateException | IOException e) {
+        } catch (KeyStoreException e) {
             e.printStackTrace();
         }
         return null;
@@ -139,38 +142,52 @@ public class KeyStoreReader {
         }
     }
 
-    public PrivateKey getRenterCaPK(){
-        KeyStore ks = null;
+    public PrivateKey getRenterCaPk(){
+        return getCaPk(RENTER_ALIAS);
+    }
+
+    public PrivateKey getOwnerCaPk(){
+        return getCaPk(OWNER_ALIAS);
+    }
+
+    public X500Name getRenterCaName(){
+        return getIssuerName(RENTER_ALIAS);
+    }
+
+    public X500Name getOwnerCaName(){
+        return getIssuerName(OWNER_ALIAS);
+    }
+
+    private PrivateKey getCaPk(String alias){
         try {
-            ks = KeyStore.getInstance("JKS", "SUN");
-
-            // ucitavamo podatke
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(KEYSTORE_PATH));
-            ks.load(in, KEYSTORE_PASSWORD.toCharArray());
-
-            PrivateKey key = (PrivateKey) ks.getKey("renterca (rootca)", KEYSTORE_PASSWORD.toCharArray());
-            return key;
-        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
-                 CertificateException | UnrecoverableKeyException e) {
+            return (PrivateKey) keyStore.getKey(alias, KEYSTORE_PASSWORD.toCharArray());
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public PrivateKey getOwnerCaPK(){
-        KeyStore ks = null;
+    private X500Name getIssuerName(String alias){
         try {
-            ks = KeyStore.getInstance("JKS", "SUN");
+            loadKeyStore(KEYSTORE_PATH,KEYSTORE_PASSWORD.toCharArray());
 
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(KEYSTORE_PATH));
-            ks.load(in, KEYSTORE_PASSWORD.toCharArray());
-
-            PrivateKey key = (PrivateKey) ks.getKey("ownerca (rootca)", KEYSTORE_PASSWORD.toCharArray());
-            return key;
-        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
-                 CertificateException | UnrecoverableKeyException e) {
-            throw new RuntimeException(e);
+            if (keyStore.isKeyEntry(alias)) {
+                X509Certificate cert = (X509Certificate) keyStore.getCertificate(alias);
+                return new X500Name(cert.getSubjectX500Principal().getName());
+            }
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
+//    public X509Certificate readCertificate(String alias){
+//        try{
+//            keyStore.load(new FileInputStream(KEYSTORE_PATH), KEYSTORE_PASSWORD.toCharArray());
+//            Certificate cert = keyStore.getCertificate(alias);
+//        } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyStoreException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return null;
+//    }
 
 }
