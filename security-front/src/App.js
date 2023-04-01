@@ -1,6 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter as Router, Route, Routes, Navigate, Outlet} from 'react-router-dom';
+import {Container} from 'react-bootstrap'
+import BootstrapTable from 'react-bootstrap-table-next';
+import cellEditFactory from 'react-bootstrap-table2-editor';
+import { RegistrationForm } from './components/forms/RegistrationForm';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import './assets/styles/style.css';
 
 // function App() {
 //   return (
@@ -28,10 +34,14 @@ function App() {
   // const resortView = <Container><AssetDetailedView /></Container>
   // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
   
+  // const resortForm = <Container><CreateForm userType={user} /></Container>
+  const registrationForm = <Container><RegistrationForm /></Container>
+  // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
 
   return  (<Router>
               <Routes>
                 <Route path=''>
+                  <Route path="/register" element={registrationForm} />
                 {/* <Route path='' element={<ProtectedRoute isAllowedUser={user}>{chooseNavbar(user)} </ProtectedRoute>}> */}
                   {/* <Route path='/home' element={home} />  */}
                   {/* <Route path="createAsset" element={resortForm} />  */}
