@@ -63,5 +63,8 @@ public class CertificateData {
         this.startDate = dto.startDate;
         this.endDate = endDate;
         this.serialNumber = serialNumber;
+        this.valid = true;
+
+        this.extensions = dto.extensions;
     }
 }

@@ -1,8 +1,6 @@
 package securityproject.service;
 import securityproject.util.Helper;
 import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.X500NameBuilder;
-import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
@@ -78,27 +76,10 @@ public class CsrService {
         return false;
     }
 
-    public X500Name buildX500Name (String givenName, String surname, String org,
-                                   String orgUnit, String country, String email){
-        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-        builder.addRDN(BCStyle.CN, givenName.concat(" ").concat(surname));
-        builder.addRDN(BCStyle.SURNAME, surname);
-        builder.addRDN(BCStyle.GIVENNAME, givenName);
-        builder.addRDN(BCStyle.O, org);
-        builder.addRDN(BCStyle.OU, orgUnit);
-        builder.addRDN(BCStyle.C, country);
-        builder.addRDN(BCStyle.E, email);
-
-        // UID (USER ID) je ID korisnika
-        // builder.addRDN(BCStyle.UID, UID);
-
-        return builder.build();
-    }
-
     private IssuerData generateIssuerData(PrivateKey issuerKey, String givenName,
                                           String surname, String org, String orgUnit,
                                           String country, String email, String UID) {
-        X500Name x500Name = buildX500Name(givenName, surname, org, orgUnit, country, email);
+        X500Name x500Name = Helper.buildX500Name(givenName, surname, org, orgUnit, country, email);
 
         // Kreiraju se podaci za issuer-a, sto u ovom slucaju ukljucuje:
         // - privatni kljuc koji ce se koristiti da potpise sertifikat koji se izdaje
@@ -144,7 +125,7 @@ public class CsrService {
     }
     private PKCS10CertificationRequest createCertificateRequest(RequestDto dto) {
         KeyPair keyPair = KeyTool.generateKeyPair();
-        X500Name x500Name = buildX500Name(
+        X500Name x500Name = Helper.buildX500Name(
                 dto.givenName,dto.surname, dto.organization, dto.orgUnit, dto.country, dto.email);
 
 

@@ -1,6 +1,10 @@
 package securityproject.util;
 
 
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.X500NameBuilder;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -34,5 +38,22 @@ public class Helper {
         random.nextBytes(serialNumber);
         BigInteger serial = new BigInteger(1, serialNumber);
         return String.valueOf(serial); // internally calls BigInteger.toString()
+    }
+
+    public static X500Name buildX500Name(String givenName, String surname, String org,
+                                         String orgUnit, String country, String email){
+        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, givenName.concat(" ").concat(surname));
+        builder.addRDN(BCStyle.SURNAME, surname);
+        builder.addRDN(BCStyle.GIVENNAME, givenName);
+        builder.addRDN(BCStyle.O, org);
+        builder.addRDN(BCStyle.OU, orgUnit);
+        builder.addRDN(BCStyle.C, country);
+        builder.addRDN(BCStyle.E, email);
+
+        // UID (USER ID) je ID korisnika
+        // builder.addRDN(BCStyle.UID, UID);
+
+        return builder.build();
     }
 }

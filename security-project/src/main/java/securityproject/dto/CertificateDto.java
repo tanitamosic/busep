@@ -1,6 +1,9 @@
 package securityproject.dto;
 
+import securityproject.model.Extension;
+
 import java.util.Date;
+import java.util.List;
 
 public class CertificateDto {
     public String email;
@@ -11,7 +14,7 @@ public class CertificateDto {
     public String orgUnit;
     public String country;
     public boolean owner;
-    public String[] extensions;
+    public List<Extension> extensions;
 
     public Date startDate;
     public Integer duration = 1;

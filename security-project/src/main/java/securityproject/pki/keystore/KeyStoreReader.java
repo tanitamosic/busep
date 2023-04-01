@@ -113,7 +113,7 @@ public class KeyStoreReader {
         return null;
     }
 
-    private List<Certificate> showKeyStoreContent(String keyStoreFile, String keyStorePass) {
+    public List<Certificate> showKeyStoreContent(String keyStoreFile, String keyStorePass) {
         try {
             // kreiramo instancu KeyStore
             KeyStore ks = KeyStore.getInstance("JKS", "SUN");

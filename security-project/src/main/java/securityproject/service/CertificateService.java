@@ -17,21 +17,19 @@ import securityproject.dto.CertificateDto;
 import securityproject.model.CertificateData;
 import securityproject.pki.data.IssuerData;
 import securityproject.pki.data.SubjectData;
-import securityproject.pki.keystore.KeyTool;
+import securityproject.pki.keystore.KeyStoreReader;
 import securityproject.repository.CertificateRepository;
+import securityproject.util.Constants;
 import securityproject.util.Helper;
 
 import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.SecureRandom;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Date;
-
+import java.util.List;
 
 
 @Service
@@ -39,6 +37,9 @@ public class CertificateService {
 
     @Autowired
     CertificateRepository certificateRepository;
+
+    @Autowired
+    KeyStoreReader keyStoreReader;
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
@@ -85,7 +86,26 @@ public class CertificateService {
 
     public void createCertificateData(CertificateDto dto) {
         Date endDate = Helper.addYears(dto.startDate, dto.duration);
-        CertificateData certData = new CertificateData(dto, endDate, Helper.generateSerialNumber());
+        String serialNumber = Helper.generateSerialNumber();
+        CertificateData certData = new CertificateData(dto, endDate, serialNumber);
         save(certData);
+
+        X500Name name = Helper.buildX500Name(dto.givenName, dto.surname, dto.organization, dto.orgUnit, dto.country, dto.email);
+        Certificate cert;
+        PrivateKey privateKey;
+        if (dto.owner) {
+            cert = keyStoreReader.readCertificate(Constants.KEYSTORE_PATH, Constants.KEYSTORE_PASSWORD, Constants.OWNER_ALIAS);
+            privateKey = keyStoreReader.getOwnerCaPK();
+        } else {
+            cert = keyStoreReader.readCertificate(Constants.KEYSTORE_PATH, Constants.KEYSTORE_PASSWORD, Constants.RENTER_ALIAS);
+            privateKey = keyStoreReader.getRenterCaPK();
+
+        }
+        PublicKey publicKey = cert.getPublicKey();
+        SubjectData subjectData = new SubjectData(publicKey, name, serialNumber, dto.startDate, endDate);
+
+        IssuerData issuerData = new IssuerData(privateKey, name);
+
+        X509Certificate x509cert = generateCertificate(subjectData, issuerData);
     }
 }
