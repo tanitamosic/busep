@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import securityproject.model.enums.RequestStatus;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Where(clause = "valid=true")
 public class Csr {
     @Id
     @Column(name="csr_id")

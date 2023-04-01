@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 import securityproject.dto.CertificateDto;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Where(clause = "valid=true")
 public class CertificateData {
     @Id
     @Column(name="cert_id")
