@@ -7,13 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.CertificateDto;
 import securityproject.model.Csr;
+import securityproject.service.CertificateService;
 import securityproject.service.CsrService;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/admin")
+@RequestMapping(value = "/")
 public class AdminController {
     /*
     1. pregled svih zahteva - get
@@ -30,6 +31,8 @@ public class AdminController {
 
     @Autowired
     CsrService csrService;
+    @Autowired
+    CertificateService certificateService;
 
     @GetMapping(value="/get-all-csrs")
     public ResponseEntity<List<Csr>> getCSRRequests() {
@@ -52,6 +55,12 @@ public class AdminController {
     @PostMapping(value="/reject-request")
     public ResponseEntity<Boolean> rejectRequest(@RequestBody Long id) {
         Boolean success = csrService.rejectRequest(id);
+        return new ResponseEntity<>(success, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value="/invalidate-certificate-{id}")
+    public ResponseEntity<Boolean> invalidateCertificate(@PathVariable Long id) {
+        Boolean success = certificateService.invalidateCertificate(id);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 }

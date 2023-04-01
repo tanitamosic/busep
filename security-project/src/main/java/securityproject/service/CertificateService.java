@@ -20,13 +20,15 @@ import securityproject.repository.CertificateRepository;
 import securityproject.util.Constants;
 import securityproject.util.Helper;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
+import java.security.cert.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.Optional;
 
 
 @Service
@@ -40,6 +42,8 @@ public class CertificateService {
     KeyStoreReader keyStoreReader;
     @Autowired
     FileService fileService;
+    @Autowired
+    BlacklistService blacklistService;
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
@@ -124,4 +128,26 @@ public class CertificateService {
         }
         return new IssuerData(privateKey, name);
     }
+
+    public Boolean invalidateCertificate(Long id) {
+        Optional<CertificateData> opt = certificateRepository.findById(id);
+        if (opt.isPresent()) {
+            // ---------------------- invalidate in db ----------------------
+            CertificateData certData = opt.get();
+            certData.setValid(false);
+            certificateRepository.saveAndFlush(certData);
+            // add to blacklist
+            blacklistService.addCertificateToBlacklist(certData);
+            // ---------------------- invalidate in jks ---------------------
+            X509Certificate cert = (X509Certificate) keyStoreReader.readCertificate(certData.getEmail());
+
+            return keyStoreWriter.invalidateCertificate(cert);
+
+
+        } else {
+            return false;
+        }
+    }
+
+
 }
