@@ -19,4 +19,6 @@ public class BlacklistedCertificate {
     private String email;
     @Column(name = "blacklist_date", nullable = false)
     private Date blacklist_date; // date cert was blacklisted
+    @Column(name = "reason", nullable = false)
+    private String reason;
 }

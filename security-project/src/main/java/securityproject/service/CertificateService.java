@@ -129,7 +129,7 @@ public class CertificateService {
         return new IssuerData(privateKey, name);
     }
 
-    public Boolean invalidateCertificate(Long id) {
+    public Boolean invalidateCertificate(Long id, String reason) {
         Optional<CertificateData> opt = certificateRepository.findById(id);
         if (opt.isPresent()) {
             // ---------------------- invalidate in db ----------------------
@@ -137,10 +137,10 @@ public class CertificateService {
             certData.setValid(false);
             certificateRepository.saveAndFlush(certData);
             // add to blacklist
-            blacklistService.addCertificateToBlacklist(certData);
+            blacklistService.addCertificateToBlacklist(certData, reason);
             // ---------------------- invalidate in jks ---------------------
             X509Certificate cert = (X509Certificate) keyStoreReader.readCertificate(certData.getEmail());
-
+            fileService.deleteCerFile(certData.getEmail());
             return keyStoreWriter.invalidateCertificate(cert);
 
 

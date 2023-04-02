@@ -47,4 +47,20 @@ public class FileService {
             throw new RuntimeException(e);
         }
     }
+
+    public void deleteCerFile(String alias) {
+        String filename = "src/main/resources/data/cer/" + alias + CERTIFICATE_SUFFIX + ".cer";
+        File file = new File(filename);
+        if (file.exists()) {
+            boolean deleted = file.delete();
+            // Check if the file was deleted successfully
+            if (deleted) {
+                System.out.println("File deleted successfully");
+            } else {
+                System.out.println("Failed to delete the file");
+            }
+        } else {
+            System.out.println("File does not exist");
+        }
+    }
 }

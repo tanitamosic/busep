@@ -58,9 +58,9 @@ public class AdminController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    @DeleteMapping(value="/invalidate-certificate-{id}")
-    public ResponseEntity<Boolean> invalidateCertificate(@PathVariable Long id) {
-        Boolean success = certificateService.invalidateCertificate(id);
+    @DeleteMapping(value="/invalidate-certificate-{id}/reason={reason}")
+    public ResponseEntity<Boolean> invalidateCertificate(@PathVariable Long id, @PathVariable String reason) {
+        Boolean success = certificateService.invalidateCertificate(id, reason);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 }

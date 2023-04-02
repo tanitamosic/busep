@@ -14,10 +14,11 @@ public class BlacklistService {
     @Autowired
     BlacklistRepository blacklistRepository;
 
-    public void addCertificateToBlacklist(CertificateData data) {
+    public void addCertificateToBlacklist(CertificateData data, String reason) {
         BlacklistedCertificate entry = new BlacklistedCertificate();
         entry.setEmail(data.getEmail());
         entry.setBlacklist_date(new Date());
+        entry.setReason(reason);
         blacklistRepository.saveAndFlush(entry);
     }
 }
