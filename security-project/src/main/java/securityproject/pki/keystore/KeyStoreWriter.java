@@ -72,13 +72,13 @@ public class KeyStoreWriter {
         }
     }
 
-    public Boolean invalidateCertificate(X509Certificate cert) {
+    public Boolean invalidateCertificate(String alias) {
         try {
 
             // Get the default trust store
             loadKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
             // Remove the certificate from the trust store
-            keyStore.deleteEntry(cert.getSubjectX500Principal().getName());
+            keyStore.deleteEntry(alias);
 
             // Save the updated trust store
             FileOutputStream out = new FileOutputStream(Constants.KEYSTORE_PATH);

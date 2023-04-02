@@ -140,9 +140,8 @@ public class CertificateService {
             // add to blacklist
             blacklistService.addCertificateToBlacklist(certData, reason);
             // ---------------------- invalidate in jks ---------------------
-            X509Certificate cert = (X509Certificate) keyStoreReader.readCertificate(certData.getEmail());
             fileService.deleteCerFile(certData.getEmail());
-            return keyStoreWriter.invalidateCertificate(cert);
+            return keyStoreWriter.invalidateCertificate(certData.getEmail());
 
 
         } else {
