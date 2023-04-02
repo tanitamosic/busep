@@ -110,6 +110,12 @@ export default function RequestPreview(){
                 "owner": request.owner,
                 "extensions": extensions
             }
+            
+            // TODO startDate = YYYY-MM-dd
+            // TODO duration = 1
+            // TODO ekstenzije prekopirati i slati kao {keyusage: [], extendedkeyusage: []}
+            //          celu stringcinu
+
             console.log(acceptJson)
             acceptRequest(acceptJson).then(
                 (response) => {
