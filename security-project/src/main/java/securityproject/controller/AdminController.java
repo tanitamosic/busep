@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.CertificateDto;
+import securityproject.model.CertificateData;
 import securityproject.model.Csr;
 import securityproject.service.CertificateService;
 import securityproject.service.CsrService;
@@ -61,5 +62,17 @@ public class AdminController {
     public ResponseEntity<Boolean> invalidateCertificate(@PathVariable Long id, @PathVariable String reason) {
         Boolean success = certificateService.invalidateCertificate(id, reason);
         return new ResponseEntity<>(success, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/get-all-valid-certificates")
+    public ResponseEntity<List<CertificateData>> getAllValidCertificates() {
+        List<CertificateData> certificates = certificateService.getValidCertificates();
+        return new ResponseEntity<>(certificates, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/check-certificate-validity-{id}")
+    public ResponseEntity<Boolean> isCertValid(@PathVariable Long id) {
+        Boolean isValid = certificateService.isCertificateValid(id);
+        return new ResponseEntity<>(isValid, HttpStatus.OK);
     }
 }

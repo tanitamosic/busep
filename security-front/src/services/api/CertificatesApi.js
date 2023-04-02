@@ -32,8 +32,7 @@ export async function getRequests(id){
 
   export async function getCertificates(){
     try {
-        // TODO fix url
-        const responseData = await getApiCall().get(`/csr/certificates`);
+        const responseData = await getApiCall().get(`/admin/get-all-valid-certificates`);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -43,8 +42,7 @@ export async function getRequests(id){
 
   export async function isCertificateValid(id){
     try {
-        // TODO fix url
-        const responseData = await getApiCall().get(`/csr/validate/` + id);
+        const responseData = await getApiCall().get(`/admin/check-certificate-validity-` + id);
         return responseData;
     } catch (err) {
         console.log(err.message);

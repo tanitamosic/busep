@@ -28,6 +28,7 @@ import java.security.*;
 import java.security.cert.*;
 import java.security.cert.Certificate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -147,6 +148,16 @@ public class CertificateService {
         } else {
             return false;
         }
+    }
+
+    public List<CertificateData> getValidCertificates() {
+        return certificateRepository.findAll();
+    }
+
+    public Boolean isCertificateValid(Long id) {
+        Optional<CertificateData> opt = certificateRepository.findById(id);
+        return opt.isPresent();
+        // because of @Where clause in CertificateData class, we only need to check if Jpa query finds the certificate
     }
 
 

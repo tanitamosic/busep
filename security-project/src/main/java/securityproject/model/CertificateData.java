@@ -1,5 +1,6 @@
 package securityproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,7 @@ public class CertificateData {
     private String email;
     @Column(name = "serial_number", unique = true, nullable = false)
     private String serialNumber;
+    @JsonIgnore
     @Column(name = "public_key", unique = true, nullable = false)
     private String publicKey;
 
