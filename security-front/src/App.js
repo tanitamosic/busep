@@ -9,6 +9,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/style.css';
 import RequestsList from './components/business/RequestsList';
 import RequestPreview from './components/business/RequestPreview';
+import CertificatesList from './components/business/CertificatesList';
+import CertificatePreview from './components/business/CertificatePreview';
 
 function App() {
   // const resortForm = <Container><CreateForm userType={user} /></Container>
@@ -19,6 +21,8 @@ function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
   const requestsList = <Container><RequestsList /></Container>
   const requestPreview = <Container><RequestPreview /></Container>
+  const certificatesList = <Container><CertificatesList /></Container>
+  const certificatePreview = <Container><CertificatePreview /></Container>
   // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
 
   return  (<Router>
@@ -36,8 +40,8 @@ function App() {
                 <Route path='/user' element={"<h1>user</h1>"}>
 
                 </Route>
-                <Route path='/admin/certificates/:id' element={"<h1>:id certificate</h1>"}/> {/* preview, validate, remove - 6, 7, 8*/}
-                <Route path='/admin/certificates' element={"<h1>all certificates</h1>"}/> {/* list all, button for detailed view - 5 */}
+                <Route path='/admin/certificates/:id' element={certificatePreview}/> {/* preview, validate, remove - 6, 7, 8*/}
+                <Route path='/admin/certificates' element={certificatesList}/> {/* list all, button for detailed view - 5 */}
                 <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
                 <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
                 <Route path='/admin' element={"<h1>admin</h1>"}>

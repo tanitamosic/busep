@@ -4,37 +4,38 @@ import { Row, Col, Button } from 'react-bootstrap';
 import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import { declineRequest, acceptRequest } from '../../services/api/CertificatesApi';
+import {isCertificateValid, deactivateCertificate } from '../../services/api/CertificatesApi';
 import LabeledTextarea from '../forms/LabeledTextarea';
 
-export default function RequestPreview(){
+export default function CertificatePreview(){
 
-    const {email} = useParams();
-    const [request, setRequest] = useState(null);
-    const [extensions, setExtensions] = useState([]);
-    const [declineReason, setDeclineReason] = useState("");
+    const {id} = useParams();
+    const [certificate, setCertificate] = useState(null);
+    const [deactivateReason, setDeactivateReason] = useState("");
 
     // TODO use this when apis available on backend
     //
     // useEffect(() => {
-    //     async function fetchRequest(){
-    //         const requestData = await getRequestByEmail(email);
-    //         setRequest(!!requestData ? requestData.data : {});
+    //     async function fetchCertificate(){
+    //         const requestData = await getCertificateById(id);
+    //         setCertificate(!!requestData ? requestData.data : {});
     //         return requestData;
     //     }
-    //     fetchRequest();
-    // }, [email])
+    //     fetchCertificate();
+    // }, [id])
 
     useEffect(() => {
-        for (let r of dummyRequests){
-            if (r.email === email){
-                setRequest(r);
+        console.log(id)
+        for (let c of dummyCertificates){
+            console.log(c.id)
+            if (c.id.toString() === id){
+                setCertificate(c);
             }
         }
         
-    }, [email])
+    }, [id])
 
-    const dummyRequests = [
+    const dummyCertificates = [
         {
           "givenName": "John",
           "surname": "Doe",
@@ -43,7 +44,10 @@ export default function RequestPreview(){
           "organization": "Acme Corporation",
           "orgUnit": "Sales",
           "country": "United States",
-          "owner": true
+          "owner": true,
+          "endDate": "2024/04/02",
+          "valid": true,
+          "id": 154
         },
         {
           "givenName": "Jane",
@@ -53,7 +57,10 @@ export default function RequestPreview(){
           "organization": "Globex Corporation",
           "orgUnit": "Marketing",
           "country": "Canada",
-          "owner": false
+          "owner": false,
+          "endDate": "2024/08/02",
+          "valid": true,
+          "id": 18
         },
         {
           "givenName": "Michael",
@@ -63,7 +70,10 @@ export default function RequestPreview(){
           "organization": "Initech",
           "orgUnit": "IT",
           "country": "United Kingdom",
-          "owner": false
+          "owner": false,
+          "endDate": "2022/04/02",
+          "valid": false,
+          "id": 5
         },
         {
           "givenName": "Samantha",
@@ -73,7 +83,10 @@ export default function RequestPreview(){
           "organization": "Tech Solutions",
           "orgUnit": "Development",
           "country": "Australia",
-          "owner": true
+          "owner": true,
+          "endDate": "2023/02/02",
+          "valid": false,
+          "id": 7
         },
         {
           "givenName": "David",
@@ -83,101 +96,101 @@ export default function RequestPreview(){
           "organization": "ABC Corporation",
           "orgUnit": "Finance",
           "country": "New Zealand",
-          "owner": false
+          "owner": false,
+          "endDate": "2026/06/02",
+          "valid": true,
+          "id": 37
         }
       ]
 
-    const acceptButtonPressed = (e) => {
+    const isValidateButtonPressed = (e) => {
         // if (true) {
-            postAcceptRequest(e);
+            getIsValidRequest(e);
         // } else {
             // alert("")
         // }
     }
 
-    const postAcceptRequest = useCallback(
+    const getIsValidRequest = useCallback(
         (e) => {
             e.preventDefault();
-            // TODO should not send and receive password
-            const acceptJson = {
-                "givenName": request.givenName,
-                "surname": request.surname,
-                "email": request.email,
-                "password": request.password,
-                "organization": request.organization,
-                "orgUnit": request.orgUnit,
-                "country": request.country,
-                "owner": request.owner,
-                "extensions": extensions
-            }
-            console.log(acceptJson)
-            acceptRequest(acceptJson).then(
+            isCertificateValid().then(
                 (response) => {
                     console.log(response);
-                    alert("Request has been accepted.");
+                    if (response.data === true){
+                        alert("Certificate is valid.");
+                    } else {
+                        alert("Certificate is invalid.")
+                    }
                 }, (error) => {
                     console.log(error);
                 }
             );
-        }, [request, extensions]
+        }, []
     )
 
-    const declineButtonPressed = (e) => {
-        if (declineReason.length > 0) {
-            postDeclineRequest(e);
+    const deactivateButtonPressed = (e) => {
+        if (deactivateReason.length > 0) {
+            postDeactivateCertificate(e);
         } else {
-            alert("You need to write decline reason")
+            alert("You need to write deactivate reason")
         }
     }
 
-    const postDeclineRequest = useCallback(
+    const postDeactivateCertificate = useCallback(
         (e) => {
             e.preventDefault();
-            const declineJson = {email, declineReason}
-            console.log(declineJson)
-            declineRequest(declineJson).then(
+            const deactivateJson = {id, deactivateReason}
+            console.log(deactivateJson)
+            deactivateCertificate(deactivateJson).then(
                 (response) => {
                     console.log(response);
-                    alert("Request for " + email + " declined.");
+                    alert("Certificate " + id + " deactivated.");
                 }, (error) => {
                 console.log(error);
                 }
             );
-        }, [declineReason, email]
+        }, [deactivateReason, id]
     )
     
-    if(!!request){
+    if(!!certificate){
     return <>
-            <center><h3>Request for {email}</h3></center>
+            <center><h3>Certificate {id}</h3></center>
             <br/>
             <div className="borderedBlock mt-3 " align="">
                 <Row>
                     <Col sm="4">
                         <Row>
-                            Name: {request.givenName}
+                            Name: {certificate.givenName}
                         </Row>
                         <Row>
-                            Last name: {request.surname}
+                            Last name: {certificate.surname}
                         </Row>
                         <Row>
-                            Email: {request.email}
+                            Email: {certificate.email}
                         </Row>
                         
                     </Col>
                     <Col sm="4">
                         <Row>
-                            Organization: {request.organization}
+                            Organization: {certificate.organization}
                         </Row>
                         <Row>
-                            Organizational unit: {request.orgUnit}
+                            Organizational unit: {certificate.orgUnit}
                         </Row>
                         <Row>
-                            Country: {request.country}
+                            Country: {certificate.country}
                         </Row>
                     </Col>
                     <Col sm="4">
                         <Row>
-                            {request && <p>Is property owner: {request.owner.toString()}</p>}
+                            {certificate && <p>Is property owner: {certificate.owner.toString()}</p>}
+                        </Row>
+                        <Row>
+                            Start date: {certificate.startDate}
+                        </Row>
+                        <Row>
+                            End date: {certificate.endDate}
                         </Row>
                     </Col>
                 </Row>
@@ -189,20 +202,20 @@ export default function RequestPreview(){
                 <Row className='mt-2'>
                         <Col sm={4}/>
                         <Col sm={4} align='center'>
-                            <Button className='formButton' onClick={acceptButtonPressed}>
-                                Accept
+                            <Button className='formButton' onClick={isValidateButtonPressed}>
+                                Validate
                             </Button>
                         </Col>
                         <Col sm={4}/>
                   </Row>
                 <br/>
 
-                <LabeledTextarea value={declineReason} label="Decline reason" inputName="declineReason" placeholder="Type reason for declining the request" required onChangeFunc={setDeclineReason}/>
+                <LabeledTextarea value={deactivateReason} label="Deactivate reason" inputName="deactivateReason" placeholder="Type reason for deactivating the certificate" required onChangeFunc={setDeactivateReason}/>
                 <Row className='mt-2'>
                         <Col sm={4}/>
                         <Col sm={4} align='center'>
-                            <Button className='formButton' onClick={declineButtonPressed}>
-                                Decline
+                            <Button className='formButton' onClick={deactivateButtonPressed}>
+                                Deactivate
                             </Button>
                         </Col>
                         <Col sm={4}/>
@@ -211,7 +224,7 @@ export default function RequestPreview(){
             </div>
         </>
     } else {
-        return "No request for such email"
+        return "No such certificate"
     }
 }
 

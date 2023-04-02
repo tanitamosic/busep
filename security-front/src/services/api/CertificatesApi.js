@@ -32,3 +32,36 @@ export async function getRequests(){
         return err.message
     }
   }
+
+  export async function getCertificates(){
+    try {
+        // TODO fix url
+        const responseData = await getApiCall().get(`/csr/certificates`);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
+  export async function isCertificateValid(id){
+    try {
+        // TODO fix url
+        const responseData = await getApiCall().get(`/csr/validate/` + id);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
+  export async function deactivateCertificate(deactivateBody){
+    try {
+        // TODO fix url
+        const responseData = await getApiCall().post(`/csr/deactivate`, deactivateBody);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
