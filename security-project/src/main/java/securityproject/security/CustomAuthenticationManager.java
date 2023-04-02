@@ -54,6 +54,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         MyUserDetails details = (MyUserDetails) userService.loadUserByUsername(enteredEmail);
 
         if (null != details) {
+            if (details.isAccountNonLocked()) {
+                throw new LockedException("Account is locked.");
+            }
+            if (!details.isEnabled()) {
+                throw new DisabledException("Account is disabled.");
+            }
             String encodedPassword = details.getPassword();
             if (pe.matches(enteredPassword, encodedPassword)) {
                 auth = new TokenBasedAuthentication(details);
