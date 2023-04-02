@@ -1,9 +1,8 @@
 import {getApiCall} from "../Configs.js"
 
-export async function getRequests(){
+export async function getRequests(id){
     try {
-        // TODO fix url
-        const responseData = await getApiCall().get(`/csr/requests`);
+        const responseData = await getApiCall().get('/admin/get-csr-' + id);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -13,8 +12,7 @@ export async function getRequests(){
 
   export async function declineRequest(declineRequest){
     try {
-        // TODO fix url and where email? in body or just url (now in body)
-        const responseData = await getApiCall().post(`/csr/requests/decline/`, declineRequest);
+        const responseData = await getApiCall().post(`/admin/decline-request`, declineRequest);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -24,8 +22,7 @@ export async function getRequests(){
 
   export async function acceptRequest(acceptRequest){
     try {
-        // TODO fix url
-        const responseData = await getApiCall().post(`/csr/requests/accept/`, acceptRequest);
+        const responseData = await getApiCall().post(`/admin/accept-request`, acceptRequest);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -55,10 +52,9 @@ export async function getRequests(){
     }
   }
 
-  export async function deactivateCertificate(deactivateBody){
+  export async function deactivateCertificate(id, reason){
     try {
-        // TODO fix url
-        const responseData = await getApiCall().post(`/csr/deactivate`, deactivateBody);
+        const responseData = await getApiCall().delete(`/admin/invalidate-certificate-`+ id+`/reason=`+reason);
         return responseData;
     } catch (err) {
         console.log(err.message);

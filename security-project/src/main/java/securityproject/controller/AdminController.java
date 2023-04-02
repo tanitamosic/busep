@@ -3,7 +3,6 @@ package securityproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.CertificateDto;
 import securityproject.model.Csr;
@@ -14,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(value = "/")
+@RequestMapping(value = "/admin")
 public class AdminController {
     /*
     1. pregled svih zahteva - get
@@ -52,8 +51,8 @@ public class AdminController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    @PostMapping(value="/reject-request")
-    public ResponseEntity<Boolean> rejectRequest(@RequestBody Long id) {
+    @PostMapping(value="/decline-request")
+    public ResponseEntity<Boolean> declineRequest(@RequestBody Long id) {
         Boolean success = csrService.rejectRequest(id);
         return new ResponseEntity<>(success, HttpStatus.OK);
     }

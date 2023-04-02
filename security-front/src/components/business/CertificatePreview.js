@@ -142,7 +142,7 @@ export default function CertificatePreview(){
             e.preventDefault();
             const deactivateJson = {id, deactivateReason}
             console.log(deactivateJson)
-            deactivateCertificate(deactivateJson).then(
+            deactivateCertificate(id, deactivateReason).then(
                 (response) => {
                     console.log(response);
                     alert("Certificate " + id + " deactivated.");
