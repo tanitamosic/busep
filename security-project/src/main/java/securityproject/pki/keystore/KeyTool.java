@@ -10,6 +10,7 @@ import securityproject.service.CertificateService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.security.*;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -31,20 +32,10 @@ public class KeyTool {
     }
 
     public static Object getObjectFromPem(String pem){
-        pem = pem.replace("-----BEGIN CERTIFICATE-----\n", "");
-        pem = pem.replace("-----END CERTIFICATE-----", "");
-
-        // Decode the base64-encoded data
-        byte[] decoded = Base64.getDecoder().decode(pem);
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(decoded);
-        InputStreamReader reader = new InputStreamReader(inputStream);
-        PEMParser pemParser = new PEMParser(reader);
+        PEMParser pemParser = new PEMParser(new StringReader(pem));
         try {
             Object obj = pemParser.readObject();
-
             pemParser.close();
-            reader.close();
-            inputStream.close();
             return obj;
         } catch (IOException e) {
             throw new RuntimeException(e);

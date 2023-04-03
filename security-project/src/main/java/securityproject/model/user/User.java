@@ -36,7 +36,7 @@ public abstract class User {
     private String password;
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
