@@ -1,5 +1,7 @@
 package securityproject.service;
 
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import securityproject.dto.RequestDto;
 import securityproject.model.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,10 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private RoleService roleService;
+
+    @Lazy
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -57,7 +63,7 @@ public class UserService implements UserDetailsService {
         u.setEnabled(false);
         u.setLocked(false);
         u.setLastPasswordResetDate(null);
-        u.setPassword(dto.password);
+        u.setPassword(passwordEncoder.encode(dto.password));
         return u;
     }
 }
