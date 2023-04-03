@@ -20,13 +20,16 @@ import securityproject.repository.CertificateRepository;
 import securityproject.util.Constants;
 import securityproject.util.Helper;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
+import java.security.cert.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -40,6 +43,8 @@ public class CertificateService {
     KeyStoreReader keyStoreReader;
     @Autowired
     FileService fileService;
+    @Autowired
+    BlacklistService blacklistService;
 
     public X509Certificate generateCertificate(SubjectData subjectData, IssuerData issuerData) {
         try {
@@ -124,4 +129,35 @@ public class CertificateService {
         }
         return new IssuerData(privateKey, name);
     }
+
+    public Boolean invalidateCertificate(Long id, String reason) {
+        Optional<CertificateData> opt = certificateRepository.findById(id);
+        if (opt.isPresent()) {
+            // ---------------------- invalidate in db ----------------------
+            CertificateData certData = opt.get();
+            certData.setValid(false);
+            certificateRepository.saveAndFlush(certData);
+            // add to blacklist
+            blacklistService.addCertificateToBlacklist(certData, reason);
+            // ---------------------- invalidate in jks ---------------------
+            fileService.deleteCerFile(certData.getEmail());
+            return keyStoreWriter.invalidateCertificate(certData.getEmail());
+
+
+        } else {
+            return false;
+        }
+    }
+
+    public List<CertificateData> getValidCertificates() {
+        return certificateRepository.findAll();
+    }
+
+    public Boolean isCertificateValid(Long id) {
+        Optional<CertificateData> opt = certificateRepository.findById(id);
+        return opt.isPresent();
+        // because of @Where clause in CertificateData class, we only need to check if Jpa query finds the certificate
+    }
+
+
 }

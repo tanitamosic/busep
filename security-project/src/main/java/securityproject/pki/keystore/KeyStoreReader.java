@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.PKIXParameters;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.LinkedList;
@@ -33,6 +34,10 @@ public class KeyStoreReader {
         } catch (KeyStoreException | NoSuchProviderException e) {
             e.printStackTrace();
         }
+    }
+
+    public PKIXParameters getPKIXParameters() throws InvalidAlgorithmParameterException, KeyStoreException {
+        return new PKIXParameters(this.keyStore);
     }
 
     public void loadKeyStore(String fileName, char[] password) {

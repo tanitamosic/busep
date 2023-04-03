@@ -28,15 +28,15 @@ public abstract class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeqGen")
     @Column(name = "user_id")
     private Long id;
-    @Column(name = "name", nullable = true)
+    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "surname", nullable = true)
+    @Column(name = "surname", nullable = false)
     private String surname;
-    @Column(name = "password", nullable = true)
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "email", nullable = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -44,10 +44,10 @@ public abstract class User {
     )
     private Set<Role> roles = new HashSet<>();
     // ADMIN USER DELETION => SET LOCKED TO 'TRUE'
-    @Column(name = "locked", nullable = true)
+    @Column(name = "locked", nullable = false)
     private Boolean locked;
     // DEFAULT TO FALSE => SET TO 'TRUE' ON ACCOUNT ACTIVATION
-    @Column(name = "enabled", nullable = true)
+    @Column(name = "enabled", nullable = false)
     private Boolean enabled;
     @Column(name = "last_password_reset_date", nullable = true)
     private Date lastPasswordResetDate;

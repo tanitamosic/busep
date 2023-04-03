@@ -3,10 +3,11 @@ package securityproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.CertificateDto;
+import securityproject.model.CertificateData;
 import securityproject.model.Csr;
+import securityproject.service.CertificateService;
 import securityproject.service.CsrService;
 
 import java.util.List;
@@ -30,6 +31,8 @@ public class AdminController {
 
     @Autowired
     CsrService csrService;
+    @Autowired
+    CertificateService certificateService;
 
     @GetMapping(value="/get-all-csrs")
     public ResponseEntity<List<Csr>> getCSRRequests() {
@@ -49,9 +52,27 @@ public class AdminController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    @PostMapping(value="/reject-request")
-    public ResponseEntity<Boolean> rejectRequest(@RequestBody Long id) {
+    @PostMapping(value="/decline-request")
+    public ResponseEntity<Boolean> declineRequest(@RequestBody Long id) {
         Boolean success = csrService.rejectRequest(id);
         return new ResponseEntity<>(success, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value="/invalidate-certificate-{id}/reason={reason}")
+    public ResponseEntity<Boolean> invalidateCertificate(@PathVariable Long id, @PathVariable String reason) {
+        Boolean success = certificateService.invalidateCertificate(id, reason);
+        return new ResponseEntity<>(success, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/get-all-valid-certificates")
+    public ResponseEntity<List<CertificateData>> getAllValidCertificates() {
+        List<CertificateData> certificates = certificateService.getValidCertificates();
+        return new ResponseEntity<>(certificates, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/check-certificate-validity-{id}")
+    public ResponseEntity<Boolean> isCertValid(@PathVariable Long id) {
+        Boolean isValid = certificateService.isCertificateValid(id);
+        return new ResponseEntity<>(isValid, HttpStatus.OK);
     }
 }

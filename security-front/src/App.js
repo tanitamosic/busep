@@ -26,10 +26,16 @@ function App() {
   // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
 
   return  (<Router>
+              <div>
+                <h3>Welcome to my React homepage!</h3>
+                <a href="/register">Registruj se</a> <br/>
+                <a href="/admin/certificates">Pregledaj serfikate</a> <br/>
+                <a href="/admin/requests">Pregledaj zahteve za sertifikat</a>
+              </div>
               <Routes>
                 <Route path=''>
                   <Route path="/register" element={registrationForm} />
-                {/* <Route path='' element={<ProtectedRoute isAllowedUser={user}>{chooseNavbar(user)} </ProtectedRoute>}> */}
+                  {/* <Route path='' element={<ProtectedRoute isAllowedUser={user}>{chooseNavbar(user)} </ProtectedRoute>}> */}
                   {/* <Route path='/home' element={home} />  */}
                   {/* <Route path="createAsset" element={resortForm} />  */}
                   {/* <Route path="/logout" element={<Container><Logout handleLogout={handleLogout}/></Container>} /> */}

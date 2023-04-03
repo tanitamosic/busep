@@ -5,7 +5,8 @@ export const passwordText = "";
 export const phoneNum = "";
 
 // disabled dangerous SQL dangers, can't input anything dangerous
-const onlyLettersRegex = new RegExp('^([a-zA-Z]+\\s)*[a-zA-Z]+$');
+// const onlyLettersRegex = new RegExp('^([a-zA-Z]+\\s)*[a-zA-Z]+$');
+const onlyLettersRegex = new RegExp('[a-zA-Z]+');
 const onlyNumbersRegex = new RegExp('^[0-9]+$');
 
 // Samo sam kopirala od negde, proveriti da li ok

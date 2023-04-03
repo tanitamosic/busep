@@ -12,6 +12,8 @@ import securityproject.model.user.StandardUser;
 import securityproject.model.user.User;
 import securityproject.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashSet;
 import java.util.Set;
 

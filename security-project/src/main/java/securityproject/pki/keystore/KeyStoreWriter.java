@@ -1,6 +1,7 @@
 package securityproject.pki.keystore;
 
 import org.springframework.stereotype.Component;
+import securityproject.util.Constants;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -69,6 +70,24 @@ public class KeyStoreWriter {
         } catch (KeyStoreException e) {
             e.printStackTrace();
         }
+    }
+
+    public Boolean invalidateCertificate(String alias) {
+        try {
+
+            // Get the default trust store
+            loadKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+            // Remove the certificate from the trust store
+            keyStore.deleteEntry(alias);
+
+            // Save the updated trust store
+            FileOutputStream out = new FileOutputStream(Constants.KEYSTORE_PATH);
+            keyStore.store(out, Constants.KEYSTORE_PASSWORD.toCharArray());
+            out.close();
+        } catch (CertificateException | NoSuchAlgorithmException | KeyStoreException | IOException e) {
+            return false;
+        }
+        return true;
     }
 
 }
