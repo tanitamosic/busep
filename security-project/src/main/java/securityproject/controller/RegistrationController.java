@@ -13,6 +13,9 @@ import securityproject.dto.RequestDto;
 import securityproject.mail.MailingService;
 import securityproject.service.CsrService;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 @RestController
 @RequestMapping(value = "/csr")
 public class RegistrationController {
@@ -21,10 +24,22 @@ public class RegistrationController {
 
     @PostMapping(value = "/request")
     public ResponseEntity<String> sendCsr(@RequestBody RequestDto dto){
-        String res = "";
-        if(dto.owner) res = service.makeOwnerCrf(dto);
-        else res = service.makeRenterCrf(dto);
-        return new ResponseEntity<String>("yay", HttpStatus.OK);
+        try {
+            String res = "";
+            if(dto.owner) res = service.makeOwnerCrf(dto);
+            else res = service.makeRenterCrf(dto);
+            return new ResponseEntity<String>("yay", HttpStatus.OK);
+        } catch (ConstraintViolationException e) {
+            StringBuilder errorMessage = new StringBuilder();
+            for (ConstraintViolation<?> v: e.getConstraintViolations()) {
+                errorMessage.append(v.getMessage()).append("\n");
+            }
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>(errorMessage.toString(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+
     }
 
     /**

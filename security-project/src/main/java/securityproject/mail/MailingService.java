@@ -64,6 +64,7 @@ public class MailingService {
     }
 
     public void sendCertificate(String target, String certPath) {
+        // TODO: dodaj pin
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);

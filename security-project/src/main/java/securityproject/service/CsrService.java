@@ -98,32 +98,23 @@ public class CsrService {
     }
 
     public String makeOwnerCrf(RequestDto dto) {
-        try {
-            PKCS10CertificationRequest csr = createCertificateRequest(dto);
-            fileService.writeCsrFile(dto.email, csr);
-            String pem = fileService.readCsrFile(dto.email);
-            PKCS10CertificationRequest read = (PKCS10CertificationRequest) KeyTool.getObjectFromPem(pem);
+        PKCS10CertificationRequest csr = createCertificateRequest(dto);
+        fileService.writeCsrFile(dto.email, csr);
+        String pem = fileService.readCsrFile(dto.email);
+        PKCS10CertificationRequest read = (PKCS10CertificationRequest) KeyTool.getObjectFromPem(pem);
 
-            userService.registerOwner(dto);  // save user
-            return pem;
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        userService.registerOwner(dto);  // save user
+        return pem;
     }
 
     public String makeRenterCrf(RequestDto dto) {
-        try {
-            PKCS10CertificationRequest csr = createCertificateRequest(dto);
-            fileService.writeCsrFile(dto.email, csr);
+        PKCS10CertificationRequest csr = createCertificateRequest(dto);
+        fileService.writeCsrFile(dto.email, csr);
 
-            userService.registerRenter(dto);  // save user
-            return fileService.readCsrFile(dto.email);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        userService.registerRenter(dto);  // save user
+        return fileService.readCsrFile(dto.email);
     }
+
     private PKCS10CertificationRequest createCertificateRequest(RequestDto dto) {
         KeyPair keyPair = KeyTool.generateKeyPair();
         X500Name x500Name = Helper.buildX500Name(
