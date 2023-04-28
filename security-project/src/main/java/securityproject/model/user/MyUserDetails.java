@@ -55,7 +55,7 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.getLocked();
+        return !user.getLocked(); // 'nonLocked' is confusing af, so i gotta do add the bool inversion
     }
 
     @Override

@@ -32,11 +32,17 @@ public class WebSecurityConfig {
     private UserService userService;
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    @Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
+
+    @Autowired
+    private CustomLoginSuccessHandler loginSuccessHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
                 .authenticationManager(new CustomAuthenticationManager())
+                .formLogin().failureHandler(loginFailureHandler).successHandler(loginSuccessHandler).and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
@@ -54,6 +60,7 @@ public class WebSecurityConfig {
 //                .and()
 //                .exceptionHandling().accessDeniedPage("/403");
         http.csrf().disable();
+        http.headers().contentSecurityPolicy("script 'self'");
         return http.build();
     }
 }
