@@ -41,8 +41,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .authenticationManager(new CustomAuthenticationManager())
-                .formLogin().failureHandler(loginFailureHandler).successHandler(loginSuccessHandler).and()
+                .authenticationManager(new CustomAuthenticationManager(this.passwordEncoder(), this.userService))
+                .formLogin()
+                    .loginProcessingUrl("/login")
+                    .failureHandler(loginFailureHandler)
+                    .successHandler(loginSuccessHandler)
+                    .permitAll().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()

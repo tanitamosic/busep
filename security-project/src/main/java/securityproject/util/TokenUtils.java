@@ -21,8 +21,8 @@ public class TokenUtils {
     @Value("spring-security-example")
     private String APP_NAME;
 
-    @Value("somesecret")
-    public String SECRET = "somesecret";
+    @Value(",yeEuST*pm`#MR6G(DKmQQUL")
+    public String SECRET = ",yeEuST*pm`#MR6G(DKmQQUL";
 
     @Value("1800000")
     private int EXPIRES_IN;
