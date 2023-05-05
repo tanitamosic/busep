@@ -8,6 +8,7 @@ export const phoneNum = "";
 // const onlyLettersRegex = new RegExp('^([a-zA-Z]+\\s)*[a-zA-Z]+$');
 const onlyLettersRegex = new RegExp('[a-zA-Z]+');
 const onlyNumbersRegex = new RegExp('^[0-9]+$');
+const yyyyMMddRegex = new RegExp('^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$');
 
 // Samo sam kopirala od negde, proveriti da li ok
 const validEmail = new RegExp(
@@ -39,6 +40,12 @@ export function checkNumInput(input){
     return onlyNumbersRegex.test(input);     
 }
 
+export function checkDateInput(input){
+    console.log(input)
+    console.log(yyyyMMddRegex.test(input)   )
+    input = removeSpaces(input)
+    return yyyyMMddRegex.test(input);     
+}
 
 export function isEmpty(input){
     if(input ===null || input === undefined || input ==='' ){
