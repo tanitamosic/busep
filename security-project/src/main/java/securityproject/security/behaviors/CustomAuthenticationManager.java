@@ -1,4 +1,4 @@
-package securityproject.security;
+package securityproject.security.behaviors;
 
 
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import securityproject.security.TokenBasedAuthentication;
 import securityproject.service.UserService;
 
 @Service

@@ -4,15 +4,11 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import io.jsonwebtoken.*;
 import securityproject.model.user.MyUserDetails;
 import securityproject.model.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 
 @Component
@@ -50,6 +46,18 @@ public class TokenUtils {
 
 
         // moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom funkcije .claim("key", value), npr. .claim("role", user.getRole())
+    }
+
+    public Boolean verifyToken(String token, String username) {
+        try {
+            Jws<Claims> jws = Jwts.parser()
+                    .setSigningKey(SECRET.getBytes())
+                    .require("alg", SIGNATURE_ALGORITHM.getValue())
+                    .parseClaimsJws(token);
+            return username.equals(jws.getBody().getSubject());
+        } catch (JwtException e) {
+            return false;
+        }
     }
 
     /**

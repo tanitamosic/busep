@@ -10,6 +10,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import securityproject.security.behaviors.*;
 import securityproject.service.UserService;
 import securityproject.util.TokenUtils;
 
@@ -34,9 +35,10 @@ public class WebSecurityConfig {
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired
     private CustomLoginFailureHandler loginFailureHandler;
-
     @Autowired
     private CustomLoginSuccessHandler loginSuccessHandler;
+    @Autowired
+    private CustomLogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -50,6 +52,9 @@ public class WebSecurityConfig {
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+                .logout()
+                    .logoutUrl("/logout")
+                    .addLogoutHandler(logoutHandler).and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll();
 //                .antMatchers("/").hasAnyAuthority("USER", "CREATOR", "EDITOR", "ADMIN")

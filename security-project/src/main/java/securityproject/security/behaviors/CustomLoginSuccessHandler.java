@@ -1,4 +1,4 @@
-package securityproject.security;
+package securityproject.security.behaviors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

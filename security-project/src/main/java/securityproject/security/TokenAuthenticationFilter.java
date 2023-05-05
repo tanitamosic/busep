@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import securityproject.model.user.MyUserDetails;
+import securityproject.model.webtokens.JWTBlacklist;
 import securityproject.service.UserService;
 import securityproject.util.TokenUtils;
 
@@ -58,7 +59,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                     MyUserDetails userDetails = (MyUserDetails) userDetailsService.loadUserByUsername(username);
                     System.out.println("filter: "+ userDetails.getUsername());
 
-                    if (tokenUtils.validateToken(authToken, userDetails)) {
+                    if (tokenUtils.validateToken(authToken, userDetails)
+                            && !JWTBlacklist.isTokenBlacklisted(authToken)
+                            && tokenUtils.verifyToken(authToken, userDetails.getUsername())) {
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
                         authentication.setToken(authToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
