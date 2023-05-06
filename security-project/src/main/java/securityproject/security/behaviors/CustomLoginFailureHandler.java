@@ -42,8 +42,8 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
             }
 
         }
-        response.sendRedirect("/login-failure");
-//        super.setDefaultFailureUrl("/login-failure");
+//        response.sendRedirect("/login-failure?reason=" + "reason for failure");  // this is unsafe supposedly
+        super.setDefaultFailureUrl("/login-failure");
         super.onAuthenticationFailure(request, response, exception);
     }
 
