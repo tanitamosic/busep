@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(nativeQuery = true, value="SELECT users.enabled FROM users WHERE users.email=:email")
     Boolean isEmailConfirmed(@Param("email") String email);
 
+    User getUserByActivationString(@Param("act_string") String activationString);
     @Query(nativeQuery = true, value = "UPDATE users u SET u.failedAttempt=:failed_attempts WHERE u.email=:email")
     @Modifying
     @Transactional

@@ -64,4 +64,9 @@ public abstract class User {
     private Integer failedAttempt;
     @Column(name = "lock_time")
     private Date lockTime;
+
+    @Column(name = "act_string")
+    private String activationString;
+    @Column(name = "pin")
+    private Integer pin;
 }
