@@ -9,14 +9,26 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 // TODO: rename
 public class Helper {
+
+    public static String getActivationString(){
+        byte[] array = new byte[13];
+        new Random().nextBytes(array);
+        return new String(array, Charset.forName("UTF-8"));
+    }
+
+    public static Integer getPin(){
+        return new Random().nextInt(100000,999999);
+    }
 
     public static Date addYears(Date currentDate, int amount) {
         // create a calendar object and set it to the current date
