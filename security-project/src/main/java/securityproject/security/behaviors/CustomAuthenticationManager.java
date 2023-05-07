@@ -1,6 +1,7 @@
-package securityproject.security;
+package securityproject.security.behaviors;
 
 
+import lombok.AllArgsConstructor;
 import securityproject.model.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -9,10 +10,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import securityproject.security.TokenBasedAuthentication;
 import securityproject.service.UserService;
 
 @Service
 @Configurable
+@AllArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
 
     @Autowired
@@ -53,8 +56,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         Authentication auth = null;
         MyUserDetails details = (MyUserDetails) userService.loadUserByUsername(enteredEmail);
 
-        if (null != details) {
-            if (details.isAccountNonLocked()) {
+        if (null != details.getUser()) {
+            if (!details.isAccountNonLocked()) {
                 throw new LockedException("Account is locked.");
             }
             if (!details.isEnabled()) {
