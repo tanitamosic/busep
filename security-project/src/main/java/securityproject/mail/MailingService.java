@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -38,12 +39,27 @@ public class MailingService {
         mailSender.send(email);
     }
 
-    public void sendRegAcceptMail(String target) {
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(target);
-        email.setSubject("Obaveštenje o registraciji na React Certificate Factory");
-        email.setText("Čestitamo,\r\n Vaš zahtev za registraciju je prihvaćen!\r\nDobro došli u React Certificate Factory!!");
-        mailSender.send(email);
+    public void sendValidationMail(String target, String activationString) {
+
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message,true);
+
+            helper.setTo(target);
+            helper.setSubject("Obaveštenje o registraciji na React Certificate Factory");
+            String content = "Dobrodošli u React Certificate Factory!\n\n" +
+                    "Molimo Vas da potvrdite Vašu email adresu klikom na link: \n\n";
+            String button = "<a href=\"http://127.0.0.1:8080/"+ activationString +"\">\n" +
+                    "    <button>Activate Account</button>\n" +
+                    "  </a>";
+            helper.setText(content + button, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        mailSender.send(message);
     }
 
     public void sendRegAuthMail(String target, String confNum) {
@@ -63,15 +79,16 @@ public class MailingService {
         mailSender.send(email);
     }
 
-    public void sendCertificate(String target, String certPath) {
-        // TODO: dodaj pin
+    public void sendCertificate(String target, String certPath, String pin) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setTo(target);
             helper.setSubject("Stigo Vam je sertifikat");
-            helper.setText("Preuzmite ga da bi ste postali pocasni clan React Certificate Factory-ja!!!! <3\r\n Much love <3");
+            helper.setText("Preuzmite ga da bi ste postali pocasni clan React Certificate Factory-ja!!!! <3\r\n " +
+                    "Vas pin je: " + pin +".\n" +
+                    "Much love <3");
 
             Path path = Paths.get(certPath);
             byte[] fileData = Files.readAllBytes(path);

@@ -112,7 +112,7 @@ public class CsrService {
         String pem = fileService.readCsrFile(dto.email);
         PKCS10CertificationRequest read = (PKCS10CertificationRequest) KeyTool.getObjectFromPem(pem);
 
-        userService.registerOwner(dto);  // save user
+        userService.registerUser(dto);  // save user
         return pem;
     }
 
@@ -120,7 +120,7 @@ public class CsrService {
         PKCS10CertificationRequest csr = createCertificateRequest(dto);
         fileService.writeCsrFile(dto.email, csr);
 
-        userService.registerRenter(dto);  // save user
+        userService.registerUser(dto);  // save user
         return fileService.readCsrFile(dto.email);
     }
 
