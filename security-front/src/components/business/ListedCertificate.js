@@ -12,7 +12,7 @@ export default function ListedCertificate({certificate}){
                         {certificate.id}
                     </Col>
                     <Col sm="2">
-                        {certificate.givenName} + {certificate.surname} 
+                        {certificate.givenName} {certificate.surname} 
                     </Col>
                     <Col sm="2">
                         {certificate.email}

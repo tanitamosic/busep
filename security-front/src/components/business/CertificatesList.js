@@ -5,11 +5,21 @@ import { Row, Col } from 'react-bootstrap';
 import { getCertificates } from '../../services/api/CertificatesApi';
 import ListedRequest from './ListedRequest';
 import ListedCertificate from './ListedCertificate';
+import { useNavigate } from 'react-router';
 
 export default function CertificatesList(){
 
     const [certificates, setCertificates] = useState([]);
     const [listedCertificates, setListedCertificates] = useState([]);
+
+    const userRole = sessionStorage.getItem("userRole");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(userRole !== "admin"){
+            navigate("/unavailable");
+        }
+    }, [navigate, userRole])
 
     const dummyCertificates = [
         {

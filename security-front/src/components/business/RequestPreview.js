@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import { declineRequest, acceptRequest } from '../../services/api/CertificatesApi';
 import LabeledTextarea from '../forms/LabeledTextarea';
+import { useNavigate } from 'react-router-dom';
 
 export default function RequestPreview(){
 
@@ -24,6 +25,15 @@ export default function RequestPreview(){
     //     }
     //     fetchRequest();
     // }, [email])
+
+    const userRole = sessionStorage.getItem("userRole");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(userRole !== "admin"){
+            navigate("/unavailable");
+        }
+    }, [navigate, userRole])
 
     useEffect(() => {
         for (let r of dummyRequests){

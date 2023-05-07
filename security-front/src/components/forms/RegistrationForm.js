@@ -4,6 +4,7 @@ import { Form, Button, Container, Col, Row} from 'react-bootstrap';
 import { sendRegistrationRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
+import { useNavigate  } from "react-router-dom";  
 
 export function RegistrationForm() {
     const [givenName, setName] = useState("");
@@ -15,6 +16,15 @@ export function RegistrationForm() {
     const [orgUnit, setOrgUnit] = useState("");
     const [country, setCountry] = useState("");
     const [owner, setIsOwner] = useState(false);
+
+    const userRole = sessionStorage.getItem("userRole");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!!userRole){
+            navigate("/" + userRole.toLowerCase());
+        }
+    }, [navigate, userRole])
 
     const registerButtonPressed = (e) => {
       if (validateInput()) {
@@ -29,7 +39,7 @@ export function RegistrationForm() {
       let valid = (checkLettersInput(givenName) && givenName.length > 0 ) && 
                   (checkLettersInput(surname) && surname.length > 0 ) && 
                   (checkEmailInput(email) && email.length > 0 ) && 
-                  (checkPasswordInput(password) && password.length > 0 ) && 
+                  (checkPasswordInput(password) && password.length >= 12 ) && 
                   password === retypedPassword &&
                   organization.length > 0 &&
                   orgUnit.length > 0 &&

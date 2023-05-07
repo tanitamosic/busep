@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {isCertificateValid, deactivateCertificate } from '../../services/api/CertificatesApi';
 import LabeledTextarea from '../forms/LabeledTextarea';
+import { useNavigate  } from "react-router-dom";
 
 export default function CertificatePreview(){
 
@@ -23,6 +24,15 @@ export default function CertificatePreview(){
     //     }
     //     fetchCertificate();
     // }, [id])
+
+    const userRole = sessionStorage.getItem("userRole");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(userRole !== "admin"){
+            navigate("/unavailable");
+        }
+    }, [navigate, userRole])
 
     useEffect(() => {
         console.log(id)
