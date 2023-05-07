@@ -27,7 +27,8 @@ public class Helper {
     }
 
     public static Integer getPin(){
-        return new Random().nextInt(100000,999999);
+        Random random = new Random();
+        return random.nextInt(900000) + 100000;
     }
 
     public static Date addYears(Date currentDate, int amount) {

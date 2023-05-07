@@ -22,7 +22,7 @@ public class RegistrationController {
     @PostMapping(value = "/request")
     public ResponseEntity<String> sendCsr(@RequestBody RequestDto dto){
         try {
-            String res = service.makeCrf(dto);
+            String res = csrService.makeCrf(dto);
             if (res != null)
                 return new ResponseEntity<String>("yay", HttpStatus.OK);
             else

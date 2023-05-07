@@ -16,8 +16,9 @@ import static securityproject.util.Constants.CERTIFICATE_SUFFIX;
 @Service
 public class FileService {
     private ArrayList<String> passwordList;
-    private static final String PASSWORD_FILE = "";
+    private static final String PASSWORD_FILE = "src/main/resources/password-blacklist.txt";
     public FileService(){
+        passwordList = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(PASSWORD_FILE));
             String line;

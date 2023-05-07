@@ -54,4 +54,14 @@ public class LoginController {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
+
+    @GetMapping(value="login-failed")
+    public ResponseEntity<Map<String, Object>> handleInvalidPin() {
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("error", true);
+        response.put("message", "Invalid credentials");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
 }
