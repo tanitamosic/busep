@@ -15,6 +15,7 @@ import securityproject.model.user.User;
 import securityproject.repository.UserRepository;
 import securityproject.util.ModelValidator;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +39,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     ModelValidator modelValidator;
+
+    @Autowired
+    FileService fileService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -106,5 +110,10 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    public boolean commonPassword(String password){
+        ArrayList<String> passwords = fileService.getPasswordList();
+        return passwords.contains(password);
     }
 }

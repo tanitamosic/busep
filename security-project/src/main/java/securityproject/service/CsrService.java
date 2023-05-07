@@ -97,6 +97,15 @@ public class CsrService {
         return new SubjectData(key,name,sn,startDate,endDate);
     }
 
+    public String makeCrf(RequestDto dto){
+        String res = "";
+        if (userService.commonPassword(dto.password))
+            return null;
+        if(dto.owner) res = makeOwnerCrf(dto);
+        else res = makeRenterCrf(dto);
+        return res;
+    }
+
     public String makeOwnerCrf(RequestDto dto) {
         PKCS10CertificationRequest csr = createCertificateRequest(dto);
         fileService.writeCsrFile(dto.email, csr);
@@ -125,9 +134,7 @@ public class CsrService {
         IssuerData is = new IssuerData(keyPair.getPrivate(),x500Name);
         X509Certificate cert = certificateService.generateCertificate(sub, is);
         keyStoreWriter.writeKeys(dto.email,keyPair.getPrivate(),KEYSTORE_PASSWORD.toCharArray(),cert);
-        //TODO: tanita - pravi fajl ali ne nalazi ks
 
-        //napravi CRF objekat i sacuvaj u repo/bazu - DONE
         Csr csr = getCsr(dto);
         csrRepository.saveAndFlush(csr);
 

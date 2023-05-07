@@ -25,10 +25,12 @@ public class RegistrationController {
     @PostMapping(value = "/request")
     public ResponseEntity<String> sendCsr(@RequestBody RequestDto dto){
         try {
-            String res = "";
-            if(dto.owner) res = service.makeOwnerCrf(dto);
-            else res = service.makeRenterCrf(dto);
-            return new ResponseEntity<String>("yay", HttpStatus.OK);
+            String res = service.makeCrf(dto);
+            if (res != null)
+                return new ResponseEntity<String>("yay", HttpStatus.OK);
+            else
+                return  new ResponseEntity<>(("Passoword Error: Your password is one of " +
+                        "the most used passwords in the world.").toString(), HttpStatus.BAD_REQUEST);
         } catch (ConstraintViolationException e) {
             StringBuilder errorMessage = new StringBuilder();
             for (ConstraintViolation<?> v: e.getConstraintViolations()) {
