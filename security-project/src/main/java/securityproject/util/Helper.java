@@ -10,6 +10,7 @@ import org.bouncycastle.pkcs.PKCS10CertificationRequest;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -23,6 +24,7 @@ public class Helper {
     public static String getActivationString(){
         Random random = new Random();
         return String.valueOf(random.nextInt(900000) + 100000);
+
     }
 
     public static Integer getPin(){

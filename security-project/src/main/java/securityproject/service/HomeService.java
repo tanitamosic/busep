@@ -28,6 +28,10 @@ public class HomeService {
         return houseRepository.findHousesByOwner(user);
     }
 
+    public List<House> getAllHouses() {
+        return houseRepository.findAll();
+    }
+
     public List<House> getAllHousesWithRenter(StandardUser user) {
         return houseRepository.findHousesByRenter(user);
     }

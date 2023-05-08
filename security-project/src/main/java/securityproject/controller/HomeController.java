@@ -46,6 +46,20 @@ public class HomeController {
 
     }
 
+    @GetMapping("/get-all-homes")
+    public ResponseEntity<List<House>> getAllHouses() {
+        List<House> houses;
+        try {
+            houses = homeService.getAllHouses();
+            return new ResponseEntity<>(houses, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
+
     @PostMapping("/create-home")
     public ResponseEntity<String> createHome(HouseDTO houseDTO) {
         try {

@@ -3,7 +3,7 @@ import {getApiCall} from "../Configs.js"
 // TODO 
 export async function getAllObjects(){
     try {
-        const responseData = await getApiCall().get('/objects');
+        const responseData = await getApiCall().get('/home/get-all-homes');
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -14,7 +14,7 @@ export async function getAllObjects(){
   // TODO 
   export async function getUserObjects(userEmail){
     try {
-        const responseData = await getApiCall().get(`/objects/user/` +  userEmail);
+        const responseData = await getApiCall().get('/home/get-all-homes-by-user-' +  userEmail);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -26,7 +26,7 @@ export async function getAllObjects(){
   export async function removeObject(id){
     try {
         let objectId = {id};
-        const responseData = await getApiCall().post(`/objects/remove`, objectId);
+        const responseData = await getApiCall().post('/home/delete-home-', objectId);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -37,7 +37,7 @@ export async function getAllObjects(){
   // TODO 
   export async function sendObjectCreationRequest(objectJson){
     try {
-        const responseData = await getApiCall().post(`/objects/createNew`, objectJson);
+        const responseData = await getApiCall().post('/home/create-home', objectJson);
         return responseData;
     } catch (err) {
         console.log(err.message);
