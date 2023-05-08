@@ -6,6 +6,7 @@ import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";    
 import { setToken, getToken } from '../../services/utils/AuthService';
+import { getRole } from '../../services/utils/AuthService';
 
 export function LoginForm() {
     
@@ -26,13 +27,6 @@ export function LoginForm() {
     const loginButtonPressed = (e) => {
       if (validateInput()) {
         postLoginRequest(e);
-
-        // let userRole = pin;
-        // sessionStorage.setItem("userRole", userRole);
-        // navigate("/" + userRole.toLowerCase());
-        // window.dispatchEvent(new Event("userRoleUpdated"));
-
-
       } else {
         console.log("Invalid input")
         alert("Invalid input")
@@ -53,26 +47,17 @@ export function LoginForm() {
             e.preventDefault();
             const userJson = {email, password, pin}
             console.log(userJson)
-            
-            // TODO
 
             sendLoginRequest(userJson).then(
                 (response) => {
                     console.log(response);
-                    // const config = response.config;
-                    // const headers = response.headers;
-                    // console.log(config);
-                    // console.log(headers);
-                    // if (authorizationHeader) {
-                    //     const [bearer, token] = authorizationHeader.split(' ');
-                    //     console.log(token)
-                    // }
-                    
+                    const token = response.data.jwt;
+                    console.log(token);
+
+                    setToken(token)
                     alert("Logged in");
 
-                    setToken(response.token);
-                    let userRole = response.userType;
-                    navigate('/home', {replace: true} )
+                    let userRole = getRole();
                     sessionStorage.setItem("userRole", userRole);
 
                     navigate("/" + userRole.toLowerCase());

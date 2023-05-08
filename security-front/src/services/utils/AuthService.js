@@ -1,20 +1,32 @@
+import jwtDecode from "jwt-decode";
+
 export const setToken = (token) => {
   if(token === null){
     sessionStorage.setItem("jwt", null);
   }
   else{
-    sessionStorage.setItem("jwt", JSON.stringify(token.accessToken));
+    sessionStorage.setItem("jwt", JSON.stringify(token));
   }
 }
 export const getToken = () => {
-   return JSON.parse(sessionStorage.getItem("jwt"));
+   return sessionStorage.getItem("jwt");
 }
 
-
-export const setRole = (role) => {
-  sessionStorage.setItem("role", role);
-}
 export const getRole = () => {
-   return sessionStorage.getItem("role");
+  const decodedToken = getDecodedToken();
+  const role = decodedToken.role;
+
+  if (role === "ROLE_ADMIN"){
+    return "admin";
+  } else if (role === "ROLE_OWNER" || role === "ROLE_RENTER"){
+    return "client";
+  } else {
+    return "";
+  }
+}
+
+export const getDecodedToken = () => {
+  const token = getToken();
+  return jwtDecode(token);
 }
 
