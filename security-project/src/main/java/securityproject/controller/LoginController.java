@@ -32,15 +32,20 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    private class ResponseBody {
+        public String jwt;
+    }
+
     @GetMapping(value="login-success/{email}")
-    public ResponseEntity<String> createToken(@PathVariable String email) {
+    public ResponseEntity<ResponseBody> createToken(@PathVariable String email) {
         MyUserDetails u = (MyUserDetails) userService.loadUserByUsername(email);
         Role r = (Role) u.getUser().getRoles().toArray()[0];
         String token = tokenUtils.generateToken(email, r.getName());
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Authorization", token);
-        return ResponseEntity.ok().headers(responseHeaders).build();
+        ResponseBody rb = new ResponseBody();
+        rb.jwt = token;
+
+        return new ResponseEntity<>(rb, HttpStatus.OK);
     }
 
     @GetMapping(value="login-failure")
