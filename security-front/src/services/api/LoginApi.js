@@ -11,16 +11,6 @@ export async function sendRegistrationRequest(regRequest){
     }
 }
 
-// export async function sendLoginRequest(userJson){
-//     try {
-//         const responseData = await getApiCall().post(`/csr/login`, loginRequest);
-//         return responseData;
-//     } catch (err) {
-//         console.log(err.message);
-//         return err.message
-//     }
-// }
-
 export async function sendLoginRequest(userJson){
     try {
         // let fd = new FormData();
@@ -30,6 +20,16 @@ export async function sendLoginRequest(userJson){
         fd.append("pin", userJson.pin);
         const responseData = await getApiCallUrlEncoded().post(`/login`, fd);
 
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+}
+
+export async function sendLogoutRequest(){
+    try {
+        const responseData = await getApiCall().get("/logout");
         return responseData;
     } catch (err) {
         console.log(err.message);

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import '../../assets/styles/business.css';
 import { Row, Col, Button } from 'react-bootstrap';
 import { useNavigate  } from "react-router-dom";    
+import { getRole } from '../../services/utils/AuthService';
 
 export default function AdminFirstPage(){
 
@@ -23,7 +24,7 @@ export default function AdminFirstPage(){
         navigate('/logout');
     }
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
 
     useEffect(() => {
         if(userRole !== "admin"){

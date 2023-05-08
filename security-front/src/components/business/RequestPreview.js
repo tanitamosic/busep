@@ -9,6 +9,7 @@ import LabeledTextarea from '../forms/LabeledTextarea';
 import { useNavigate } from 'react-router-dom';
 import LabeledInput from '../forms/LabeledInput';
 import { checkDateInput, checkNumInput} from '../../services/utils/InputValidation';
+import { getRole } from '../../services/utils/AuthService';
 
 export default function RequestPreview(){
 
@@ -66,7 +67,7 @@ export default function RequestPreview(){
     //     fetchRequest();
     // }, [email])
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
     const navigate = useNavigate();
 
     useEffect(() => {

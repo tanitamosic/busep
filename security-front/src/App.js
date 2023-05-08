@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react';
 import UserObjectsList from './components/business/UserObjectsList';
 import AllObjectsList from './components/business/AllObjectsList';
 import { CreateObjectForm } from './components/forms/CreateObjectForm';
+import { getRole } from './services/utils/AuthService';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -44,7 +45,7 @@ function App() {
   })
 
   function getNavbarByUserRole(){
-    let userRole = sessionStorage.getItem("userRole");
+    let userRole = getRole();
 
     if(userRole === "client"){
       return <ClientNavbar />;

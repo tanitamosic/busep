@@ -5,13 +5,14 @@ import { Row, Col } from 'react-bootstrap';
 import { getRequests } from '../../services/api/CertificatesApi';
 import ListedRequest from './ListedRequest';
 import { useNavigate } from 'react-router';
+import { getRole } from '../../services/utils/AuthService';
 
 export default function RequestsList(){
 
     const [requests, setRequests] = useState([]);
     const [listedRequests, setListedRequests] = useState([]);
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
     const navigate = useNavigate();
 
     useEffect(() => {

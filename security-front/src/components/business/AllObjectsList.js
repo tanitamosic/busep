@@ -8,13 +8,14 @@ import ListedCertificate from './ListedCertificate';
 import { useNavigate } from 'react-router';
 import ListedObject from './ListedObject';
 import { getAllObjects } from '../../services/api/ObjectsApi';
+import { getRole } from '../../services/utils/AuthService';
 
 export default function AllObjectsList(){
 
     const [objects, setObjects] = useState([]);
     const [listedObjects, setListedObjects] = useState([]);
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
     const navigate = useNavigate();
 
     useEffect(() => {

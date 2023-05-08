@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import '../../assets/styles/business.css';
 import { Row, Col, Button } from 'react-bootstrap';
-import { useNavigate  } from "react-router-dom";    
+import { useNavigate  } from "react-router-dom";   
+import { getRole } from '../../services/utils/AuthService'; 
 
 export default function ClientFirstPage(){
 
@@ -11,7 +12,7 @@ export default function ClientFirstPage(){
         navigate('/logout');
     }
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
 
     useEffect(() => {
         if(userRole !== "client"){

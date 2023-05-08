@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react';
 import {isCertificateValid, deactivateCertificate } from '../../services/api/CertificatesApi';
 import LabeledTextarea from '../forms/LabeledTextarea';
 import { useNavigate  } from "react-router-dom";
+import { getRole } from '../../services/utils/AuthService';
 
 export default function CertificatePreview(){
 
@@ -25,7 +26,7 @@ export default function CertificatePreview(){
     //     fetchCertificate();
     // }, [id])
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
     const navigate = useNavigate();
 
     useEffect(() => {

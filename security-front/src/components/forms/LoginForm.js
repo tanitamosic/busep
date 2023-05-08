@@ -55,10 +55,9 @@ export function LoginForm() {
                     console.log(token);
 
                     setToken(token)
-                    alert("Logged in");
 
                     let userRole = getRole();
-                    sessionStorage.setItem("userRole", userRole);
+                    // sessionStorage.setItem("userRole", userRole);
 
                     navigate("/" + userRole.toLowerCase());
                     window.dispatchEvent(new Event("userRoleUpdated"));

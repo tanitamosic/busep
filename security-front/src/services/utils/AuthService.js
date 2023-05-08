@@ -8,8 +8,13 @@ export const setToken = (token) => {
     sessionStorage.setItem("jwt", JSON.stringify(token));
   }
 }
+
 export const getToken = () => {
    return sessionStorage.getItem("jwt");
+}
+
+export const removeToken = () => {
+  return sessionStorage.removeItem("jwt");
 }
 
 export const getRole = () => {
@@ -27,6 +32,10 @@ export const getRole = () => {
 
 export const getDecodedToken = () => {
   const token = getToken();
-  return jwtDecode(token);
+  if (!!token){
+    return jwtDecode(token);
+  } else {
+    return {};
+  }
 }
 

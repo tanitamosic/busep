@@ -6,13 +6,14 @@ import { getCertificates } from '../../services/api/CertificatesApi';
 import ListedRequest from './ListedRequest';
 import ListedCertificate from './ListedCertificate';
 import { useNavigate } from 'react-router';
+import { getRole } from '../../services/utils/AuthService';
 
 export default function CertificatesList(){
 
     const [certificates, setCertificates] = useState([]);
     const [listedCertificates, setListedCertificates] = useState([]);
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
     const navigate = useNavigate();
 
     useEffect(() => {
