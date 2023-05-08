@@ -4,10 +4,8 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import securityproject.dto.HouseDTO;
 import securityproject.model.home.House;
 import securityproject.model.user.MyUserDetails;
 import securityproject.model.user.Role;
@@ -46,6 +44,50 @@ public class HomeController {
         }
 
 
+    }
+
+    @PostMapping("/create-home")
+    public ResponseEntity<String> createHome(HouseDTO houseDTO) {
+        try {
+            homeService.createHome(houseDTO);
+            return ResponseEntity.ok("Home created successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/delete-home-{id}")
+    public ResponseEntity<String> deleteHome(@PathVariable Long id) {
+        try {
+            homeService.deleteHome(id);
+            return ResponseEntity.ok("Home deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/delete-device-{id}")
+    public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
+        try {
+            homeService.deleteDevice(id);
+            return ResponseEntity.ok("Device deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/update-home")
+    public ResponseEntity<String> updateHome(HouseDTO dto) {
+        try {
+            homeService.updateHome(dto);
+            return ResponseEntity.ok("Home updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

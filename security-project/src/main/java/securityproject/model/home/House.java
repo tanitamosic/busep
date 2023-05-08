@@ -7,6 +7,8 @@ import lombok.Setter;
 import securityproject.model.user.StandardUser;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class House {
             joinColumns = @JoinColumn(name = "home_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @NotNull
     private StandardUser owner;
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
@@ -42,6 +45,7 @@ public class House {
     private StandardUser renter;
 
     @Column(name="address", nullable = false)
+    @NotBlank
     private String address;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
