@@ -4,6 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 
 export default function ListedRequest({request}){
+    console.log(request.id)
     const detViewUrl = "/admin/requests/" + request.email;
 
     return <div className="borderedBlock mt-3 " align="">

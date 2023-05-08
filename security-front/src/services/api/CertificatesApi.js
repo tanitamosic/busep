@@ -10,6 +10,16 @@ export async function getRequests(id){
     }
   }
 
+  export async function getRequestByEmail(email){
+    try {
+        const responseData = await getApiCall().get('/admin/get-csr-by-email/' + email);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
   export async function declineRequest(declineRequest){
     try {
         const responseData = await getApiCall().post(`/admin/decline-request`, declineRequest);

@@ -51,6 +51,11 @@ public class CsrService {
         return opt.orElse(null);
     }
 
+    public Csr getCsrByEmail(String email) {
+        Optional<Csr> opt = csrRepository.findByEmail(email);
+        return opt.orElse(null);
+    }
+
     public Boolean acceptRequest(CertificateDto dto) {
         Optional<Csr> opt = csrRepository.findByEmail(dto.email);
         try{
