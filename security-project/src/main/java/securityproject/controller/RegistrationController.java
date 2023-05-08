@@ -49,7 +49,7 @@ public class RegistrationController {
     @GetMapping(value="/confirm-registration/{activationString}")
     public ResponseEntity<String> confirmRegistration(@PathVariable String activationString) {
         if (userService.activateUser(activationString))
-            return new ResponseEntity<>("Registration successful! You can log in now.", HttpStatus.OK);
+            return new ResponseEntity<>("<h5>Registration successful! You can log in now.<h5>", HttpStatus.OK);
         else
             return new ResponseEntity<>("Error: User not found", HttpStatus.BAD_REQUEST);
     }

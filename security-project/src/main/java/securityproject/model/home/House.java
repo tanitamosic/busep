@@ -23,8 +23,7 @@ import static javax.persistence.InheritanceType.SINGLE_TABLE;
 @Table(name = "houses")
 public class House {
     @Id
-    @SequenceGenerator(name = "homeIdSeqGen", sequenceName = "homeId", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "homeIdSeqGen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "home_id")
     private Long id;
 

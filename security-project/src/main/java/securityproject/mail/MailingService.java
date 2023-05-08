@@ -49,7 +49,7 @@ public class MailingService {
             helper.setSubject("Obaveštenje o registraciji na React Certificate Factory");
             String content = "Dobrodošli u React Certificate Factory!\n\n" +
                     "Molimo Vas da potvrdite Vašu email adresu klikom na link: \n\n";
-            String button = "<a href=\"http://127.0.0.1:8081/"+ activationString +"\">\n" +
+            String button = "<a href=\"http://localhost:8081/csr/confirm-registration/"+ activationString +"\">\n" +
                     "    <button>Activate Account</button>\n" +
                     "  </a>";
             helper.setText(content + button, true);

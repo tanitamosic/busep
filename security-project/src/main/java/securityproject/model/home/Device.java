@@ -19,8 +19,7 @@ import static javax.persistence.InheritanceType.SINGLE_TABLE;
 public class Device {
 
     @Id
-    @SequenceGenerator(name = "deviceIdSeqGen", sequenceName = "deviceId", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deviceIdSeqGen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "device_id")
     private Long id;
 
