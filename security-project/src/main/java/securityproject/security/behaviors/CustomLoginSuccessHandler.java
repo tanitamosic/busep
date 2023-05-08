@@ -45,9 +45,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             super.onAuthenticationSuccess(request, response, authentication);
 
         } else {
-            HttpSession session = request.getSession();
-            session.setAttribute("username", user.getEmail());
-            super.setDefaultTargetUrl("/login-success");
+            super.setDefaultTargetUrl("/login-success/".concat(user.getEmail()));
             super.onAuthenticationSuccess(request, response, authentication);
         }
 
