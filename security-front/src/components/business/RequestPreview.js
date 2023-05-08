@@ -10,10 +10,12 @@ import { useNavigate } from 'react-router-dom';
 import LabeledInput from '../forms/LabeledInput';
 import { checkDateInput, checkNumInput} from '../../services/utils/InputValidation';
 import { getRole } from '../../services/utils/AuthService';
+import { getRequestByEmail } from '../../services/api/CertificatesApi';
 
 export default function RequestPreview(){
 
     const {email} = useParams();
+    
     const [request, setRequest] = useState(null);
     const [extensions, setExtensions] = useState([]);
     const [declineReason, setDeclineReason] = useState("");
@@ -58,14 +60,14 @@ export default function RequestPreview(){
 
     // TODO use this when apis available on backend
     //
-    // useEffect(() => {
-    //     async function fetchRequest(){
-    //         const requestData = await getRequestByEmail(email);
-    //         setRequest(!!requestData ? requestData.data : {});
-    //         return requestData;
-    //     }
-    //     fetchRequest();
-    // }, [email])
+    useEffect(() => {
+        async function fetchRequest(){
+            const requestData = await getRequestByEmail(email);
+            setRequest(!!requestData ? requestData.data : {});
+            return requestData;
+        }
+        fetchRequest();
+    }, [email])
 
     const userRole = getRole();
     const navigate = useNavigate();
@@ -76,67 +78,67 @@ export default function RequestPreview(){
         }
     }, [navigate, userRole])
 
-    useEffect(() => {
-        for (let r of dummyRequests){
-            if (r.email === email){
-                setRequest(r);
-            }
-        }
+    // useEffect(() => {
+    //     for (let r of dummyRequests){
+    //         if (r.email === email){
+    //             setRequest(r);
+    //         }
+    //     }
         
-    }, [email])
+    // }, [email])
 
-    const dummyRequests = [
-        {
-          "givenName": "John",
-          "surname": "Doe",
-          "email": "johndoe@example.com",
-          "password": "5tr0ngP@55w0rd!",
-          "organization": "Acme Corporation",
-          "orgUnit": "Sales",
-          "country": "United States",
-          "owner": true
-        },
-        {
-          "givenName": "Jane",
-          "surname": "Smith",
-          "email": "janesmith@example.com",
-          "password": "P@ssw0rd123",
-          "organization": "Globex Corporation",
-          "orgUnit": "Marketing",
-          "country": "Canada",
-          "owner": false
-        },
-        {
-          "givenName": "Michael",
-          "surname": "Johnson",
-          "email": "michaeljohnson@example.com",
-          "password": "SecureP@55",
-          "organization": "Initech",
-          "orgUnit": "IT",
-          "country": "United Kingdom",
-          "owner": false
-        },
-        {
-          "givenName": "Samantha",
-          "surname": "Lee",
-          "email": "samanthalee@example.com",
-          "password": "Pa$$word!",
-          "organization": "Tech Solutions",
-          "orgUnit": "Development",
-          "country": "Australia",
-          "owner": true
-        },
-        {
-          "givenName": "David",
-          "surname": "Brown",
-          "email": "davidbrown@example.com",
-          "password": "C0mpl3xP@55",
-          "organization": "ABC Corporation",
-          "orgUnit": "Finance",
-          "country": "New Zealand",
-          "owner": false
-        }
-      ]
+    // const dummyRequests = [
+    //     {
+    //       "givenName": "John",
+    //       "surname": "Doe",
+    //       "email": "johndoe@example.com",
+    //       "password": "5tr0ngP@55w0rd!",
+    //       "organization": "Acme Corporation",
+    //       "orgUnit": "Sales",
+    //       "country": "United States",
+    //       "owner": true
+    //     },
+    //     {
+    //       "givenName": "Jane",
+    //       "surname": "Smith",
+    //       "email": "janesmith@example.com",
+    //       "password": "P@ssw0rd123",
+    //       "organization": "Globex Corporation",
+    //       "orgUnit": "Marketing",
+    //       "country": "Canada",
+    //       "owner": false
+    //     },
+    //     {
+    //       "givenName": "Michael",
+    //       "surname": "Johnson",
+    //       "email": "michaeljohnson@example.com",
+    //       "password": "SecureP@55",
+    //       "organization": "Initech",
+    //       "orgUnit": "IT",
+    //       "country": "United Kingdom",
+    //       "owner": false
+    //     },
+    //     {
+    //       "givenName": "Samantha",
+    //       "surname": "Lee",
+    //       "email": "samanthalee@example.com",
+    //       "password": "Pa$$word!",
+    //       "organization": "Tech Solutions",
+    //       "orgUnit": "Development",
+    //       "country": "Australia",
+    //       "owner": true
+    //     },
+    //     {
+    //       "givenName": "David",
+    //       "surname": "Brown",
+    //       "email": "davidbrown@example.com",
+    //       "password": "C0mpl3xP@55",
+    //       "organization": "ABC Corporation",
+    //       "orgUnit": "Finance",
+    //       "country": "New Zealand",
+    //       "owner": false
+    //     }
+    //   ]
 
     const addSSLServerExtensions = (e) => {
         decheckAllKeyOptions()

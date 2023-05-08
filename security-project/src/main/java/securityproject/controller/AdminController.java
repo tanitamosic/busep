@@ -49,6 +49,12 @@ public class AdminController {
         return new ResponseEntity<>(csr, HttpStatus.OK);
     }
 
+    @GetMapping(value="/get-csr-by-email/{email}")
+    public ResponseEntity<Csr> getCSRRequest(@PathVariable String email) {
+        Csr csr = csrService.getCsrByEmail(email);
+        return new ResponseEntity<>(csr, HttpStatus.OK);
+    }
+
     @PostMapping(value="/accept-request")
     public ResponseEntity<Boolean> acceptRequest(@RequestBody CertificateDto dto) {
         Boolean success = csrService.acceptRequest(dto);

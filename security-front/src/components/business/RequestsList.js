@@ -21,66 +21,66 @@ export default function RequestsList(){
         }
     }, [navigate, userRole])
 
-    const dummyRequests = [
-        {
-          "givenName": "John",
-          "surname": "Doe",
-          "email": "johndoe@example.com",
-          "password": "5tr0ngP@55w0rd!",
-          "organization": "Acme Corporation",
-          "orgUnit": "Sales",
-          "country": "United States",
-          "owner": true
-        },
-        {
-          "givenName": "Jane",
-          "surname": "Smith",
-          "email": "janesmith@example.com",
-          "password": "P@ssw0rd123",
-          "organization": "Globex Corporation",
-          "orgUnit": "Marketing",
-          "country": "Canada",
-          "owner": false
-        },
-        {
-          "givenName": "Michael",
-          "surname": "Johnson",
-          "email": "michaeljohnson@example.com",
-          "password": "SecureP@55",
-          "organization": "Initech",
-          "orgUnit": "IT",
-          "country": "United Kingdom",
-          "owner": false
-        },
-        {
-          "givenName": "Samantha",
-          "surname": "Lee",
-          "email": "samanthalee@example.com",
-          "password": "Pa$$word!",
-          "organization": "Tech Solutions",
-          "orgUnit": "Development",
-          "country": "Australia",
-          "owner": true
-        },
-        {
-          "givenName": "David",
-          "surname": "Brown",
-          "email": "davidbrown@example.com",
-          "password": "C0mpl3xP@55",
-          "organization": "ABC Corporation",
-          "orgUnit": "Finance",
-          "country": "New Zealand",
-          "owner": false
-        }
-      ]
+    // const dummyRequests = [
+    //     {
+    //       "givenName": "John",
+    //       "surname": "Doe",
+    //       "email": "johndoe@example.com",
+    //       "password": "5tr0ngP@55w0rd!",
+    //       "organization": "Acme Corporation",
+    //       "orgUnit": "Sales",
+    //       "country": "United States",
+    //       "owner": true
+    //     },
+    //     {
+    //       "givenName": "Jane",
+    //       "surname": "Smith",
+    //       "email": "janesmith@example.com",
+    //       "password": "P@ssw0rd123",
+    //       "organization": "Globex Corporation",
+    //       "orgUnit": "Marketing",
+    //       "country": "Canada",
+    //       "owner": false
+    //     },
+    //     {
+    //       "givenName": "Michael",
+    //       "surname": "Johnson",
+    //       "email": "michaeljohnson@example.com",
+    //       "password": "SecureP@55",
+    //       "organization": "Initech",
+    //       "orgUnit": "IT",
+    //       "country": "United Kingdom",
+    //       "owner": false
+    //     },
+    //     {
+    //       "givenName": "Samantha",
+    //       "surname": "Lee",
+    //       "email": "samanthalee@example.com",
+    //       "password": "Pa$$word!",
+    //       "organization": "Tech Solutions",
+    //       "orgUnit": "Development",
+    //       "country": "Australia",
+    //       "owner": true
+    //     },
+    //     {
+    //       "givenName": "David",
+    //       "surname": "Brown",
+    //       "email": "davidbrown@example.com",
+    //       "password": "C0mpl3xP@55",
+    //       "organization": "ABC Corporation",
+    //       "orgUnit": "Finance",
+    //       "country": "New Zealand",
+    //       "owner": false
+    //     }
+    //   ]
 
     useEffect(() => {
-        setRequests(dummyRequests);
-        // getRequests().then(
-        //     (response) => {
-        //         setRequests(!!response ? response.data : []);
-        //     }
-        // )
+        // setRequests(dummyRequests);
+        getRequests().then(
+            (response) => {
+                setRequests(!!response ? response.data : []);
+            }
+        )
     }, [])
 
     useEffect(() => {
