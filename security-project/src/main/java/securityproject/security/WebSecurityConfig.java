@@ -52,13 +52,14 @@ public class WebSecurityConfig {
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+                .authorizeRequests()
+                    .antMatchers("/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/csr/**").permitAll()
+                    .antMatchers("/").permitAll().and()
                 .logout()
                     .logoutUrl("/logout")
-                    .addLogoutHandler(logoutHandler).and()
-                .authorizeRequests()
-                .antMatchers("/admin").hasAuthority("ADMIN")
-                .antMatchers("/csr").permitAll()
-                .antMatchers("/").permitAll();
+                    .addLogoutHandler(logoutHandler);
+
         http.csrf().disable();
         http.headers().contentSecurityPolicy("script 'self'");
         return http.build();
