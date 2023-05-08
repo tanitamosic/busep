@@ -18,6 +18,7 @@ import securityproject.util.TokenUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,17 +32,15 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @GetMapping(value="login-success")
-    public ResponseEntity<String> success(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        String username = (String) session.getAttribute("username");
-        MyUserDetails u = (MyUserDetails) userService.loadUserByUsername(username);
+    @GetMapping(value="login-success/{email}")
+    public ResponseEntity<String> createToken(@PathVariable String email) {
+        MyUserDetails u = (MyUserDetails) userService.loadUserByUsername(email);
         Role r = (Role) u.getUser().getRoles().toArray()[0];
-        String token = tokenUtils.generateToken(username, r.getName());
+        String token = tokenUtils.generateToken(email, r.getName());
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", token);
-        return ResponseEntity.ok().headers(responseHeaders).body("logged in");
+        return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
     @GetMapping(value="login-failure")

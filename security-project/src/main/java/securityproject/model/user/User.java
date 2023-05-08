@@ -1,5 +1,6 @@
 package securityproject.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public abstract class User {
     @SequenceGenerator(name = "userIdSeqGen", sequenceName = "userId", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeqGen")
     @Column(name = "user_id")
+    @JsonIgnore
     private Long id;
     @NotBlank(message = "Name can't be blank")
     @Column(name = "name", nullable = false)
@@ -38,6 +40,7 @@ public abstract class User {
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[!@#$%^&*()_+={}|:<>,.?/])(?=.*?[0-9]).{8,}$",
             message = "Password must have at least 8 characters, 1 capital 1 lowercase letter, 1 number and 1 special character.")
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     private String password;
     @Email(message = "Invalid email")
     @Column(name = "email", nullable = false, unique = true)
@@ -48,25 +51,33 @@ public abstract class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
     // ADMIN USER DELETION => SET LOCKED TO 'TRUE'
     @NotNull(message = "\"Locked\" field can't be null")
     @Column(name = "locked", nullable = false)
+    @JsonIgnore
     private Boolean locked;
     // DEFAULT TO FALSE => SET TO 'TRUE' ON ACCOUNT ACTIVATION
     @NotNull(message = "\"Enabled\" field can't be null")
     @Column(name = "enabled", nullable = false)
+    @JsonIgnore
     private Boolean enabled;
     @Column(name = "last_password_reset_date", nullable = true)
+    @JsonIgnore
     private Date lastPasswordResetDate;
 
     @Column(name = "failed_attempt")
+    @JsonIgnore
     private Integer failedAttempt;
     @Column(name = "lock_time")
+    @JsonIgnore
     private Date lockTime;
 
     @Column(name = "act_string")
+    @JsonIgnore
     private String activationString;
     @Column(name = "pin")
+    @JsonIgnore
     private Integer pin;
 }
