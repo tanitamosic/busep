@@ -26,8 +26,7 @@ import static javax.persistence.InheritanceType.SINGLE_TABLE;
 public abstract class User {
 
     @Id
-    @SequenceGenerator(name = "userIdSeqGen", sequenceName = "userId", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userIdSeqGen")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     @JsonIgnore
     private Long id;

@@ -21,9 +21,8 @@ import java.util.Random;
 public class Helper {
 
     public static String getActivationString(){
-        byte[] array = new byte[13];
-        new Random().nextBytes(array);
-        return new String(array, Charset.forName("UTF-8"));
+        Random random = new Random();
+        return String.valueOf(random.nextInt(900000) + 100000);
     }
 
     public static Integer getPin(){

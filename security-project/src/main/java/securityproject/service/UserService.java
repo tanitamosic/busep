@@ -103,6 +103,7 @@ public class UserService implements UserDetailsService {
         u.setPassword(passwordEncoder.encode(dto.password));
         u.setActivationString(Helper.getActivationString());
         u.setPin(Helper.getPin());
+        u.setFailedAttempt(0);
         return u;
     }
 
