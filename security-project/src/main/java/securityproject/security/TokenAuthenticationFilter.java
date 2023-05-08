@@ -44,9 +44,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
         String username;
         String authToken = tokenUtils.getToken(request);
+        String fingerprint = tokenUtils.getFingerprintFromCookie(request);
         try {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String token = httpServletRequest.getHeader("Authorization");
+
 
             if(token != null){
                 if(token.startsWith("Bearer ")){
@@ -59,7 +61,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                     MyUserDetails userDetails = (MyUserDetails) userDetailsService.loadUserByUsername(username);
                     System.out.println("filter: "+ userDetails.getUsername());
 
-                    if (tokenUtils.validateToken(authToken, userDetails)
+                    if (tokenUtils.validateToken(authToken, userDetails, fingerprint)
                             && !JWTBlacklist.isTokenBlacklisted(authToken)
                             && tokenUtils.verifyToken(authToken, userDetails.getUsername())) {
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);

@@ -36,10 +36,15 @@ public class LoginController {
     public ResponseEntity<String> createToken(@PathVariable String email) {
         MyUserDetails u = (MyUserDetails) userService.loadUserByUsername(email);
         Role r = (Role) u.getUser().getRoles().toArray()[0];
-        String token = tokenUtils.generateToken(email, r.getName());
+        String fingerprint = tokenUtils.generateFingerprint();
+        String jwt = tokenUtils.generateToken(email, r.getName(),fingerprint);
 
+        // Kreiraj cookie
+        // String cookie = "__Secure-Fgp=" + fingerprint + "; SameSite=Strict; HttpOnly; Path=/; Secure";  // kasnije mozete probati da postavite i ostale atribute, ali tek nakon sto podesite https
+        String cookie = "Fingerprint=" + fingerprint + "; HttpOnly; Path=/";
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Authorization", token);
+        responseHeaders.set("Authorization", jwt);
+        responseHeaders.add("Set-Cookie", cookie);
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
