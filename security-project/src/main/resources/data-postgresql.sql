@@ -18,3 +18,9 @@ INSERT INTO users (user_id, name, surname, password, email, locked, enabled, las
 INSERT INTO users_roles (user_id, role_id) VALUES (1, 1) ON CONFLICT DO NOTHING;
 INSERT INTO users_roles (user_id, role_id) VALUES (2, 2) ON CONFLICT DO NOTHING;
 INSERT INTO users_roles (user_id, role_id) VALUES (3, 3) ON CONFLICT DO NOTHING;
+
+INSERT INTO devices (device_id, name) VALUES (1, 'device1') ON CONFLICT DO NOTHING;
+INSERT INTO houses (home_id, address) VALUES (1, 'Bulevar Despota Stefana 7, Novi Sad 21000, R. Srbija') ON CONFLICT DO NOTHING;
+INSERT INTO home_devices (home_id, device_id) VALUES (1, 1) ON CONFLICT DO NOTHING;
+INSERT INTO home_owners (home_id, user_id) VALUES (1, 2) ON CONFLICT DO NOTHING;
+INSERT INTO home_renters (home_id, user_id) VALUES (1, 3) ON CONFLICT DO NOTHING;
