@@ -18,6 +18,9 @@ import ClientFirstPage from './components/business/ClientFirstPage';
 import LogoutPage from './layouts/LogoutPage';
 import UnavailablePage from './components/business/UnavailablePage';
 import { useEffect, useState } from 'react';
+import UserObjectsList from './components/business/UserObjectsList';
+import AllObjectsList from './components/business/AllObjectsList';
+import { CreateObjectForm } from './components/forms/CreateObjectForm';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -30,6 +33,9 @@ function App() {
   const clientFirstPage = <Container><ClientFirstPage /></Container>
   const logoutPage = <Container><LogoutPage /></Container>
   const unavailablePage = <Container><UnavailablePage /></Container>
+  const userObjectsList = <Container><UserObjectsList /></Container>
+  const allObjectsList = <Container><AllObjectsList /></Container>
+  const createObjectForm = <Container><CreateObjectForm /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -59,14 +65,18 @@ function App() {
                   <Route path="/login" element={loginForm} />
                   <Route path="/logout" element={logoutPage} />
                   <Route path='/client' element={clientFirstPage} />
+
                   <Route path='/admin/certificates/:id' element={certificatePreview}/> {/* preview, validate, remove - 6, 7, 8*/}
                   <Route path='/admin/certificates' element={certificatesList}/> {/* list all, button for detailed view - 5 */}
+
                   <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
                   <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
-                  <Route path='/admin/clients/:email' element={'clients email'}/>
-                  <Route path='/admin/clients' element={'clients'}/>
-                  <Route path='/admin/houses/:id' element={'houses id'}/>
-                  <Route path='/admin/houses' element={'houses'}/>
+
+                  <Route path='/admin/objects/:email' element={userObjectsList}/>
+                  <Route path='/admin/objects' element={allObjectsList}/>
+                  
+                  <Route path='/admin/newObject' element={createObjectForm}/>
+
                   <Route path='/admin' element={adminFirstPage}/>
 
                   <Route path="*" element={unavailablePage} />

@@ -5,6 +5,7 @@ import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 
 export default function ListedCertificate({certificate}){
     const detViewUrl = "/admin/certificates/" + certificate.id;
+    const objectsViewUrl = "/admin/objects/" + certificate.id;
 
     return <div className="borderedBlock mt-3 " align="">
                 <Row>
@@ -20,14 +21,21 @@ export default function ListedCertificate({certificate}){
                     <Col sm="2">
                         {certificate.endDate}
                     </Col>
-                    <Col sm="2">
+                    <Col sm="1">
                         {certificate.valid.toString()}
                     </Col>
                     
-                    <Col sm="2">
+                    <Col sm="1">
                         <div className='mt-4'>
                             <FixedWidthRegButton href={detViewUrl} text='Preview' onClickFunction={''}/>
                         </div>
+                        
+                    </Col>
+                    <Col sm="1">
+                        <div className='mt-4'>
+                            <FixedWidthRegButton href={objectsViewUrl} text='Objects' onClickFunction={''}/>
+                        </div>
+                        
                     </Col>
                 </Row>
             </div>

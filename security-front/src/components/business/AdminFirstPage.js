@@ -15,6 +15,10 @@ export default function AdminFirstPage(){
         navigate('/admin/requests');
     }
 
+    const allObjectsButtonPressed = (e) => {
+        navigate('/admin/objects');
+    }
+
     const logoutButtonPressed = (e) => {
         navigate('/logout');
     }
@@ -49,6 +53,15 @@ export default function AdminFirstPage(){
             <Row className='mt-2'>
                 <Col sm={4}/>
                 <Col sm={4} align='center'>
+                    <Button className='formButton' onClick={allObjectsButtonPressed}>
+                        All objects
+                    </Button>
+                </Col>
+                <Col sm={4}/>
+            </Row> 
+            <Row className='mt-2'>
+                <Col sm={4}/>
+                <Col sm={4} align='center'>
                     <Button className='formButton' onClick={logoutButtonPressed}>
                         Logout
                     </Button>
@@ -56,5 +69,5 @@ export default function AdminFirstPage(){
                 <Col sm={4}/>
             </Row> 
         </>
-}
+} 
 

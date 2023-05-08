@@ -26,6 +26,13 @@ export function LoginForm() {
     const loginButtonPressed = (e) => {
       if (validateInput()) {
         postLoginRequest(e);
+
+        let userRole = pin;
+        sessionStorage.setItem("userRole", userRole);
+        navigate("/" + userRole.toLowerCase());
+        window.dispatchEvent(new Event("userRoleUpdated"));
+
+
       } else {
         console.log("Invalid input")
         alert("Invalid input")
@@ -49,27 +56,27 @@ export function LoginForm() {
             
             // TODO
 
-            sendLoginRequest(userJson).then(
-                (response) => {
-                    console.log(response);
+            // sendLoginRequest(userJson).then(
+            //     (response) => {
+            //         console.log(response);
                     
-                    // alert("Logged in");
+            //         // alert("Logged in");
 
-                    // setToken(response.token);
-                    // let userRole = response.userType;
-                    // navigate('/home', {replace: true} )
-                    // sessionStorage.setItem("userRole", userRole);
+            //         // setToken(response.token);
+            //         // let userRole = response.userType;
+            //         // navigate('/home', {replace: true} )
+            //         // sessionStorage.setItem("userRole", userRole);
 
-                    // navigate("/" + userRole.toLowerCase());
-                    // window.dispatchEvent(new Event("userRoleUpdated"));
-                    return response;
-                }, (error) => {
-                  console.log(error);
-                }
-            );
+            //         // navigate("/" + userRole.toLowerCase());
+            //         // window.dispatchEvent(new Event("userRoleUpdated"));
+            //         return response;
+            //     }, (error) => {
+            //       console.log(error);
+            //     }
+            // );
         }, [email, password, pin]
     )
-    
+
     return (<>
         <Row className='mt-5' >
             <Col sm={2} />

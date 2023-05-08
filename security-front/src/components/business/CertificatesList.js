@@ -91,11 +91,12 @@ export default function CertificatesList(){
 
     useEffect(() => {
         setCertificates(dummyCertificates);
-        // getCertificates().then(
-        //     (response) => {
-        //         setCertificates(!!response ? response.data : []);
-        //     }
-        // )
+        getCertificates().then(
+            (response) => {
+                console.log(response)
+                setCertificates(!!response ? response.data : []);
+            }
+        )
     }, [])
 
     useEffect(() => {
