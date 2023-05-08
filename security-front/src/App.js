@@ -2,8 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter as Router, Route, Routes, Navigate, Outlet} from 'react-router-dom';
 import {Container, Navbar} from 'react-bootstrap'
-import BootstrapTable from 'react-bootstrap-table-next';
-import cellEditFactory from 'react-bootstrap-table2-editor';
 import { RegistrationForm } from './components/forms/RegistrationForm';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './assets/styles/style.css';
@@ -22,11 +20,6 @@ import UnavailablePage from './components/business/UnavailablePage';
 import { useEffect, useState } from 'react';
 
 function App() {
-  // const resortForm = <Container><CreateForm userType={user} /></Container>
-  // const resortView = <Container><AssetDetailedView /></Container>
-  // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
-  
-  // const resortForm = <Container><CreateForm userType={user} /></Container>
   const registrationForm = <Container><RegistrationForm /></Container>
   const loginForm = <Container><LoginForm /></Container>
   const requestsList = <Container><RequestsList /></Container>
@@ -37,7 +30,6 @@ function App() {
   const clientFirstPage = <Container><ClientFirstPage /></Container>
   const logoutPage = <Container><LogoutPage /></Container>
   const unavailablePage = <Container><UnavailablePage /></Container>
-  // const assetList = <Container><AssetsPreview isSearch={false}/></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -64,8 +56,6 @@ function App() {
               <Routes>
                 <Route path="" >
                   <Route path="/register" element={registrationForm} />
-                    {/* <Route path='' element={<ProtectedRoute isAllowedUser={user}>{chooseNavbar(user)} </ProtectedRoute>}> */}
-                    {/* <Route path="/logout" element={<Container><Logout handleLogout={handleLogout}/></Container>} /> */}
                   <Route path="/login" element={loginForm} />
                   <Route path="/logout" element={logoutPage} />
                   <Route path='/client' element={clientFirstPage} />
