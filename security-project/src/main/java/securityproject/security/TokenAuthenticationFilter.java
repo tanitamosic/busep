@@ -61,7 +61,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
                     if (tokenUtils.validateToken(authToken, userDetails)
                             && !JWTBlacklist.isTokenBlacklisted(authToken)
-                            && tokenUtils.verifyToken(authToken, userDetails.getUsername())) {
+                            //&& tokenUtils.verifyToken(authToken, userDetails.getUsername())
+                    ) {
                         TokenBasedAuthentication authentication = new TokenBasedAuthentication(userDetails);
                         authentication.setToken(authToken);
                         SecurityContextHolder.getContext().setAuthentication(authentication);
