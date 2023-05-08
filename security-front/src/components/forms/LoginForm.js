@@ -27,10 +27,10 @@ export function LoginForm() {
       if (validateInput()) {
         postLoginRequest(e);
 
-        let userRole = pin;
-        sessionStorage.setItem("userRole", userRole);
-        navigate("/" + userRole.toLowerCase());
-        window.dispatchEvent(new Event("userRoleUpdated"));
+        // let userRole = pin;
+        // sessionStorage.setItem("userRole", userRole);
+        // navigate("/" + userRole.toLowerCase());
+        // window.dispatchEvent(new Event("userRoleUpdated"));
 
 
       } else {
@@ -56,24 +56,32 @@ export function LoginForm() {
             
             // TODO
 
-            // sendLoginRequest(userJson).then(
-            //     (response) => {
-            //         console.log(response);
+            sendLoginRequest(userJson).then(
+                (response) => {
+                    console.log(response);
+                    // const config = response.config;
+                    // const headers = response.headers;
+                    // console.log(config);
+                    // console.log(headers);
+                    // if (authorizationHeader) {
+                    //     const [bearer, token] = authorizationHeader.split(' ');
+                    //     console.log(token)
+                    // }
                     
-            //         // alert("Logged in");
+                    alert("Logged in");
 
-            //         // setToken(response.token);
-            //         // let userRole = response.userType;
-            //         // navigate('/home', {replace: true} )
-            //         // sessionStorage.setItem("userRole", userRole);
+                    setToken(response.token);
+                    let userRole = response.userType;
+                    navigate('/home', {replace: true} )
+                    sessionStorage.setItem("userRole", userRole);
 
-            //         // navigate("/" + userRole.toLowerCase());
-            //         // window.dispatchEvent(new Event("userRoleUpdated"));
-            //         return response;
-            //     }, (error) => {
-            //       console.log(error);
-            //     }
-            // );
+                    navigate("/" + userRole.toLowerCase());
+                    window.dispatchEvent(new Event("userRoleUpdated"));
+                    return response;
+                }, (error) => {
+                  console.log(error);
+                }
+            );
         }, [email, password, pin]
     )
 
