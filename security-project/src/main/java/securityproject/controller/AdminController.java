@@ -1,8 +1,10 @@
 package securityproject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.CertificateDto;
 import securityproject.model.CertificateData;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     /*
     1. pregled svih zahteva - get

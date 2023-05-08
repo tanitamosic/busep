@@ -56,18 +56,9 @@ public class WebSecurityConfig {
                     .logoutUrl("/logout")
                     .addLogoutHandler(logoutHandler).and()
                 .authorizeRequests()
+                .antMatchers("/admin").hasAuthority("ADMIN")
+                .antMatchers("/csr").permitAll()
                 .antMatchers("/").permitAll();
-//                .antMatchers("/").hasAnyAuthority("USER", "CREATOR", "EDITOR", "ADMIN")
-//                .antMatchers("/new").hasAnyAuthority("ADMIN", "CREATOR")
-//                .antMatchers("/edit/**").hasAnyAuthority("ADMIN", "EDITOR")
-//                .antMatchers("/delete/**").hasAuthority("ADMIN")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().permitAll()
-//                .and()
-//                .logout().permitAll()
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/403");
         http.csrf().disable();
         http.headers().contentSecurityPolicy("script 'self'");
         return http.build();
