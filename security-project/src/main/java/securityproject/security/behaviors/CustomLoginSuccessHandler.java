@@ -6,10 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import securityproject.model.user.MyUserDetails;
@@ -38,7 +35,12 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         Map<String, String[]> paramMap = new HashMap<>(request.getParameterMap());
         Integer pin = Integer.valueOf(paramMap.get("pin")[0]);
-        if (pin.equals(user.getPin())) {
+        if (!pin.equals(user.getPin())) {
+            if (userDetails.getUser().getFailedAttempt() < UserService.MAX_FAILED_ATTEMPTS - 1) {
+                userService.increaseFailedAttempts(userDetails.getUser());
+            } else {
+                userService.lock(userDetails.getUser());
+            }
             super.setDefaultTargetUrl("/login-failed");
             super.onAuthenticationSuccess(request, response, authentication);
 
