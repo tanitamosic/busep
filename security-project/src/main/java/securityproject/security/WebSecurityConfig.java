@@ -52,22 +52,14 @@ public class WebSecurityConfig {
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
+                .authorizeRequests()
+                    .antMatchers("/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/csr/**").permitAll()
+                    .antMatchers("/").permitAll().and()
                 .logout()
                     .logoutUrl("/logout")
-                    .addLogoutHandler(logoutHandler).and()
-                .authorizeRequests()
-                .antMatchers("/").permitAll();
-//                .antMatchers("/").hasAnyAuthority("USER", "CREATOR", "EDITOR", "ADMIN")
-//                .antMatchers("/new").hasAnyAuthority("ADMIN", "CREATOR")
-//                .antMatchers("/edit/**").hasAnyAuthority("ADMIN", "EDITOR")
-//                .antMatchers("/delete/**").hasAuthority("ADMIN")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin().permitAll()
-//                .and()
-//                .logout().permitAll()
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/403");
+                    .addLogoutHandler(logoutHandler);
+
         http.csrf().disable();
         http.headers().contentSecurityPolicy("script 'self'");
         return http.build();

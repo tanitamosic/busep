@@ -3,6 +3,7 @@ package securityproject.service;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import securityproject.dto.RequestDto;
+import securityproject.mail.MailingService;
 import securityproject.model.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +14,10 @@ import securityproject.model.user.Role;
 import securityproject.model.user.StandardUser;
 import securityproject.model.user.User;
 import securityproject.repository.UserRepository;
+import securityproject.util.Helper;
 import securityproject.util.ModelValidator;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,11 +42,18 @@ public class UserService implements UserDetailsService {
     @Autowired
     ModelValidator modelValidator;
 
+    @Autowired
+    FileService fileService;
+    
+    @Autowired
+    MailingService mailingService;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return new MyUserDetails(userRepository.getUserByEmail(email));
     }
 
+    // DEPRECATED
     public User registerRenter(RequestDto dto) {
         modelValidator.validatePassword(dto.password);
 
@@ -53,12 +63,28 @@ public class UserService implements UserDetailsService {
         return u;
     }
 
+
+    // DEPRECATED
     public User registerOwner(RequestDto dto) {
         modelValidator.validatePassword(dto.password);
 
         Role role = roleService.getOwnerRole();
         StandardUser u = createStandardUser(dto, role);
         userRepository.saveAndFlush(u);
+        return u;
+    }
+
+    public User registerUser(RequestDto dto) {
+        modelValidator.validatePassword(dto.password);
+
+        Role role = null;
+        if (dto.owner) role = roleService.getOwnerRole();
+        else role = roleService.getRenterRole();
+
+        StandardUser u = createStandardUser(dto, role);
+        userRepository.saveAndFlush(u);
+        mailingService.sendValidationMail(u.getEmail(),u.getActivationString());
+
         return u;
     }
 
@@ -75,6 +101,8 @@ public class UserService implements UserDetailsService {
         u.setLocked(false);
         u.setLastPasswordResetDate(null);
         u.setPassword(passwordEncoder.encode(dto.password));
+        u.setActivationString(Helper.getActivationString());
+        u.setPin(Helper.getPin());
         return u;
     }
 
@@ -106,5 +134,22 @@ public class UserService implements UserDetailsService {
             return true;
         }
         return false;
+    }
+
+    public boolean commonPassword(String password){
+        ArrayList<String> passwords = fileService.getPasswordList();
+        return passwords.contains(password);
+    }
+    
+    public boolean activateUser(String activationString){
+        User user = userRepository.getUserByActivationString(activationString);
+        if (user!=null)
+        {
+            user.setEnabled(true);
+            userRepository.saveAndFlush(user);
+
+            return true;
+        } else
+            return false;
     }
 }

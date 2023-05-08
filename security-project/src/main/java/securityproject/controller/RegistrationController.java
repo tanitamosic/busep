@@ -3,15 +3,10 @@ package securityproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.RequestDto;
-import securityproject.mail.MailingService;
 import securityproject.service.CsrService;
+import securityproject.service.UserService;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -20,15 +15,19 @@ import javax.validation.ConstraintViolationException;
 @RequestMapping(value = "/csr")
 public class RegistrationController {
     @Autowired
-    private CsrService service;
+    private CsrService csrService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping(value = "/request")
     public ResponseEntity<String> sendCsr(@RequestBody RequestDto dto){
         try {
-            String res = "";
-            if(dto.owner) res = service.makeOwnerCrf(dto);
-            else res = service.makeRenterCrf(dto);
-            return new ResponseEntity<String>("yay", HttpStatus.OK);
+            String res = csrService.makeCrf(dto);
+            if (res != null)
+                return new ResponseEntity<String>("yay", HttpStatus.OK);
+            else
+                return  new ResponseEntity<>(("Passoword Error: Your password is one of " +
+                        "the most used passwords in the world.").toString(), HttpStatus.BAD_REQUEST);
         } catch (ConstraintViolationException e) {
             StringBuilder errorMessage = new StringBuilder();
             for (ConstraintViolation<?> v: e.getConstraintViolations()) {
@@ -43,15 +42,15 @@ public class RegistrationController {
     }
 
     /**
-     * Searches the database for url_id. If it exists - enables user. If it doesn't - it does nothing.
-     * @param url_id the authentication request object
+     * Searches the database for activationString. If it exists - enables user. If it doesn't - it does nothing.
+     * @param activationString the authentication request object
      * @return response entity with string message
      */
-    @GetMapping(value="/confirm-registration/acc={url_id}")
-    public ResponseEntity<String> confirmRegistration(@PathVariable String url_id) {
-        /*
-        * impl...
-        * */
-        return new ResponseEntity<>("Registration successful! You can log in now.", HttpStatus.OK);
+    @GetMapping(value="/confirm-registration/{activationString}")
+    public ResponseEntity<String> confirmRegistration(@PathVariable String activationString) {
+        if (userService.activateUser(activationString))
+            return new ResponseEntity<>("Registration successful! You can log in now.", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Error: User not found", HttpStatus.BAD_REQUEST);
     }
 }

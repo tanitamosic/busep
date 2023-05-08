@@ -29,6 +29,7 @@ public class ModelValidator {
     }
 
     public void validatePassword(String rawPassword) {
+        //TODO: BLACKLIST
         String fieldName = "password";
         Class<StandardUser> clazz = StandardUser.class;
 

@@ -97,13 +97,22 @@ public class CsrService {
         return new SubjectData(key,name,sn,startDate,endDate);
     }
 
+    public String makeCrf(RequestDto dto){
+        String res = "";
+        if (userService.commonPassword(dto.password))
+            return null;
+        if(dto.owner) res = makeOwnerCrf(dto);
+        else res = makeRenterCrf(dto);
+        return res;
+    }
+
     public String makeOwnerCrf(RequestDto dto) {
         PKCS10CertificationRequest csr = createCertificateRequest(dto);
         fileService.writeCsrFile(dto.email, csr);
         String pem = fileService.readCsrFile(dto.email);
         PKCS10CertificationRequest read = (PKCS10CertificationRequest) KeyTool.getObjectFromPem(pem);
 
-        userService.registerOwner(dto);  // save user
+        userService.registerUser(dto);  // save user
         return pem;
     }
 
@@ -111,7 +120,7 @@ public class CsrService {
         PKCS10CertificationRequest csr = createCertificateRequest(dto);
         fileService.writeCsrFile(dto.email, csr);
 
-        userService.registerRenter(dto);  // save user
+        userService.registerUser(dto);  // save user
         return fileService.readCsrFile(dto.email);
     }
 
@@ -125,9 +134,7 @@ public class CsrService {
         IssuerData is = new IssuerData(keyPair.getPrivate(),x500Name);
         X509Certificate cert = certificateService.generateCertificate(sub, is);
         keyStoreWriter.writeKeys(dto.email,keyPair.getPrivate(),KEYSTORE_PASSWORD.toCharArray(),cert);
-        //TODO: tanita - pravi fajl ali ne nalazi ks
 
-        //napravi CRF objekat i sacuvaj u repo/bazu - DONE
         Csr csr = getCsr(dto);
         csrRepository.saveAndFlush(csr);
 
