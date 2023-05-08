@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { getToken } from './utils/AuthService';
+import { getToken, getTokenWithNoNavodnici } from './utils/AuthService';
 
 export var getApiCall = () =>{
-    const token = getToken();
+    const token = getTokenWithNoNavodnici();
     return axios.create({
         baseURL: "http://localhost:8081",
-        headers:  {"Authorization" : `Bearer ${token}`,
+        headers:  {"Authorization" : `Bearer ` + token,
                     "Content-Type": "application/json"}
     });
 
@@ -15,10 +15,10 @@ export var getApiCall = () =>{
 } 
 
 export var getApiCallUrlEncoded = () =>{
-    const token = getToken();
+    const token = getTokenWithNoNavodnici();
     return axios.create({
         baseURL: "http://localhost:8081",
-        headers:  {"Authorization" : `Bearer ${token}`,
+        headers:  {"Authorization" : `Bearer ` + token,
                     'Content-Type': 'application/x-www-form-urlencoded'}
     });
 

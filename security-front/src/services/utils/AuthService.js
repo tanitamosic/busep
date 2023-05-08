@@ -10,7 +10,24 @@ export const setToken = (token) => {
 }
 
 export const getToken = () => {
-   return sessionStorage.getItem("jwt");
+   const token = sessionStorage.getItem("jwt");
+   
+   if (!!token){
+    return token;
+  } else {
+    return "";
+  }
+}
+
+export const getTokenWithNoNavodnici = () => {
+  const token = sessionStorage.getItem("jwt");
+  
+  if (!!token){
+    const splitedtoken = token.slice(1, -1);
+   return splitedtoken;
+ } else {
+   return "";
+ }
 }
 
 export const removeToken = () => {
