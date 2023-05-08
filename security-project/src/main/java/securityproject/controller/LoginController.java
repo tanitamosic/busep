@@ -50,7 +50,12 @@ public class LoginController {
         AuthenticationException exception = (AuthenticationException) request.getSession().getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
 
         response.put("error", true);
-        response.put("message", exception.getMessage());
+
+        if (exception != null){
+            response.put("message", exception.getMessage());
+        } else {
+            response.put("message", "null");
+        }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }

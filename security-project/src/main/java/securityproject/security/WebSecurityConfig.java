@@ -58,7 +58,8 @@ public class WebSecurityConfig {
                     .antMatchers("/").permitAll().and()
                 .logout()
                     .logoutUrl("/logout")
-                    .addLogoutHandler(logoutHandler);
+                    .addLogoutHandler(logoutHandler)
+                .and().cors();
 
         http.csrf().disable();
         http.headers().contentSecurityPolicy("script 'self'");

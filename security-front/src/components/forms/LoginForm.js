@@ -5,6 +5,7 @@ import { sendLoginRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";    
+import { setToken, getToken } from '../../services/utils/AuthService';
 
 export function LoginForm() {
     
@@ -25,14 +26,6 @@ export function LoginForm() {
     const loginButtonPressed = (e) => {
       if (validateInput()) {
         postLoginRequest(e);
-        // TODO login
-
-        let userRole = pin;  // just for testing purposes
-        sessionStorage.setItem("userRole", userRole);
-
-        navigate("/" + userRole.toLowerCase());
-        window.dispatchEvent(new Event("userRoleUpdated"));
-
       } else {
         console.log("Invalid input")
         alert("Invalid input")
@@ -52,21 +45,31 @@ export function LoginForm() {
         (e) => {
             e.preventDefault();
             const userJson = {email, password, pin}
-            // console.log(userJson)
+            console.log(userJson)
             
             // TODO
 
-            // sendLoginRequest(userJson).then(
-            //     (response) => {
-            //         console.log(response);
-            //         alert("Logged in");
-            //     }, (error) => {
-            //       console.log(error);
-            //     }
-            // );
+            sendLoginRequest(userJson).then(
+                (response) => {
+                    console.log(response);
+                    
+                    // alert("Logged in");
+
+                    // setToken(response.token);
+                    // let userRole = response.userType;
+                    // navigate('/home', {replace: true} )
+                    // sessionStorage.setItem("userRole", userRole);
+
+                    // navigate("/" + userRole.toLowerCase());
+                    // window.dispatchEvent(new Event("userRoleUpdated"));
+                    return response;
+                }, (error) => {
+                  console.log(error);
+                }
+            );
         }, [email, password, pin]
     )
-
+    
     return (<>
         <Row className='mt-5' >
             <Col sm={2} />
