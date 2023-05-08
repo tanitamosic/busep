@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { getToken, getTokenWithNoNavodnici } from './utils/AuthService';
+import { getToken, getTokenWithNoQuotes } from './utils/AuthService';
 
 export var getApiCall = () =>{
-    const token = getTokenWithNoNavodnici();
+    const token = getTokenWithNoQuotes();
+    //axios.defaults.headers.common['Access-Control-Allow-Origin'] = 'http://localhost:8081';
     return axios.create({
         baseURL: "http://localhost:8081",
         headers:  {"Authorization" : `Bearer ` + token,
@@ -15,7 +16,7 @@ export var getApiCall = () =>{
 } 
 
 export var getApiCallUrlEncoded = () =>{
-    const token = getTokenWithNoNavodnici();
+    const token = getTokenWithNoQuotes();
     return axios.create({
         baseURL: "http://localhost:8081",
         headers:  {"Authorization" : `Bearer ` + token,

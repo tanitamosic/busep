@@ -23,10 +23,9 @@ export async function getAllObjects(){
   }
 
   // not working completely
-  export async function removeObject(id){
+  export async function removeObjectRequest(id){
     try {
-        let objectId = {id};
-        const responseData = await getApiCall().post('/home/delete-home-', objectId);
+        const responseData = await getApiCall().delete('/home/delete-home-' + id);
         return responseData;
     } catch (err) {
         console.log(err.message);

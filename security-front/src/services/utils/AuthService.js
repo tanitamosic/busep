@@ -19,7 +19,7 @@ export const getToken = () => {
   }
 }
 
-export const getTokenWithNoNavodnici = () => {
+export const getTokenWithNoQuotes = () => {
   const token = sessionStorage.getItem("jwt");
   
   if (!!token){
