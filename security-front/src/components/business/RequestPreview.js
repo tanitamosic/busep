@@ -225,19 +225,21 @@ export default function RequestPreview(){
             // TODO should not send and receive password
             if (duration.length > 0 && checkNumInput(duration) &&
                  checkDateInput(startDate)){
+                    let extensions = chosenKeyUsage.concat(chosenExtendedKeyUsage);
                     const acceptJson = {
                         "givenName": request.givenName,
                         "surname": request.surname,
                         "email": request.email,
                         "password": request.password,
                         "organization": request.organization,
-                        "orgUnit": request.orgUnit,
+                        "orgUnit": request.organizationUnit,
                         "country": request.country,
-                        "owner": request.owner,
-                        "extensions": {
-                            "keyUsage" : chosenKeyUsage,
-                            "extendedKeyUsage" : chosenExtendedKeyUsage
-                        },
+                        "owner": request.isOwner,
+                        // "extensions": {
+                        //     "keyUsage" : chosenKeyUsage,
+                        //     "extendedKeyUsage" : chosenExtendedKeyUsage
+                        // },
+                        "extensions": extensions,
                         "startDate" : startDate,
                         "duration" : duration
                     }
@@ -313,7 +315,7 @@ export default function RequestPreview(){
                     </Col>
                     <Col sm="4">
                         <Row>
-                            {request && <p>Is property owner: {request.owner.toString()}</p>}
+                            {request && <p>Is property owner: {request.isOwner.toString()}</p>}
                         </Row>
                     </Col>
                 </Row>

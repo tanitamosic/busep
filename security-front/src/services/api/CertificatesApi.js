@@ -2,7 +2,7 @@ import {getApiCall} from "../Configs.js"
 
 export async function getRequests(id){
     try {
-        const responseData = await getApiCall().get('/admin/get-csr-' + id);
+        const responseData = await getApiCall().get('/admin/get-all-csrs');
         return responseData;
     } catch (err) {
         console.log(err.message);

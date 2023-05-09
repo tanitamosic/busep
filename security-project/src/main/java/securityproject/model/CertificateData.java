@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,9 +50,9 @@ public class CertificateData {
     @NotBlank(message = "Serial number can't be blank.")
     @Column(name = "serial_number", unique = true, nullable = false)
     private String serialNumber;
-    @NotBlank(message = "Public key can't be blank.")
+
     @JsonIgnore
-    @Column(name = "public_key", unique = true, nullable = false)
+    @Column(name = "public_key", nullable = true)
     private String publicKey;
 
     @Column(name = "issuer")
@@ -82,6 +83,14 @@ public class CertificateData {
         this.serialNumber = serialNumber;
         this.valid = true;
 
-        this.extensions = dto.extensions;
+        this.extensions = new ArrayList<>();
+        for (String ext : dto.extensions) {
+            Extension e = new Extension();
+            e.setName(ext);
+            e.setCritical(false);
+            e.setValue("temp");
+
+            this.extensions.add(e);
+        }
     }
 }

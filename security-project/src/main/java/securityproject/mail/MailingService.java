@@ -79,7 +79,7 @@ public class MailingService {
         mailSender.send(email);
     }
 
-    public void sendCertificate(String target, String certPath, String pin) {
+    public void sendCertificate(String target, String pin) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -90,7 +90,7 @@ public class MailingService {
                     "Vas pin je: " + pin +".\n" +
                     "Much love <3");
 
-            Path path = Paths.get(certPath);
+            Path path = Paths.get("src/main/resources/data/cer/"+target+".cer");
             byte[] fileData = Files.readAllBytes(path);
             InputStreamSource attachmentSource = new ByteArrayResource(fileData);
             helper.addAttachment(path.getFileName().toString(), attachmentSource);

@@ -14,6 +14,7 @@ export default function AdminNavbar(){
                 <Nav.Link href="/admin/certificates">Certificates</Nav.Link>
                 <Nav.Link href="/admin/requests">Reqests</Nav.Link>
                 <Nav.Link href="/admin/objects">All objects</Nav.Link> 
+                <Nav.Link href="/admin/newObject">New object</Nav.Link> 
                 <Nav.Link href="/logout">Logout</Nav.Link>
             </Nav>
         </Navbar.Collapse>

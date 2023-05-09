@@ -14,7 +14,7 @@ public class CertificateDto {
     public String orgUnit;
     public String country;
     public boolean owner;
-    public List<Extension> extensions;
+    public List<String> extensions;
 
     public Date startDate;
     public Integer duration = 1;
