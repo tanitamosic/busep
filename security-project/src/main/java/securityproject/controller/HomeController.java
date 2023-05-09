@@ -72,6 +72,7 @@ public class HomeController {
     }
 
     @DeleteMapping("/delete-home-{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> deleteHome(@PathVariable Long id) {
         try {
             homeService.deleteHome(id);
@@ -83,6 +84,7 @@ public class HomeController {
     }
 
     @DeleteMapping("/delete-device-{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
         try {
             homeService.deleteDevice(id);

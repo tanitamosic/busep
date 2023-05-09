@@ -68,6 +68,7 @@ public class AdminController {
     }
 
     @DeleteMapping(value="/invalidate-certificate-{id}/reason={reason}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Boolean> invalidateCertificate(@PathVariable Long id, @PathVariable String reason) {
         Boolean success = certificateService.invalidateCertificate(id, reason);
         return new ResponseEntity<>(success, HttpStatus.OK);
