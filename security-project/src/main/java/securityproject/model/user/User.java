@@ -36,8 +36,8 @@ public abstract class User {
     @NotBlank(message = "Surname can't be blank")
     @Column(name = "surname", nullable = false)
     private String surname;
-    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[!@#$%^&*()_+={}|:<>,.?/])(?=.*?[0-9]).{8,}$",
-            message = "Password must have at least 8 characters, 1 capital 1 lowercase letter, 1 number and 1 special character.")
+    @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[!@#$%^&*()_+={}|:<>,.?/])(?=.*?[0-9]).{12,}$",
+            message = "Password must have at least 12 characters, 1 capital 1 lowercase letter, 1 number and 1 special character.")
     @Column(name = "password", nullable = false)
     @JsonIgnore
     private String password;

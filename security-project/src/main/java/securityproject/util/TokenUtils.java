@@ -1,8 +1,18 @@
 package securityproject.util;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 
 import io.jsonwebtoken.*;
 import securityproject.model.user.MyUserDetails;
@@ -26,26 +36,47 @@ public class TokenUtils {
     // Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent//postman
     @Value("Authorization")
     private String AUTH_HEADER;
+    @Value("Cookie")
+    private String COOKIE_HEADER;
 
     private static final String AUDIENCE_WEB = "web";
 
     private final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS512;
 
+    private final SecureRandom secureRandom = new SecureRandom();
 
 
-    public String generateToken(String username, String role) {
-
+    public String generateToken(String username, String role, String fingerprint) {
+        String fingerprintHash = generateFingerprintHash(fingerprint);
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
                 .claim("role", role)
+                .claim("userFingerprint", fingerprintHash)
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
-
-
         // moguce je postavljanje proizvoljnih podataka u telo JWT tokena pozivom funkcije .claim("key", value), npr. .claim("role", user.getRole())
+    }
+
+    public String generateFingerprint() {
+        // Generisanje random string-a koji ce predstavljati fingerprint za korisnika
+        byte[] randomFgp = new byte[50];
+        this.secureRandom.nextBytes(randomFgp);
+        return DatatypeConverter.printHexBinary(randomFgp);
+    }
+
+    private String generateFingerprintHash(String userFingerprint) {
+        // Generisanje hash-a za fingerprint koji stavljamo u token (sprecavamo XSS da procita fingerprint i sam postavi ocekivani cookie)
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] userFingerprintDigest = digest.digest(userFingerprint.getBytes(StandardCharsets.UTF_8));
+            return DatatypeConverter.printHexBinary(userFingerprintDigest);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public Boolean verifyToken(String token, String username) {
@@ -99,8 +130,20 @@ public class TokenUtils {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7); // preuzimamo samo token (vrednost tokena je nakon "Bearer " prefiksa)
         }
-
         return null;
+    }
+
+    public String getFingerprintFromCookie(HttpServletRequest request) {
+        String userFingerprint = null;
+        if (request.getCookies() != null && request.getCookies().length > 0) {
+            List<Cookie> cookies = Arrays.stream(request.getCookies()).collect(Collectors.toList());
+            Optional<Cookie> cookie = cookies.stream().filter(c -> "Fingerprint".equals(c.getName())).findFirst();
+
+            if (cookie.isPresent()) {
+                userFingerprint = cookie.get().getValue();
+            }
+        }
+        return userFingerprint;
     }
 
     public String getUsernameFromToken(String token) {
@@ -158,6 +201,19 @@ public class TokenUtils {
         return expiration;
     }
 
+    private String getFingerprintFromToken(String token) {
+        String fingerprint;
+        try {
+            final Claims claims = this.getAllClaimsFromToken(token);
+            fingerprint = claims.get("userFingerprint", String.class);
+        } catch (ExpiredJwtException ex) {
+            throw ex;
+        } catch (Exception e) {
+            fingerprint = null;
+        }
+        return fingerprint;
+    }
+
     /**
      * Funkcija za čitanje svih podataka iz JWT tokena
      *
@@ -182,15 +238,48 @@ public class TokenUtils {
         return claims;
     }
 
+    private String getAlgorithmFromToken(String token) {
+        String algorithm;
+        try {
+            algorithm = Jwts.parser()
+                    .setSigningKey(SECRET)
+                    .parseClaimsJws(token)
+                    .getHeader()
+                    .getAlgorithm();
+        } catch (ExpiredJwtException ex) {
+            throw ex;
+        } catch (Exception e) {
+            algorithm = null;
+        }
+        return algorithm;
+    }
 
-    public Boolean validateToken(String token, MyUserDetails userDetails) {
+
+    public Boolean validateToken(String token, MyUserDetails userDetails, String fingerprint) {
         User u = userDetails.getUser();
         final String username = getUsernameFromToken(token);
         final Date created = getIssuedAtDateFromToken(token);
 
-        return (username != null
-                && username.equals(userDetails.getUsername())
-                && !isCreatedBeforeLastPasswordReset(created, u.getLastPasswordResetDate()));
+        // Token je validan kada:
+        boolean isUsernameValid = username != null // korisnicko ime nije null
+                && username.equals(userDetails.getUsername()) // korisnicko ime iz tokena se podudara sa korisnickom imenom koje pise u bazi
+                && !isCreatedBeforeLastPasswordReset(created, u.getLastPasswordResetDate()); // nakon kreiranja tokena korisnik nije menjao svoju lozinku
+
+        // Validiranje fingerprint-a
+        System.out.println("FGP ===> " + fingerprint);
+        boolean isFingerprintValid = false;
+        boolean isAlgorithmValid = false;
+        if (fingerprint != null) {
+            isFingerprintValid = validateTokenFingerprint(fingerprint, token);
+            isAlgorithmValid = SIGNATURE_ALGORITHM.getValue().equals(getAlgorithmFromToken(token));
+        }
+        return isUsernameValid && isFingerprintValid && isAlgorithmValid;
+    }
+    private boolean validateTokenFingerprint(String fingerprint, String token) {
+        // Hesiranje fingerprint-a radi poređenja sa hesiranim fingerprint-om u tokenu
+        String fingerprintHash = generateFingerprintHash(fingerprint);
+        String fingerprintFromToken = getFingerprintFromToken(token);
+        return fingerprintFromToken.equals(fingerprintHash);
     }
 
 
