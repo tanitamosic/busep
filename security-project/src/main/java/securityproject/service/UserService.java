@@ -53,6 +53,10 @@ public class UserService implements UserDetailsService {
         return new MyUserDetails(userRepository.getUserByEmail(email));
     }
 
+    public User getUserById(Long id) throws UsernameNotFoundException {
+        return userRepository.getUserById(id);
+    }
+
     // DEPRECATED
     public User registerRenter(RequestDto dto) {
         modelValidator.validatePassword(dto.password);

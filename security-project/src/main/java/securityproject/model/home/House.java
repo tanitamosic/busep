@@ -27,31 +27,36 @@ public class House {
     @Column(name = "home_id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "home_owners",
-            joinColumns = @JoinColumn(name = "home_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @NotNull
-    private StandardUser owner;
-    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "home_renters",
-            joinColumns = @JoinColumn(name = "home_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private StandardUser renter;
+    // TODO remove this, change getting the renter/owner by using HouseUserRole
+
+//    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "home_owners",
+//            joinColumns = @JoinColumn(name = "home_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id")
+//    )
+//    @NotNull
+//    private StandardUser owner;
+//
+//    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "home_renters",
+//            joinColumns = @JoinColumn(name = "home_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id")
+//    )
+//    private StandardUser renter;
 
     @Column(name="address", nullable = false)
-    @NotBlank
     private String address;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "home_devices",
-            joinColumns = @JoinColumn(name = "home_id"),
-            inverseJoinColumns = @JoinColumn(name = "device_id")
-    )
-    private List<Device> devices;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "home_devices",
+//            joinColumns = @JoinColumn(name = "home_id"),
+//            inverseJoinColumns = @JoinColumn(name = "device_id")
+//    )
+//    private List<Device> devices;
+
+    @Column(name="is_active")
+    private Boolean isActive;
 }

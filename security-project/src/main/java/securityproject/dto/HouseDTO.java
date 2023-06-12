@@ -8,5 +8,5 @@ public class HouseDTO {
     public String ownerEmail;
     public String renterEmail;
     public String address;
-    public List<DeviceDTO> devices;
+//    public List<DeviceDTO> devices;
 }

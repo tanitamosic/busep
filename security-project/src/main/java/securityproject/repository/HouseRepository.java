@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface HouseRepository extends JpaRepository<House, Long> {
 
-    List<House> findHousesByRenter(StandardUser renter);
-    List<House> findHousesByOwner(StandardUser owner);
+    List<House> findHousesByRenterAndIsActive(StandardUser renter, Boolean isActive);
+    List<House> findHousesByOwnerAndIsActive(StandardUser owner, Boolean isActive);
 }

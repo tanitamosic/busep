@@ -23,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Transactional
     void updateFailedAttempts(@Param("failed_attempts")int i, @Param("email") String email);
+
+    User getUserById(Long id);
 }

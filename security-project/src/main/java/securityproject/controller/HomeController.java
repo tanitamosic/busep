@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import securityproject.dto.DeviceDTO;
 import securityproject.dto.HouseDTO;
+import securityproject.dto.HouseResponse;
+import securityproject.model.home.Device;
 import securityproject.model.home.House;
 import securityproject.model.user.MyUserDetails;
 import securityproject.model.user.Role;
@@ -27,8 +30,8 @@ public class HomeController {
     HomeService homeService;
 
     @GetMapping("/get-all-homes-by-user-{email}")
-    public ResponseEntity<List<House>> getAllHousesWithUser(@PathVariable String email) {
-        List<House> houses;
+    public ResponseEntity<List<HouseResponse>> getAllHousesWithUser(@PathVariable String email) {
+        List<HouseResponse> houses;
         MyUserDetails userDetails = (MyUserDetails) userService.loadUserByUsername(email);
         Role r = (Role) userDetails.getUser().getRoles().toArray()[0];
         try {
@@ -47,8 +50,8 @@ public class HomeController {
     }
 
     @GetMapping("/get-all-homes")
-    public ResponseEntity<List<House>> getAllHouses() {
-        List<House> houses;
+    public ResponseEntity<List<HouseResponse>> getAllHouses() {
+        List<HouseResponse> houses;
         try {
             houses = homeService.getAllHouses();
             return new ResponseEntity<>(houses, HttpStatus.OK);
@@ -56,15 +59,13 @@ public class HomeController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-
     }
 
     @PostMapping("/create-home")
-    public ResponseEntity<String> createHome(HouseDTO houseDTO) {
+    public ResponseEntity<HouseResponse> createHome(HouseDTO houseDTO) {
         try {
-            homeService.createHome(houseDTO);
-            return ResponseEntity.ok("Home created successfully");
+            HouseResponse h = homeService.createHome(houseDTO);
+            return new ResponseEntity<>(h, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -89,6 +90,18 @@ public class HomeController {
         try {
             homeService.deleteDevice(id);
             return ResponseEntity.ok("Device deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/add-device")
+    @CrossOrigin(origins = "http://localhost:3000")
+    public ResponseEntity<Device> addDevice(DeviceDTO dto) {
+        try {
+            Device d = homeService.addDevice(dto);
+            return new ResponseEntity<>(d, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
