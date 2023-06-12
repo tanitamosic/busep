@@ -34,9 +34,20 @@ export const removeToken = () => {
   return sessionStorage.removeItem("jwt");
 }
 
+export const removeLoggedUserData = () => {
+  removeToken();
+  sessionStorage.removeItem("role");
+  sessionStorage.removeItem("email");
+}
+
+export const getLoggedUserEmail = () => {
+  const email = sessionStorage.getItem("email");
+
+  return email;
+}
+
 export const getRole = () => {
-  const decodedToken = getDecodedToken();
-  const role = decodedToken.role;
+  const role = sessionStorage.getItem("role");
 
   if (role === "ROLE_ADMIN"){
     return "admin";

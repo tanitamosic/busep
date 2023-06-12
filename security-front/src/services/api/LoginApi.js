@@ -1,4 +1,4 @@
-import { getApiCall, getApiCallUrlEncoded } from "../Configs.js";
+import { getApiCall, getApiCallUrlEncoded, getApiCallUrlEncodedNoBearer } from "../Configs.js";
 
 
 export async function sendRegistrationRequest(regRequest){
@@ -18,7 +18,8 @@ export async function sendLoginRequest(userJson){
         fd.append("username", userJson.email);
         fd.append("password", userJson.password);
         fd.append("pin", userJson.pin);
-        const responseData = await getApiCallUrlEncoded().post(`/login`, fd);
+        // const responseData = await getApiCallUrlEncoded().post(`/login`, fd);
+        const responseData = await getApiCallUrlEncodedNoBearer().post(`/login`, fd);
 
         return responseData;
     } catch (err) {

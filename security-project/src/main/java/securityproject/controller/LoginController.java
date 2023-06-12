@@ -48,7 +48,10 @@ public class LoginController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", jwt);
         responseHeaders.add("Set-Cookie", cookie);
-        return ResponseEntity.ok().headers(responseHeaders).build();
+
+        ResponseBody body = new ResponseBody();
+        body.jwt = jwt;
+        return ResponseEntity.ok().headers(responseHeaders).body(body);
     }
 
     @GetMapping(value="login-failure")

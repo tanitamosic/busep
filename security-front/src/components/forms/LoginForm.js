@@ -5,7 +5,7 @@ import { sendLoginRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";    
-import { setToken, getToken } from '../../services/utils/AuthService';
+import { setToken, getToken, getDecodedToken } from '../../services/utils/AuthService';
 import { getRole } from '../../services/utils/AuthService';
 
 export function LoginForm() {
@@ -46,27 +46,29 @@ export function LoginForm() {
         (e) => {
             e.preventDefault();
             const userJson = {email, password, pin}
-            console.log(userJson)
 
             sendLoginRequest(userJson).then(
                 (response) => {
-                    console.log(response);
                     const token = response.data.jwt;
-                    console.log(token);
-
                     setToken(token)
+                    let decodedToken = getDecodedToken();
 
-                    let userRole = getRole();
-                    // sessionStorage.setItem("userRole", userRole);
+                    console.log(decodedToken.sub);
+                    console.log(decodedToken.role);
+                    let email = decodedToken.sub;
+                    let role = decodedToken.role;
 
-                    navigate("/" + userRole.toLowerCase());
+                    sessionStorage.setItem("email", email);
+                    sessionStorage.setItem("role", role);
+
+                    navigate("/" + getRole());
                     window.dispatchEvent(new Event("userRoleUpdated"));
                     return response;
                 }, (error) => {
                   console.log(error);
                 }
             );
-        }, [email, password, pin]
+        }, [email, navigate, password, pin]
     )
 
     return (<>

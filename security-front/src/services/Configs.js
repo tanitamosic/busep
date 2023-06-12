@@ -27,6 +27,19 @@ export var getApiCallUrlEncoded = () =>{
 
 } 
 
+export var getApiCallUrlEncodedNoBearer = () =>{
+    // const token = getTokenWithNoQuotes();
+    return axios.create({
+        baseURL: "http://localhost:8081",
+        headers:  {
+                    'Content-Type': 'application/x-www-form-urlencoded'}
+    });
+
+    // headers:  {"Authorization" : `Bearer ${token}`,
+    //                 "Content-Type": "application/json"}
+
+} 
+
 
 
 

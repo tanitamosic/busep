@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { useNavigate  } from "react-router-dom";    
-import { removeToken } from '../services/utils/AuthService';
+import { removeLoggedUserData } from '../services/utils/AuthService';
 import { sendLogoutRequest } from '../services/api/LoginApi';
 
 export default function LogoutPage(){
@@ -11,8 +11,7 @@ export default function LogoutPage(){
         sendLogoutRequest().then(
             (response) => {
                 console.log("logout");
-                sessionStorage.removeItem("userRole")
-                removeToken();
+                removeLoggedUserData();
                 window.dispatchEvent(new Event("userRoleUpdated"));
                 navigate('/login');
                 return response;
