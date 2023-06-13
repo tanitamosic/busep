@@ -11,6 +11,16 @@ export async function getAllObjects(){
     }
   }
 
+  export async function getObject(houseId){
+    try {
+        const responseData = await getApiCall().get('/home/get-home/' + houseId);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
   // TODO 
   export async function getUserObjects(userEmail){
     try {
@@ -37,6 +47,16 @@ export async function getAllObjects(){
   export async function sendObjectCreationRequest(objectJson){
     try {
         const responseData = await getApiCall().post('/home/create-home', objectJson);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
+  export async function sendDeviceCreationRequest(deviceJson){
+    try {
+        const responseData = await getApiCall().post('/home/add-device', deviceJson);
         return responseData;
     } catch (err) {
         console.log(err.message);

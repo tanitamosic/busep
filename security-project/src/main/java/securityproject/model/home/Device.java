@@ -38,12 +38,12 @@ public class Device {
     private Long houseId;
 
     @Column(name = "type")
-    private DeviceType type;
+    private String type;
 
     @Column(name = "read_time")
     private Integer readTime;
 
-    @Column(name = "filterRegex")
+    @Column(name = "filter_regex")
     private String filterRegex;
 
     @Column(name = "name")

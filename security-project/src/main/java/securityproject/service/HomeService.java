@@ -36,7 +36,20 @@ public class HomeService {
     private UserRepository userRepository;
 
     public List<HouseResponse> getAllHouses() {
-        return makeHouseResponses(houseRepository.findAll());
+        List<House> houses = houseRepository.findHousesByIsActive(true);
+        List<HouseResponse> response = makeHouseResponses(houses);
+
+        return response;
+    }
+
+    public HouseResponse getHouseById(Long id) {
+        House house = houseRepository.findHouseByIdAndIsActive(id, true);
+
+        if (house == null){
+            return null;
+        }
+
+        return makeHouseResponse(house);
     }
 
     public List<HouseResponse> getAllHousesWithOwner(StandardUser user) {
@@ -56,7 +69,10 @@ public class HomeService {
         User r = getRenter(house.getId());
         List<Device> devices = getHouseDevices(house.getId());
 
-        return new HouseResponse(house, o.getEmail(), r.getEmail(), devices);
+        String ownerEmail = (o != null) ? o.getEmail() : "";
+        String renterEmail = (r != null) ? r.getEmail() : "";
+
+        return new HouseResponse(house, ownerEmail, renterEmail, devices);
     }
 
     public HouseResponse createHome(HouseDTO houseDTO) {

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import securityproject.dto.DeviceDTO;
 import securityproject.dto.HouseDTO;
 import securityproject.dto.HouseResponse;
+import securityproject.dto.HouseResponses;
 import securityproject.model.home.Device;
 import securityproject.model.home.House;
 import securityproject.model.user.MyUserDetails;
@@ -45,16 +46,26 @@ public class HomeController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-
     }
 
     @GetMapping("/get-all-homes")
-    public ResponseEntity<List<HouseResponse>> getAllHouses() {
+    public ResponseEntity<HouseResponses> getAllHouses() {
         List<HouseResponse> houses;
         try {
             houses = homeService.getAllHouses();
-            return new ResponseEntity<>(houses, HttpStatus.OK);
+            HouseResponses r = new HouseResponses(houses);
+            return new ResponseEntity<>(r, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/get-home/{houseId}")
+    public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId) {
+        try {
+            HouseResponse house = homeService.getHouseById(houseId);
+            return new ResponseEntity<>(house, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -53,8 +53,12 @@ public class UserService implements UserDetailsService {
         return new MyUserDetails(userRepository.getUserByEmail(email));
     }
 
-    public User getUserById(Long id) throws UsernameNotFoundException {
+    public User getUserById(Long id){
         return userRepository.getUserById(id);
+    }
+
+    public User getUserByEmail(String email){
+        return userRepository.getUserByEmail(email);
     }
 
     // DEPRECATED

@@ -24,50 +24,17 @@ export default function AllObjectsList(){
         }
     }, [navigate, userRole])
 
-    const dummyObjects = [
-        {
-            "id": "1",
-          "name": "Green Haven",
-          "address": "123 Main Street",
-          "owner": "Juros"
-        },
-        {
-            "id": "2",
-          "name": "Cozy Cottage",
-          "address": "456 Elm Avenue",
-          "owner": "Lazar"
-        },
-        {
-            "id": "3",
-          "name": "Sunset Villa",
-          "address": "789 Oak Lane",
-          "owner": "Milan"
-        },
-        {
-            "id": "4",
-          "name": "Harmony House",
-          "address": "321 Pine Street",
-          "owner": "Marko"
-        },
-        {
-            "id": "5",
-          "name": "Serene Residence",
-          "address": "987 Maple Avenue",
-          "owner": "Drago"
-        }
-      ]
-
     useEffect(() => {
-        setObjects(dummyObjects);
         getAllObjects().then(
             (response) => {
-                setObjects(!!response ? response.data : []);
+                console.log(response.data.houses)
+                setObjects(!!response ? response.data.houses : []);
             }
         )
     }, [])
 
     useEffect(() => {
-        if (objects !== undefined){
+        if (!!objects){
             console.log(objects)
             let mappedObjects = objects.map((object) => <ListedObject object={object} key={object.id}/>)
             setListedObjects(mappedObjects);
@@ -80,16 +47,13 @@ export default function AllObjectsList(){
             <br/>
 
             <Row>
-                <Col sm="2">
+                <Col sm="1">
                     Id
                 </Col>
-                <Col sm="2">
-                    Name
-                </Col>
-                <Col sm="2">
+                <Col sm="4">
                     Address
                 </Col>
-                <Col sm="2">
+                <Col sm="3">
                     Owner
                 </Col>
                 <Col sm="1">

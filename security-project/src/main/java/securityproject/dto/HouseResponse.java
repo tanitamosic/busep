@@ -18,10 +18,10 @@ public class HouseResponse {
         this.devices = devices;
     }
 
-    private Long id;
-    private String ownerEmail;
-    private String renterEmail;
-    private String address;
-    private List<Device> devices;
-    private Boolean isActive;
+    public Long id;
+    public String ownerEmail;
+    public String renterEmail;
+    public String address;
+    public List<Device> devices;
+    public Boolean isActive;
 }

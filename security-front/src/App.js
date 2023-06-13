@@ -22,6 +22,7 @@ import UserObjectsList from './components/business/UserObjectsList';
 import AllObjectsList from './components/business/AllObjectsList';
 import { CreateObjectForm } from './components/forms/CreateObjectForm';
 import { getRole } from './services/utils/AuthService';
+import ObjectPreview from './components/business/ObjectPreview';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -37,6 +38,7 @@ function App() {
   const userObjectsList = <Container><UserObjectsList /></Container>
   const allObjectsList = <Container><AllObjectsList /></Container>
   const createObjectForm = <Container><CreateObjectForm /></Container>
+  const objectPreview = <Container><ObjectPreview /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -73,12 +75,15 @@ function App() {
                   <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
                   <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
 
+                  <Route path='/admin/all-objects' element={allObjectsList}/>
                   <Route path='/admin/objects/:email' element={userObjectsList}/>
-                  <Route path='/admin/objects' element={allObjectsList}/>
+                  <Route path='/admin/object/:id' element={objectPreview}/>
                   
-                  <Route path='/admin/newObject' element={createObjectForm}/>
+                  <Route path='/admin/new-object' element={createObjectForm}/>
 
                   <Route path='/admin' element={adminFirstPage}/>
+
+
 
                   <Route path="*" element={unavailablePage} />
                 </Route>

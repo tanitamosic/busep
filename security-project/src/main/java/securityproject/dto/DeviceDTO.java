@@ -7,7 +7,7 @@ import javax.persistence.Column;
 public class DeviceDTO {
 
     public Long houseId;
-    public DeviceType type;
+    public String type;
     public Integer readTime;
     public String filterRegex;
     public String name;
