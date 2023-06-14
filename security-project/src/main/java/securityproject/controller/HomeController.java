@@ -30,7 +30,7 @@ public class HomeController {
     @Autowired
     HomeService homeService;
 
-    @GetMapping("/get-all-homes-by-user-{email}")
+    @GetMapping("/get-all-homes-by-user/{email}")
     public ResponseEntity<List<HouseResponse>> getAllHousesWithUser(@PathVariable String email) {
         List<HouseResponse> houses;
         MyUserDetails userDetails = (MyUserDetails) userService.loadUserByUsername(email);
@@ -73,7 +73,7 @@ public class HomeController {
     }
 
     @PostMapping("/create-home")
-    public ResponseEntity<HouseResponse> createHome(HouseDTO houseDTO) {
+    public ResponseEntity<HouseResponse> createHome(@RequestBody HouseDTO houseDTO) {
         try {
             HouseResponse h = homeService.createHome(houseDTO);
             return new ResponseEntity<>(h, HttpStatus.OK);
@@ -95,7 +95,7 @@ public class HomeController {
         }
     }
 
-    @DeleteMapping("/delete-device-{id}")
+    @PostMapping("/delete-device/{id}")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> deleteDevice(@PathVariable Long id) {
         try {
@@ -109,7 +109,7 @@ public class HomeController {
 
     @PostMapping("/add-device")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<Device> addDevice(DeviceDTO dto) {
+    public ResponseEntity<Device> addDevice(@RequestBody DeviceDTO dto) {
         try {
             Device d = homeService.addDevice(dto);
             return new ResponseEntity<>(d, HttpStatus.OK);

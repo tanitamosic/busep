@@ -24,7 +24,7 @@ export async function getAllObjects(){
   // TODO 
   export async function getUserObjects(userEmail){
     try {
-        const responseData = await getApiCall().get('/home/get-all-homes-by-user-' +  userEmail);
+        const responseData = await getApiCall().get('/home/get-all-homes-by-user/' +  userEmail);
         return responseData;
     } catch (err) {
         console.log(err.message);
@@ -57,6 +57,16 @@ export async function getAllObjects(){
   export async function sendDeviceCreationRequest(deviceJson){
     try {
         const responseData = await getApiCall().post('/home/add-device', deviceJson);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
+  export async function removeDeviceRequest(deviceId){
+    try {
+        const responseData = await getApiCall().post('/home/delete-device/' + deviceId);
         return responseData;
     } catch (err) {
         console.log(err.message);

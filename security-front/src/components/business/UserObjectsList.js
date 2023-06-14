@@ -17,50 +17,16 @@ export default function UserObjectsList(){
     const [objects, setObjects] = useState([]);
     const [listedObjects, setListedObjects] = useState([]);
 
-    const userRole = getRole();
-    const navigate = useNavigate();
+    // const userRole = getRole();
+    // const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     if(userRole !== "admin"){
+    //         navigate("/unavailable");
+    //     }
+    // }, [navigate, userRole])
 
     useEffect(() => {
-        if(userRole !== "admin"){
-            navigate("/unavailable");
-        }
-    }, [navigate, userRole])
-
-    const dummyObjects = [
-        {
-            "id": "1",
-          "name": "Green Haven",
-          "address": "123 Main Street",
-          "role": "Owner"
-        },
-        {
-            "id": "2",
-          "name": "Cozy Cottage",
-          "address": "456 Elm Avenue",
-          "role": "Owner"
-        },
-        {
-            "id": "3",
-          "name": "Sunset Villa",
-          "address": "789 Oak Lane",
-          "role": "Owner"
-        },
-        {
-            "id": "4",
-          "name": "Harmony House",
-          "address": "321 Pine Street",
-          "role": "Owner"
-        },
-        {
-            "id": "5",
-          "name": "Serene Residence",
-          "address": "987 Maple Avenue",
-          "role": "Owner"
-        }
-      ]
-
-    useEffect(() => {
-        setObjects(dummyObjects);
         getUserObjects(email).then(
             (response) => {
                 setObjects(!!response ? response.data : []);

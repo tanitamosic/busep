@@ -26,7 +26,7 @@ export function CreateObjectForm() {
 
     const validateInput = () => {
       let valid = (checkEmailInput(ownerEmail) && ownerEmail.length > 0 ) && 
-                  (checkEmailInput(renterEmail) && renterEmail.length > 0 ) && 
+                  (checkEmailInput(renterEmail) || renterEmail.length === 0 ) && 
                   address.length > 0
                   ;
         
@@ -42,8 +42,7 @@ export function CreateObjectForm() {
             sendObjectCreationRequest(objectJson).then(
                 (response) => {
                     console.log(response);
-                    alert("Object created");
-                    navigate("/admin/objects/" + ownerEmail);
+                    navigate("/admin/object/" + response.data.id);
                 }, (error) => {
                   console.log(error);
                 }

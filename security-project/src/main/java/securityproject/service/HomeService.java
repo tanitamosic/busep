@@ -53,7 +53,10 @@ public class HomeService {
     }
 
     public List<HouseResponse> getAllHousesWithOwner(StandardUser user) {
-        return makeHouseResponses(getHousesByOwner(user.getId()));
+        List<House> houses = getHousesByOwner(user.getId());
+        List<HouseResponse> responses = makeHouseResponses(houses);
+
+        return responses;
     }
 
     public List<HouseResponse> getAllHousesWithRenter(StandardUser user) {
@@ -80,25 +83,31 @@ public class HomeService {
         h.setAddress(houseDTO.address);
         h.setIsActive(true);
         House savedH = houseRepository.saveAndFlush(h);
-        addHouseRole(savedH.getId(), houseDTO.ownerEmail, "OWNER");
-        addHouseRole(savedH.getId(), houseDTO.renterEmail, "RENTER");
 
-        return getHouseResponse(savedH.getId());
-    }
-
-    public HouseResponse getHouseResponse(Long houseId){
-        House h = houseRepository.getReferenceById(houseId);
-
-        if (h == null){
-            return null;
+        if (houseDTO.ownerEmail != null && houseDTO.ownerEmail.length() > 0){
+            addHouseRole(savedH.getId(), houseDTO.ownerEmail, "OWNER");
         }
 
-        User o = getOwner(houseId);
-        User r = getRenter(houseId);
-        List<Device> devices = getHouseDevices(houseId);
+        if (houseDTO.renterEmail != null && houseDTO.renterEmail.length() > 0){
+            addHouseRole(savedH.getId(), houseDTO.renterEmail, "RENTER");
+        }
 
-        return new HouseResponse(h, o.getEmail(), r.getEmail(), devices);
+        return makeHouseResponse(savedH);
     }
+
+//    public HouseResponse getHouseResponse(Long houseId){
+//        House h = houseRepository.findHouseByIdAndIsActive(houseId, true);
+//
+//        if (h == null){
+//            return null;
+//        }
+//
+//        User o = getOwner(houseId);
+//        User r = getRenter(houseId);
+//        List<Device> devices = getHouseDevices(houseId);
+//
+//        return new HouseResponse(h, o.getEmail(), r.getEmail(), devices);
+//    }
 
 //    private static List<Device> parseDevices(HouseDTO houseDTO) {
 //        List<Device> devices = new ArrayList<>();
@@ -236,7 +245,7 @@ public class HomeService {
         if (hurs.size() > 0){
             houses = hurs.stream()
                     .map(hur -> hur.getHouseId())
-                    .map(houseId -> houseRepository.getReferenceById(houseId))
+                    .map(houseId -> houseRepository.findHouseByIdAndIsActive(houseId, true))
                     .collect(Collectors.toList());
         }
 

@@ -17,20 +17,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/admin")
-@PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
-    /*
-    1. pregled svih zahteva - get
-    2. prikaz jednog zahteva - get
-    3. odobravanje zahteva - post
-    4. odbijanje zahteva - post
-
-    5. prikaz svih sertifikata
-    6. prikaz jednog -||-
-    7. provera validnosti/verifikacija (unutar prikaza jednog)
-    8. povlacenje
-
-     */
 
     @Autowired
     CsrService csrService;

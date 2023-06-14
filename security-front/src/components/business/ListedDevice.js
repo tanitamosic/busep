@@ -3,7 +3,7 @@ import '../../assets/styles/business.css';
 import { Row, Col } from 'react-bootstrap';
 import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 import { useCallback } from 'react';
-import { removeObjectRequest } from '../../services/api/ObjectsApi';
+import { removeDeviceRequest } from '../../services/api/ObjectsApi';
 
 export default function ListedDevice({device}){
 
@@ -14,20 +14,15 @@ export default function ListedDevice({device}){
     const removeDevice = useCallback(
         (e) => {
             e.preventDefault();
-            //TODO
-
-            // for the sake of easienes, just reload (navigate to the house preview again (you had id in the deleted device))
-
-            // removeObjectRequest(object.id).then(
-            //     (response) => {
-            //         console.log(response);
-            //         if (response.data === true){
-            //             alert("Object removed.");
-            //         }
-            //     }, (error) => {
-            //         console.log(error);
-            //     }
-            // );
+            console.log("device id : " + device.id);
+            removeDeviceRequest(device.id).then(
+                (response) => {
+                    console.log(response);
+                    window.location.reload();
+                }, (error) => {
+                    console.log(error);
+                }
+            );
         }, []
     )
 

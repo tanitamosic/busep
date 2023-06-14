@@ -14,7 +14,7 @@ export function NewDeviceForm({houseId}) {
 
     const possibleTypes = ["SMART_CAM", "SMART_LIGHT", "SMART_LOCK", "SMART_SMOKE", "SMART_TEMP"];
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const createButtonPressed = (e) => {
       if (validateInput()) {
@@ -40,16 +40,15 @@ export function NewDeviceForm({houseId}) {
             e.preventDefault();
 
             const deviceJson = {houseId, type, readTime, regex: filterRegex, name}
-            console.log(deviceJson)
             sendDeviceCreationRequest(deviceJson).then(
                 (response) => {
                     console.log(response);
-                    navigate("/admin/object/" + houseId);
+                    window.location.reload();
                 }, (error) => {
                   console.log(error);
                 }
             );
-        }, [houseId, type, readTime, filterRegex, name, navigate]
+        }, [houseId, type, readTime, filterRegex, name]
     )
 
     const handleTypeChange = (event) => {
