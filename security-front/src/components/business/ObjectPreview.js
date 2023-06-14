@@ -24,6 +24,7 @@ export default function ObjectPreview(){
     const [devices, setDevices] = useState();
     const [listedDevices, setListedDevices] = useState();
     const [isUpdateMode, setIsUpdateMode] = useState(false);
+    const [isNewDeviceMode, setIsNewDeviceMode] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -87,6 +88,10 @@ export default function ObjectPreview(){
 
     const updateModeButtonPressed = (e) => {
         setIsUpdateMode(!isUpdateMode);
+    }
+
+    const addNewDeviceButtonPressed = (e) => {
+        setIsNewDeviceMode(!isNewDeviceMode);
     }
     
     if(!!object){
@@ -171,14 +176,26 @@ export default function ObjectPreview(){
                     <>
                         <center><h5>No devices</h5></center>
                 </>}
+                <Row className='mt-2'>
+                        <Col sm={4}/>
+                        <Col sm={4}/>
+                        <Col sm={4} align='center'>
+                            <Button className='formButton' onClick={addNewDeviceButtonPressed}>
+                                {isNewDeviceMode ? "Cancel" : "Add new device"}
+                            </Button>
+                        </Col>
+                  </Row> 
+                {isNewDeviceMode && <>
+                    <NewDeviceForm houseId={object.id} />
+                  </>}
             </div>
 
-            {<NewDeviceForm houseId={object.id} />}
+            {/* {<NewDeviceForm houseId={object.id} />}
 
             <div className="borderedBlock mt-3 " align="">
                 
 
-            </div>
+            </div> */}
         </>
     } else {
         return "No such object"

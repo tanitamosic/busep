@@ -10,6 +10,7 @@ import securityproject.model.home.Device;
 import securityproject.model.home.House;
 import securityproject.model.home.HouseUserRole;
 import securityproject.model.user.MyUserDetails;
+import securityproject.model.user.Role;
 import securityproject.model.user.StandardUser;
 import securityproject.model.user.User;
 import securityproject.repository.DeviceRepository;
@@ -283,7 +284,7 @@ public class HomeService {
 
         if (u == null){
             throw new Exception("Non existant user");
-        } else if (!u.getRoles().contains(neededRole)){
+        } else if (!u.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()).contains(neededRole)){
             throw new Exception("User has invalid role");
         }
     }

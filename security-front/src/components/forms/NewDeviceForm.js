@@ -56,18 +56,18 @@ export function NewDeviceForm({houseId}) {
       };
 
     return (<>
-    <Row className='mt-5' >
+    {/* <Row className='mt-5' >
         <Col sm={2} />
         <div className="borderedBlock">
-            <Col sm={true} >
+            <Col sm={true} > */}
                 <Form>
-                  <Row className='mt-2'>
+                  {/* <Row className='mt-2'>
                         <Col sm={4}/>
                         <Col sm={4} align='center'>
                             <h5>Add new device</h5>
                         </Col>
                         <Col sm={4}/>
-                  </Row> 
+                  </Row>  */}
 
                   <LabeledInput value={name} label="Device name" inputName="deviceName" placeholder="Type device name" required onChangeFunc={setName}/>
 
@@ -97,10 +97,10 @@ export function NewDeviceForm({houseId}) {
                         <Col sm={4}/>
                   </Row> 
                 </Form>
-            </Col>
+            {/* </Col>
         </div>
         <Col sm={2} />
-    </Row>
+    </Row> */}
     </>
     );
 }

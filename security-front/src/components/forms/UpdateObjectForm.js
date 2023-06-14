@@ -23,7 +23,8 @@ export function UpdateObjectForm({id}) {
 
     const validateInput = () => {
       let valid = (checkEmailInput(ownerEmail) || ownerEmail.length === 0 ) && 
-                  (checkEmailInput(renterEmail) || renterEmail.length === 0 )
+                  (checkEmailInput(renterEmail) || renterEmail.length === 0 ) &&
+                  !(renterEmail.length === 0 && ownerEmail.length === 0 && address.length === 0)
                   ;
         
         return valid;
