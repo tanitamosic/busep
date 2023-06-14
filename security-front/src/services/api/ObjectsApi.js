@@ -54,6 +54,16 @@ export async function getAllObjects(){
     }
   }
 
+  export async function sendObjectUpdateRequest(objectJson){
+    try {
+        const responseData = await getApiCall().post('/home/update-home', objectJson);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
   export async function sendDeviceCreationRequest(deviceJson){
     try {
         const responseData = await getApiCall().post('/home/add-device', deviceJson);

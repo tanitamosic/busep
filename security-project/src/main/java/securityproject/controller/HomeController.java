@@ -83,6 +83,17 @@ public class HomeController {
         }
     }
 
+    @PostMapping("/update-home")
+    public ResponseEntity<String> updateHome(@RequestBody HouseDTO dto) {
+        try {
+            homeService.updateHome(dto);
+            return ResponseEntity.ok("Home updated successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping("/delete-home-{id}")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> deleteHome(@PathVariable Long id) {
@@ -113,17 +124,6 @@ public class HomeController {
         try {
             Device d = homeService.addDevice(dto);
             return new ResponseEntity<>(d, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping("/update-home")
-    public ResponseEntity<String> updateHome(HouseDTO dto) {
-        try {
-            homeService.updateHome(dto);
-            return ResponseEntity.ok("Home updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

@@ -13,6 +13,7 @@ import ListedDevice from './ListedDevice';
 import { NewDeviceForm } from '../forms/NewDeviceForm';
 import { getObject } from '../../services/api/ObjectsApi';
 import { removeObjectRequest } from '../../services/api/ObjectsApi';
+import { UpdateObjectForm } from '../forms/UpdateObjectForm';
 
 export default function ObjectPreview(){
 
@@ -22,6 +23,7 @@ export default function ObjectPreview(){
     const [renter, setRenter] = useState();
     const [devices, setDevices] = useState();
     const [listedDevices, setListedDevices] = useState();
+    const [isUpdateMode, setIsUpdateMode] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -82,6 +84,10 @@ export default function ObjectPreview(){
     const removeOBjectButtonPressed = (e) => {
         removeObject(e);
     }
+
+    const updateModeButtonPressed = (e) => {
+        setIsUpdateMode(!isUpdateMode);
+    }
     
     if(!!object){
     return <>
@@ -120,6 +126,28 @@ export default function ObjectPreview(){
                         </Col>
                     </Row>
                 </>}
+                <Row className='mt-2'>
+                        <Col sm={4}/>
+                        <Col sm={4}/>
+                        <Col sm={4} align='center'>
+                            <Button className='formButton' onClick={updateModeButtonPressed}>
+                                {isUpdateMode ? "Cancel" : "Make changes"}
+                            </Button>
+                        </Col>
+                  </Row> 
+                  {isUpdateMode && <>
+                    <UpdateObjectForm id={object.id} />
+                    <br/>
+                    <Row className='mt-2'>
+                        <Col sm={4}/>
+                        <Col sm={4} align='center'>
+                            <Button className='formButton' onClick={removeOBjectButtonPressed}>
+                                Remove object
+                            </Button>
+                        </Col>
+                        <Col sm={4}/>
+                  </Row> 
+                  </>}
             </div>
 
             <div className="borderedBlock mt-3 " align="">
@@ -148,15 +176,7 @@ export default function ObjectPreview(){
             {<NewDeviceForm houseId={object.id} />}
 
             <div className="borderedBlock mt-3 " align="">
-                <Row className='mt-2'>
-                        <Col sm={4}/>
-                        <Col sm={4} align='center'>
-                            <Button className='formButton' onClick={removeOBjectButtonPressed}>
-                                Remove object
-                            </Button>
-                        </Col>
-                        <Col sm={4}/>
-                  </Row> 
+                
 
             </div>
         </>

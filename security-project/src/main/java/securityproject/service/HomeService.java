@@ -78,7 +78,8 @@ public class HomeService {
         return new HouseResponse(house, ownerEmail, renterEmail, devices);
     }
 
-    public HouseResponse createHome(HouseDTO houseDTO) {
+    public HouseResponse createHome(HouseDTO houseDTO) throws Exception {
+        validateUserExistanceAndRoleUponHouseCreation(houseDTO);
         House h = new House();
         h.setAddress(houseDTO.address);
         h.setIsActive(true);
@@ -95,31 +96,14 @@ public class HomeService {
         return makeHouseResponse(savedH);
     }
 
-//    public HouseResponse getHouseResponse(Long houseId){
-//        House h = houseRepository.findHouseByIdAndIsActive(houseId, true);
-//
-//        if (h == null){
-//            return null;
-//        }
-//
-//        User o = getOwner(houseId);
-//        User r = getRenter(houseId);
-//        List<Device> devices = getHouseDevices(houseId);
-//
-//        return new HouseResponse(h, o.getEmail(), r.getEmail(), devices);
-//    }
-
-//    private static List<Device> parseDevices(HouseDTO houseDTO) {
-//        List<Device> devices = new ArrayList<>();
-//
-//        for (DeviceDTO deviceDTO : houseDTO.devices) {
-//            Device newDevice = new Device();
-//            newDevice.setName(deviceDTO.name);
-//            devices.add(newDevice);
-//        }
-//
-//        return devices;
-//    }
+    private void validateUserExistanceAndRoleUponHouseCreation(HouseDTO houseDTO) throws Exception {
+        if (houseDTO.ownerEmail != null && houseDTO.ownerEmail.length() > 0){
+            validateUserExistenceAndRole(houseDTO.ownerEmail, "ROLE_OWNER");
+        }
+        if (houseDTO.renterEmail != null && houseDTO.renterEmail.length() > 0){
+            validateUserExistenceAndRole(houseDTO.renterEmail, "ROLE_RENTER");
+        }
+    }
 
     public void deleteHome(Long id) throws Exception {
         Optional<House> _h = houseRepository.findById(id);
@@ -139,23 +123,21 @@ public class HomeService {
         }
     }
 
+    public void updateHome(HouseDTO dto) throws Exception {
+        House h = houseRepository.findHouseByIdAndIsActive(dto.id, true);
 
-
-    public void updateHome(HouseDTO dto) {
-        Optional<House> opt = houseRepository.findById(dto.id);
-        if (opt.isPresent()) {
-            House h = opt.get();
+        if (h != null) {
             Long houseId = h.getId();
 
-            if (dto.ownerEmail != getOwner(houseId).getEmail()){
+            if (dto.ownerEmail != null && dto.ownerEmail.length() > 0 && (getOwner(houseId) == null || dto.ownerEmail != getOwner(houseId).getEmail())){
                 updateHouseUserRole(h.getId(), dto.ownerEmail, "OWNER");
             }
 
-            if (dto.renterEmail != getRenter(houseId).getEmail()){
+            if (dto.renterEmail != null && dto.renterEmail.length() > 0 && (getRenter(houseId) == null || dto.renterEmail != getRenter(houseId).getEmail())){
                 updateHouseUserRole(h.getId(), dto.renterEmail, "RENTER");
             }
 
-            if (!h.getAddress().equals(dto.address)){
+            if (dto.address != null && dto.address.length() > 0 && !h.getAddress().equals(dto.address)){
                 h.setAddress(dto.address);
             }
 
@@ -186,25 +168,17 @@ public class HomeService {
             hur = getHouseUserRoleRenter(houseId);
         }
 
-        hur.setIsActive(false);
-        houseUserRoleRepository.saveAndFlush(hur);
+        if (hur != null) {
+            hur.setIsActive(false);
+            houseUserRoleRepository.saveAndFlush(hur);
+        }
     }
 
-    private void updateHouseUserRole(Long houseId, String userEmail, String role){
+    private void updateHouseUserRole(Long houseId, String userEmail, String role) throws Exception {
+        validateUserExistenceAndRole(userEmail, "ROLE_" + role);
         deactivateHouseUserRole(houseId, role);
         addHouseRole(houseId, userEmail, role);
     }
-
-//    public HouseResponse createHome(HouseDTO houseDTO) {
-//        House h = new House();
-//        h.setAddress(houseDTO.address);
-//        h.setIsActive(true);
-//        House savedH = houseRepository.saveAndFlush(h);
-//        addHouseRole(savedH.getId(), houseDTO.ownerEmail, "OWNER");
-//        addHouseRole(savedH.getId(), houseDTO.renterEmail, "RENTER");
-//
-//        return getHouseResponse(savedH.getId());
-//    }
 
     public User getOwner(Long houseId){
         User o = null;
@@ -294,18 +268,6 @@ public class HomeService {
         return deviceRepository.saveAndFlush(d);
     }
 
-    public void addHouseDevices(Long houseId, DevicesDTO devicesDTO) {
-        for (DeviceDTO dto : devicesDTO.deviceDTOs){
-            Device d = new Device(dto);
-
-            if (d.getHouseId() == null){
-                d.setHouseId(houseId);
-            }
-
-            deviceRepository.save(d);
-        }
-    }
-
     public void deleteDevice(Long id) {
         Optional<Device> _d = deviceRepository.findById(id);
 
@@ -313,6 +275,16 @@ public class HomeService {
             Device d = _d.get();
             d.setIsActive(false);
             deviceRepository.saveAndFlush(d);
+        }
+    }
+
+    public void validateUserExistenceAndRole(String email, String neededRole) throws Exception {
+        User u = userService.getUserByEmail(email);
+
+        if (u == null){
+            throw new Exception("Non existant user");
+        } else if (!u.getRoles().contains(neededRole)){
+            throw new Exception("User has invalid role");
         }
     }
 }

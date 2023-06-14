@@ -27,7 +27,7 @@ public class DeviceMessage {
     private Long deviceId;
 
     @Column(name = "message_name")
-    private Long messageName;
+    private String messageName;
 
     @Column(name = "value")
     private String value;
