@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import securityproject.logger.RequestInterceptor;
-import securityproject.repository.mongo.LogRepository;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {

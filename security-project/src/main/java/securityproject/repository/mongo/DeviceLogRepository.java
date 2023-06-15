@@ -1,11 +1,9 @@
 package securityproject.repository.mongo;
 
-
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import securityproject.logger.Log;
-
+import securityproject.logger.logs.DeviceLog;
 
 @Repository
-public interface LogRepository extends MongoRepository<Log, Long> {
+public interface DeviceLogRepository extends MongoRepository<DeviceLog, String> {
 }

@@ -1,0 +1,1 @@
+U ovaj folder idu skripte koje samo okidaju errore, učestalije od ostalih skripti (da bi lakše izazivale alarme)

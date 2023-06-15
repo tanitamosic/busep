@@ -7,15 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import securityproject.repository.mongo.LogRepository;
+import securityproject.logger.logs.LogType;
+import securityproject.logger.logs.UserRequestLog;
+import securityproject.logger.logs.UserResponseLog;
+import securityproject.repository.mongo.UserRequestLogRepository;
+import securityproject.repository.mongo.UserResponseLogRepository;
 import securityproject.util.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.UUID;
 
 @Component
 public class RequestInterceptor implements HandlerInterceptor {
@@ -27,7 +29,9 @@ public class RequestInterceptor implements HandlerInterceptor {
     Logger logger = LoggerFactory.getLogger(RequestInterceptor.class);
 
     @Autowired
-    LogRepository logRepository;
+    UserRequestLogRepository requestLogRepository;
+    @Autowired
+    UserResponseLogRepository responseLogRepository;
 
 
     public String index() {
@@ -42,12 +46,16 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  {
-        // Log the request details
         logger.info("Request URL: {}", request.getRequestURL());
         logger.info("Request Method: {}", request.getMethod());
         logger.info("Request Parameters: {}", getParameters(request));
-        Log log = new Log(request, tokenUtils, LogType.INFO);
-        logRepository.insert(log);
+
+        // device request
+        if (request.getRequestURL().toString().startsWith("https://localhost:8081/device")) return true;
+
+        // user request
+        UserRequestLog userRequestLog = new UserRequestLog(request, tokenUtils, LogType.INFO);
+        requestLogRepository.insert(userRequestLog);
 
         return true; // Proceed with the request
     }
@@ -67,6 +75,22 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)  {
+        // ignore response to device requests
+        if (request.getRequestURL().toString().startsWith("https://localhost:8081/device")) return;
         // This method is called after the response is sent to the client
+        UserResponseLog userRequestLog = null;
+        switch (response.getStatus()) {
+            case 200: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.INFO); userRequestLog.setResponseStatus("OK"); break;
+            case 400: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.WARN); userRequestLog.setResponseStatus("BAD REQUEST"); break;
+            case 401: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.WARN); userRequestLog.setResponseStatus("UNAUTHORIZED"); break;
+            case 403: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.WARN); userRequestLog.setResponseStatus("FORBIDDEN"); break;
+            case 405: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.WARN); userRequestLog.setResponseStatus("NOT ALLOWED"); break;
+            case 415: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.WARN); userRequestLog.setResponseStatus("UNSUPPORTED MEDIA TYPE"); break;
+            case 500: userRequestLog = new UserResponseLog(request, tokenUtils, LogType.ERROR); userRequestLog.setResponseStatus("INTERNAL SERVER ERROR"); break;
+            default: break;
+        }
+        if (null != userRequestLog) {
+            responseLogRepository.insert(userRequestLog);
+        }
     }
 }
