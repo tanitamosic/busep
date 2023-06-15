@@ -134,16 +134,19 @@ public class TokenUtils {
     }
 
     public String getFingerprintFromCookie(HttpServletRequest request) {
-        String userFingerprint = null;
-        if (request.getCookies() != null && request.getCookies().length > 0) {
-            List<Cookie> cookies = Arrays.stream(request.getCookies()).collect(Collectors.toList());
-            Optional<Cookie> cookie = cookies.stream().filter(c -> "Fingerprint".equals(c.getName())).findFirst();
-
-            if (cookie.isPresent()) {
-                userFingerprint = cookie.get().getValue();
+        try {
+            String userFingerprint = null;
+            if (request.getHeader("Cookiee") != null) {
+                String cookie = request.getHeader("Cookiee");
+                String[] parts = cookie.split(";");
+                userFingerprint = parts[0].substring(12);
             }
+            return userFingerprint;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
         }
-        return userFingerprint;
+
     }
 
     public String getUsernameFromToken(String token) {

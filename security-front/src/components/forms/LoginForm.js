@@ -57,7 +57,8 @@ export function LoginForm() {
                     console.log(decodedToken.role);
                     let email = decodedToken.sub;
                     let role = decodedToken.role;
-
+                    
+                    sessionStorage.setItem("cookie", response.data.cookie);
                     sessionStorage.setItem("email", email);
                     sessionStorage.setItem("role", role);
 

@@ -6,7 +6,8 @@ export var getApiCall = () =>{
     return axios.create({
         baseURL: "http://localhost:8081",
         headers:  {"Authorization" : `Bearer ` + token,
-                    "Content-Type": "application/json"}
+                    "Content-Type": "application/json",
+                "Cookiee": sessionStorage.getItem("cookie")}
     });
 
     // headers:  {"Authorization" : `Bearer ${token}`,
