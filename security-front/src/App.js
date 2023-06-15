@@ -70,15 +70,18 @@ function App() {
                   <Route path="/login" element={loginForm} />
                   <Route path="/logout" element={logoutPage} />
 
-                  <Route path='/client/my-objects/:id' element={objectPreview} /> {/* TODO*/}
-                  <Route path='/client/my-objects' element={myObjects} /> {/* TODO*/}
-                  <Route path='/client' element={clientFirstPage} /> {/* TODO*/}
+                  <Route path='/client/my-objects/:id' element={objectPreview} />
+                  <Route path='/client/my-objects' element={myObjects} />
+                  <Route path='/client' element={clientFirstPage} /> 
 
                   <Route path='/admin/certificates/:id' element={certificatePreview}/> {/* preview, validate, remove - 6, 7, 8*/}
                   <Route path='/admin/certificates' element={certificatesList}/> {/* list all, button for detailed view - 5 */}
 
                   <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
                   <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
+
+                  <Route path='/admin/clients/:email' element={unavailablePage}/> {/* TODO*/}
+                  <Route path='/admin/clients' element={unavailablePage}/> {/* TODO*/}
 
                   <Route path='/admin/all-objects' element={allObjectsList}/>
                   <Route path='/admin/objects/:email' element={userObjectsList}/>
@@ -87,8 +90,6 @@ function App() {
                   <Route path='/admin/new-object' element={createObjectForm}/>
 
                   <Route path='/admin' element={adminFirstPage}/>
-
-
 
                   <Route path="*" element={unavailablePage} />
                 </Route>

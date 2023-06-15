@@ -13,6 +13,7 @@ export default function AdminNavbar(){
             <Nav className="ms-auto">
                 <Nav.Link href="/admin/certificates">Certificates</Nav.Link>
                 <Nav.Link href="/admin/requests">Reqests</Nav.Link>
+                <Nav.Link href="/admin/clients">Clients</Nav.Link>
                 <Nav.Link href="/admin/all-objects">All objects</Nav.Link> 
                 <Nav.Link href="/admin/new-object">New object</Nav.Link> 
                 <Nav.Link href="/logout">Logout</Nav.Link>
