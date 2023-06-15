@@ -294,7 +294,7 @@ public class TokenUtils {
 
 
     public String getAuthHeaderFromHeader(HttpServletRequest request) {
-        return request.getHeader(AUTH_HEADER);
+        return request.getHeader("Authorization");
     }
 
 }
