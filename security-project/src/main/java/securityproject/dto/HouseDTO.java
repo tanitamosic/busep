@@ -1,5 +1,7 @@
 package securityproject.dto;
 
+import securityproject.dto.device.SignedMessageDTO;
+
 import java.util.List;
 
 public class HouseDTO {
@@ -8,5 +10,5 @@ public class HouseDTO {
     public String ownerEmail;
     public String renterEmail;
     public String address;
-    public List<DeviceDTO> devices;
+    public List<SignedMessageDTO> devices;
 }

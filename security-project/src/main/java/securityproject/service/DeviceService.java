@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import securityproject.dto.DeviceDTO;
-import securityproject.logger.RequestInterceptor;
+import securityproject.dto.device.SignedMessageDTO;
+import securityproject.dto.device.MessageToVerify;
 import securityproject.logger.logs.DeviceLog;
 import securityproject.logger.logs.LogType;
 import securityproject.repository.mongo.DeviceLogRepository;
@@ -83,27 +83,29 @@ public class DeviceService {
         return byteArray;
     }
 
-    public void handleDeviceMessage(HttpServletRequest request, DeviceDTO payload) {
+    public void handleDeviceMessage(HttpServletRequest request, SignedMessageDTO payload) {
         String message = dtoToString(payload);
+        System.out.println(message);
         if (null == message) {
             logger.error("Device DTO serialization failed; deviceId: {}", payload.deviceId);
             return;
         }
-        if (verify(message, payload.getSignature())) {
-            DeviceLog log = new DeviceLog(request, LogType.INFO, payload.message);
+        if (verify(message, payload.signature)) {
+            DeviceLog log = new DeviceLog(request, LogType.INFO, payload.message, payload.timestamp);
             logRepository.insert(log);
             logger.info("Inserted INFO device log; deviceId: {}", payload.deviceId);
         } else {
-            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE");
+            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp);
             logRepository.insert(log);
-            logger.error("Inserted ERROR log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
+            logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
         }
     }
 
-    private String dtoToString(DeviceDTO dto) {
+    private String dtoToString(SignedMessageDTO dto) {
+        MessageToVerify mtv = new MessageToVerify(dto);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.writeValueAsString(dto);
+            return objectMapper.writeValueAsString(mtv);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;

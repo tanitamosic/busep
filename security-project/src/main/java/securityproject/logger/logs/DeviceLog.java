@@ -20,7 +20,7 @@ public class DeviceLog {
 
     @Id
     private String id;
-    private String timestamp;
+    private LocalDateTime timestamp;
     private String deviceId;
     private String ipAddress;
     private String requestURL;
@@ -29,13 +29,14 @@ public class DeviceLog {
     private String message;
     private LogType logType;
 
-    public DeviceLog(HttpServletRequest request, LogType type, String message) {
-        String now = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+    public DeviceLog(HttpServletRequest request, LogType type, String message, String timestamp) {
+        String format = "yyyy-MM-dd'T'HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
         this.setId(uuidString);
         this.setIpAddress(request.getRemoteAddr());
-        this.setTimestamp(now);
+        this.setTimestamp(LocalDateTime.parse(timestamp, formatter));
         this.setRequestMethod(request.getMethod());
         this.setRequestURL(request.getRequestURL().toString());
         this.setRequestParameters(request.getParameterMap());

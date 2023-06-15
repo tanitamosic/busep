@@ -2,7 +2,7 @@ package securityproject.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import securityproject.dto.DeviceDTO;
+import securityproject.dto.device.SignedMessageDTO;
 import securityproject.dto.HouseDTO;
 import securityproject.model.home.Device;
 import securityproject.model.home.House;
@@ -49,9 +49,9 @@ public class HomeService {
 
     private static List<Device> getDevices(HouseDTO houseDTO) {
         List<Device> devices = new ArrayList<>();
-        for (DeviceDTO deviceDTO : houseDTO.devices) {
+        for (SignedMessageDTO deviceDTO : houseDTO.devices) {
             Device newDevice = new Device();
-            newDevice.setName(deviceDTO.name);
+//            newDevice.setName(deviceDTO.name);
             devices.add(newDevice);
         }
         return devices;

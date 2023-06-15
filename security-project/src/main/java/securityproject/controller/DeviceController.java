@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import securityproject.dto.DeviceDTO;
+import securityproject.dto.device.SignedMessageDTO;
 import securityproject.service.DeviceService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ public class DeviceController {
     DeviceService deviceService;
 
     @PostMapping(value="thermometer")
-    public ResponseEntity<String> logTemperature(HttpServletRequest request, @RequestBody DeviceDTO payload) {
+    public ResponseEntity<String> logTemperature(HttpServletRequest request, @RequestBody SignedMessageDTO payload) {
         try {
             deviceService.handleDeviceMessage(request, payload);
             return ResponseEntity.ok().build();
