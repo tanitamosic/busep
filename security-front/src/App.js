@@ -24,6 +24,7 @@ import { CreateObjectForm } from './components/forms/CreateObjectForm';
 import { getRole } from './services/utils/AuthService';
 import ObjectPreview from './components/business/ObjectPreview';
 import MyObjectsList from './components/business/MyObjectsList';
+import ClientPreview from './components/business/ClientPreview';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -41,6 +42,7 @@ function App() {
   const createObjectForm = <Container><CreateObjectForm /></Container>
   const objectPreview = <Container><ObjectPreview /></Container>
   const myObjects = <Container><MyObjectsList /></Container>
+  const clientPreview = <Container><ClientPreview /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -80,7 +82,7 @@ function App() {
                   <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
                   <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
 
-                  <Route path='/admin/clients/:email' element={unavailablePage}/> {/* TODO*/}
+                  <Route path='/admin/clients/:email' element={clientPreview}/> {/* TODO*/}
                   <Route path='/admin/clients' element={unavailablePage}/> {/* TODO*/}
 
                   <Route path='/admin/all-objects' element={allObjectsList}/>
