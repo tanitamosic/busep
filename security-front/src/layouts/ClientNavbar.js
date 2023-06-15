@@ -11,6 +11,7 @@ export default function ClientNavbar(){
         <Navbar.Toggle />
         <Navbar.Collapse className="ps-2">
             <Nav className="ms-auto">
+                <Nav.Link href="/client/my-objects">My objects</Nav.Link>
                 <Nav.Link href="/logout">Logout</Nav.Link>
             </Nav>
         </Navbar.Collapse>

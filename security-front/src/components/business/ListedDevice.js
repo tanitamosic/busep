@@ -2,10 +2,19 @@ import React from 'react';
 import '../../assets/styles/business.css';
 import { Row, Col } from 'react-bootstrap';
 import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { removeDeviceRequest } from '../../services/api/ObjectsApi';
+import { getRole } from '../../services/utils/AuthService';
 
 export default function ListedDevice({device}){
+
+    const [canRemove, setCanRemove] = useState(false);
+
+    useEffect(() => {
+        if (getRole() === "admin"){
+            setCanRemove(true);
+        }
+    }, [device])
 
     const removeButtonPressed = (e) => {
         removeDevice(e);
@@ -39,9 +48,9 @@ export default function ListedDevice({device}){
                     </Col>
                     <Col sm="1" />
                     <Col sm="1">
-                        <div className='mt-4'>
+                        {canRemove && <div className='mt-4'>
                             <FixedWidthRegButton text='Remove' onClickFunction={removeButtonPressed}/>
-                        </div>
+                        </div>}
                     </Col>
                     <Col sm="1" />
                 </Row>

@@ -25,7 +25,14 @@ export default function ObjectPreview(){
     const [listedDevices, setListedDevices] = useState();
     const [isUpdateMode, setIsUpdateMode] = useState(false);
     const [isNewDeviceMode, setIsNewDeviceMode] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (getRole() === "admin"){
+            setIsAdmin(true);
+        }
+    }, [])
 
     useEffect(() => {
         getObject(id).then(
@@ -131,7 +138,7 @@ export default function ObjectPreview(){
                         </Col>
                     </Row>
                 </>}
-                <Row className='mt-2'>
+                {isAdmin && <Row className='mt-2'>
                         <Col sm={4}/>
                         <Col sm={4}/>
                         <Col sm={4} align='center'>
@@ -139,8 +146,8 @@ export default function ObjectPreview(){
                                 {isUpdateMode ? "Cancel" : "Make changes"}
                             </Button>
                         </Col>
-                  </Row> 
-                  {isUpdateMode && <>
+                  </Row>} 
+                  {isAdmin && isUpdateMode && <>
                     <UpdateObjectForm id={object.id} />
                     <br/>
                     <Row className='mt-2'>
@@ -176,7 +183,7 @@ export default function ObjectPreview(){
                     <>
                         <center><h5>No devices</h5></center>
                 </>}
-                <Row className='mt-2'>
+                {isAdmin && <Row className='mt-2'>
                         <Col sm={4}/>
                         <Col sm={4}/>
                         <Col sm={4} align='center'>
@@ -184,18 +191,11 @@ export default function ObjectPreview(){
                                 {isNewDeviceMode ? "Cancel" : "Add new device"}
                             </Button>
                         </Col>
-                  </Row> 
-                {isNewDeviceMode && <>
+                  </Row> }
+                {isAdmin && isNewDeviceMode && <>
                     <NewDeviceForm houseId={object.id} />
                   </>}
             </div>
-
-            {/* {<NewDeviceForm houseId={object.id} />}
-
-            <div className="borderedBlock mt-3 " align="">
-                
-
-            </div> */}
         </>
     } else {
         return "No such object"

@@ -117,6 +117,9 @@ public class HomeService {
                 deleteDevice(d.getId());
             }
 
+            deactivateHouseUserRole(h.getId(), "OWNER");
+            deactivateHouseUserRole(h.getId(), "RENTER");
+
             h.setIsActive(false);
             houseRepository.saveAndFlush(h);
         } else {

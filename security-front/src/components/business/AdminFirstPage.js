@@ -17,11 +17,11 @@ export default function AdminFirstPage(){
     }
 
     const allObjectsButtonPressed = (e) => {
-        navigate('/admin/objects');
+        navigate('/admin/all-objects');
     }
 
     const newObjectButtonPressed = (e) => {
-        navigate('/admin/newObject');
+        navigate('/admin/new-object');
     }
 
     const logoutButtonPressed = (e) => {

@@ -5,9 +5,20 @@ import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { removeObjectRequest } from '../../services/api/ObjectsApi';
+import { useState, useEffect } from 'react';
+import { getRole } from '../../services/utils/AuthService';
 
 export default function ListedObject({object}){
-    const previewUrl = "/admin/object/" + object.id;
+    // default is for client use
+    const [canRemove, setCanRemove] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState("/client/my-objects/" + object.id);
+
+    useEffect(() => {
+        if (getRole() === "admin"){
+            setCanRemove(true);
+            setPreviewUrl("/admin/object/" + object.id);
+        }
+    }, [object])
 
     const removeButtonPressed = (e) => {
         removeObject(e);
@@ -49,9 +60,9 @@ export default function ListedObject({object}){
                     <Col sm="1" />
 
                     <Col sm="1">
-                        <div className='mt-4'>
+                        {canRemove && <div className='mt-4'>
                             <FixedWidthRegButton text='Remove' onClickFunction={removeButtonPressed}/>
-                        </div>
+                        </div>}
                     </Col>
                 </Row>
             </div>

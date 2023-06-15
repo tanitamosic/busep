@@ -23,6 +23,7 @@ import AllObjectsList from './components/business/AllObjectsList';
 import { CreateObjectForm } from './components/forms/CreateObjectForm';
 import { getRole } from './services/utils/AuthService';
 import ObjectPreview from './components/business/ObjectPreview';
+import MyObjectsList from './components/business/MyObjectsList';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -39,6 +40,7 @@ function App() {
   const allObjectsList = <Container><AllObjectsList /></Container>
   const createObjectForm = <Container><CreateObjectForm /></Container>
   const objectPreview = <Container><ObjectPreview /></Container>
+  const myObjects = <Container><MyObjectsList /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -67,7 +69,10 @@ function App() {
                   <Route path="/register" element={registrationForm} />
                   <Route path="/login" element={loginForm} />
                   <Route path="/logout" element={logoutPage} />
-                  <Route path='/client' element={clientFirstPage} />
+
+                  <Route path='/client/my-objects/:id' element={objectPreview} /> {/* TODO*/}
+                  <Route path='/client/my-objects' element={myObjects} /> {/* TODO*/}
+                  <Route path='/client' element={clientFirstPage} /> {/* TODO*/}
 
                   <Route path='/admin/certificates/:id' element={certificatePreview}/> {/* preview, validate, remove - 6, 7, 8*/}
                   <Route path='/admin/certificates' element={certificatesList}/> {/* list all, button for detailed view - 5 */}

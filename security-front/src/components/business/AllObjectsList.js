@@ -9,11 +9,12 @@ import { useNavigate } from 'react-router';
 import ListedObject from './ListedObject';
 import { getAllObjects } from '../../services/api/ObjectsApi';
 import { getRole } from '../../services/utils/AuthService';
+import ObjectsList from './ObjectsList';
 
 export default function AllObjectsList(){
 
     const [objects, setObjects] = useState([]);
-    const [listedObjects, setListedObjects] = useState([]);
+    // const [listedObjects, setListedObjects] = useState([]);
 
     const userRole = getRole();
     const navigate = useNavigate();
@@ -33,17 +34,18 @@ export default function AllObjectsList(){
         )
     }, [])
 
-    useEffect(() => {
-        if (!!objects){
-            console.log(objects)
-            let mappedObjects = objects.map((object) => <ListedObject object={object} key={object.id}/>)
-            setListedObjects(mappedObjects);
-            console.log(listedObjects);
-        }
-    }, [objects])
+    // useEffect(() => {
+    //     if (!!objects){
+    //         console.log(objects)
+    //         let mappedObjects = objects.map((object) => <ListedObject object={object} key={object.id}/>)
+    //         setListedObjects(mappedObjects);
+    //         console.log(listedObjects);
+    //     }
+    // }, [objects])
 
     return <>
-            <center><h3>Objects</h3></center>
+        <ObjectsList objects={objects} />
+            {/* <center><h3>Objects</h3></center>
             <br/>
 
             <Row>
@@ -56,17 +58,17 @@ export default function AllObjectsList(){
                 <Col sm="3">
                     Owner
                 </Col>
-                <Col sm="1">
+                <Col sm="1"> */}
                     {/* Valid */}
-                </Col>
+                {/* </Col>
                 <Col sm="2" />
                 <Col sm="2">
                 </Col>
-            </Row>
+            </Row> */}
 
-            {listedObjects}
+            {/* {listedObjects} */}
             {/* just gives nice space in the bottom */}
-            <p className='mt-3'></p> 
+            {/* <p className='mt-3'></p>  */}
         </>
 }
 
