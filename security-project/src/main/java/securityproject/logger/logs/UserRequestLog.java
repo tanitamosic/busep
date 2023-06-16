@@ -23,7 +23,7 @@ public class UserRequestLog {
 
     @Id
     private String id;
-    private String timestamp;
+    private LocalDateTime timestamp;
     private String ipAddress;
     private String requestURL;
     private String requestMethod;
@@ -32,12 +32,11 @@ public class UserRequestLog {
     private LogType logType;
 
     public UserRequestLog(HttpServletRequest request, TokenUtils tokenUtils, LogType type) {
-        String now = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
         UUID uuid = UUID.randomUUID();
         String uuidString = uuid.toString();
         this.setId(uuidString);
         this.setIpAddress(request.getRemoteAddr());
-        this.setTimestamp(now);
+        this.setTimestamp(LocalDateTime.now());
         this.setRequestMethod(request.getMethod());
         this.setRequestURL(request.getRequestURL().toString());
         this.setRequestParameters(request.getParameterMap());

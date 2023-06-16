@@ -22,14 +22,12 @@ public class DeviceLog {
     private String id;
     private LocalDateTime timestamp;
     private String deviceId;
+    private String deviceType;
     private String ipAddress;
-    private String requestURL;
-    private String requestMethod;
-    private Map<String, String[]> requestParameters;
     private String message;
     private LogType logType;
 
-    public DeviceLog(HttpServletRequest request, LogType type, String message, String timestamp) {
+    public DeviceLog(HttpServletRequest request, LogType type, String message, String timestamp, String deviceType) {
         String format = "yyyy-MM-dd'T'HH:mm:ss";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         UUID uuid = UUID.randomUUID();
@@ -37,11 +35,9 @@ public class DeviceLog {
         this.setId(uuidString);
         this.setIpAddress(request.getRemoteAddr());
         this.setTimestamp(LocalDateTime.parse(timestamp, formatter));
-        this.setRequestMethod(request.getMethod());
-        this.setRequestURL(request.getRequestURL().toString());
-        this.setRequestParameters(request.getParameterMap());
         this.setLogType(type);
         this.setMessage(message);
+        this.setDeviceType(deviceType);
 
     }
 }

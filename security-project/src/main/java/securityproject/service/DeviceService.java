@@ -85,17 +85,17 @@ public class DeviceService {
 
     public void handleDeviceMessage(HttpServletRequest request, SignedMessageDTO payload) {
         String message = dtoToString(payload);
-        System.out.println(message);
         if (null == message) {
-            logger.error("Device DTO serialization failed; deviceId: {}", payload.deviceId);
+            logger.error("Device message serialization failed; deviceId: {}", payload.deviceId);
             return;
         }
         if (verify(message, payload.signature)) {
-            DeviceLog log = new DeviceLog(request, LogType.INFO, payload.message, payload.timestamp);
+            // TODO: DODAJ DROOLS PRAVILA
+            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceType);
             logRepository.insert(log);
-            logger.info("Inserted INFO device log; deviceId: {}", payload.deviceId);
+            logger.info("Inserted " +payload.logType + " device log; deviceId: {}", payload.deviceId);
         } else {
-            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp);
+            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceType);
             logRepository.insert(log);
             logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
         }
