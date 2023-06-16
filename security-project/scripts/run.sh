@@ -1,5 +1,10 @@
 #!/bin/bash
-DURATION=10
-python thermometer.py &
+dur=$1
+DURATION=$((dur))
+python thermometer.py     $DURATION &
+python camera.py          $DURATION &
+python smoke_detector.py  $DURATION &
+python light.py           $DURATION &
+python lock.py            $DURATION &
 
 wait

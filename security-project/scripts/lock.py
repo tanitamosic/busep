@@ -45,52 +45,69 @@ def send_message(payload_json):
         print(f'type: {payload_json["logType"]}; message: {payload_json["message"]}')
 
 
-def info():
+def info_locked():
     start_time = time.time()
     while True:
-        time.sleep(1)  # OR time.sleep(random.randint(0, 10))
+        time.sleep(5)  # OR time.sleep(random.randint(0, 10))
         elapsed_time = time.time() - start_time
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 4,
             'logType': 'INFO',
-            'message': f'{random.randint(17, 23)}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'Lock is locked and still',
+            'deviceType': 'SMART_LOCK',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
 
 
-def warn():
+def info_unlocked():
     start_time = time.time()
     while True:
-        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
+        time.sleep(5)  # OR time.sleep(random.randint(0, 10))
         elapsed_time = time.time() - start_time
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 4,
+            'logType': 'INFO',
+            'message': f'Lock is unlocked and still',
+            'deviceType': 'SMART_LOCK',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+
+def warn_failed_unlock():
+    start_time = time.time()
+    while True:
+        time.sleep(10)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 4,
             'logType': 'WARN',
-            'message': f'{random.choice([random.randint(9, 16), random.randint(24, 30)])}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'Attempt to unlock failed',
+            'deviceType': 'SMART_LOCK',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
 
 
-def error():
+def error_breakin():
     start_time = time.time()
     while True:
-        time.sleep(6)  # OR time.sleep(random.randint(0, 10))
+        time.sleep(15)  # OR time.sleep(random.randint(0, 10))
         elapsed_time = time.time() - start_time
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 4,
             'logType': 'ERROR',
-            'message': f'{random.choice([random.randint(0, 8), random.randint(30, 40)])}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'Someone broke in!',
+            'deviceType': 'SMART_LOCK',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
@@ -103,19 +120,22 @@ if __name__ == '__main__':
         else:
             DURATION = int(sys.argv[1])
 
-    print(f"THERMOMETER WILL RUN FOR {DURATION} SECONDS")
+    print(f"LOCK WILL RUN FOR {DURATION} SECONDS")
     # Create threads for each function
-    info_thread = threading.Thread(target=info)
-    warn_thread = threading.Thread(target=warn)
-    error_thread = threading.Thread(target=error)
+    info_locked_thread = threading.Thread(target=info_locked)
+    info_unlocked_thread = threading.Thread(target=info_unlocked)
+    warn_thread = threading.Thread(target=warn_failed_unlock)
+    error_thread = threading.Thread(target=error_breakin)
 
     # Start the threads
-    info_thread.start()
+    info_locked_thread.start()
+    info_unlocked_thread.start()
     warn_thread.start()
     error_thread.start()
 
     # Wait for all threads to complete
-    info_thread.join()
+    info_locked_thread.join()
+    info_unlocked_thread.join()
     warn_thread.join()
     error_thread.join()
 

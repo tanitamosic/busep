@@ -45,24 +45,7 @@ def send_message(payload_json):
         print(f'type: {payload_json["logType"]}; message: {payload_json["message"]}')
 
 
-def info():
-    start_time = time.time()
-    while True:
-        time.sleep(1)  # OR time.sleep(random.randint(0, 10))
-        elapsed_time = time.time() - start_time
-        if elapsed_time >= DURATION:
-            break
-        payload_json = {
-            'deviceId': 3,
-            'logType': 'INFO',
-            'message': f'{random.randint(17, 23)}',
-            'deviceType': 'SMART_TEMP',
-            'timestamp': convert_to_iso(datetime.now())
-        }
-        send_message(payload_json)
-
-
-def warn():
+def info_left():
     start_time = time.time()
     while True:
         time.sleep(3)  # OR time.sleep(random.randint(0, 10))
@@ -70,10 +53,59 @@ def warn():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 1,
+            'logType': 'INFO',
+            'message': f'Object moved left',
+            'deviceType': 'SMART_CAM',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+        
+def info_right():
+    start_time = time.time()
+    while True:
+        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 1,
+            'logType': 'INFO',
+            'message': f'Object moved right',
+            'deviceType': 'SMART_CAM',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+        
+def info_still():
+    start_time = time.time()
+    while True:
+        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 1,
+            'logType': 'INFO',
+            'message': f'Object is still',
+            'deviceType': 'SMART_CAM',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+
+def warn_running():
+    start_time = time.time()
+    while True:
+        time.sleep(6)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 1,
             'logType': 'WARN',
-            'message': f'{random.choice([random.randint(9, 16), random.randint(24, 30)])}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'Object is running',
+            'deviceType': 'SMART_CAM',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
@@ -82,15 +114,15 @@ def warn():
 def error():
     start_time = time.time()
     while True:
-        time.sleep(6)  # OR time.sleep(random.randint(0, 10))
+        time.sleep(12)  # OR time.sleep(random.randint(0, 10))
         elapsed_time = time.time() - start_time
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 1,
             'logType': 'ERROR',
-            'message': f'{random.choice([random.randint(0, 8), random.randint(30, 40)])}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'Object is sneaking, acting suspicious',
+            'deviceType': 'SMART_CAM',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
@@ -103,19 +135,25 @@ if __name__ == '__main__':
         else:
             DURATION = int(sys.argv[1])
 
-    print(f"THERMOMETER WILL RUN FOR {DURATION} SECONDS")
+    print(f"CAMERA WILL RUN FOR {DURATION} SECONDS")
     # Create threads for each function
-    info_thread = threading.Thread(target=info)
-    warn_thread = threading.Thread(target=warn)
+    info_left_thread = threading.Thread(target=info_left)
+    info_right_thread = threading.Thread(target=info_right)
+    info_still_thread = threading.Thread(target=info_still)
+    warn_thread = threading.Thread(target=warn_running)
     error_thread = threading.Thread(target=error)
 
     # Start the threads
-    info_thread.start()
+    info_left_thread.start()
+    info_right_thread.start()
+    info_still_thread.start()
     warn_thread.start()
     error_thread.start()
 
     # Wait for all threads to complete
-    info_thread.join()
+    info_left_thread.join()
+    info_right_thread.join()
+    info_still_thread.join()
     warn_thread.join()
     error_thread.join()
 

@@ -45,24 +45,7 @@ def send_message(payload_json):
         print(f'type: {payload_json["logType"]}; message: {payload_json["message"]}')
 
 
-def info():
-    start_time = time.time()
-    while True:
-        time.sleep(1)  # OR time.sleep(random.randint(0, 10))
-        elapsed_time = time.time() - start_time
-        if elapsed_time >= DURATION:
-            break
-        payload_json = {
-            'deviceId': 3,
-            'logType': 'INFO',
-            'message': f'{random.randint(17, 23)}',
-            'deviceType': 'SMART_TEMP',
-            'timestamp': convert_to_iso(datetime.now())
-        }
-        send_message(payload_json)
-
-
-def warn():
+def info_light():
     start_time = time.time()
     while True:
         time.sleep(3)  # OR time.sleep(random.randint(0, 10))
@@ -71,15 +54,31 @@ def warn():
             break
         payload_json = {
             'deviceId': 3,
-            'logType': 'WARN',
-            'message': f'{random.choice([random.randint(9, 16), random.randint(24, 30)])}',
+            'logType': 'INFO',
+            'message': f'Room is well illuminated',
+            'deviceType': 'SMART_TEMP',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+def info_dark():
+    start_time = time.time()
+    while True:
+        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 3,
+            'logType': 'INFO',
+            'message': f'Room is dark',
             'deviceType': 'SMART_TEMP',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
 
 
-def error():
+def warn_flickering():
     start_time = time.time()
     while True:
         time.sleep(6)  # OR time.sleep(random.randint(0, 10))
@@ -88,13 +87,61 @@ def error():
             break
         payload_json = {
             'deviceId': 3,
-            'logType': 'ERROR',
-            'message': f'{random.choice([random.randint(0, 8), random.randint(30, 40)])}',
+            'logType': 'WARN',
+            'message': f'Lighting bulb is flickering',
             'deviceType': 'SMART_TEMP',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
 
+def warn_dim():
+    start_time = time.time()
+    while True:
+        time.sleep(6)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 3,
+            'logType': 'WARN',
+            'message': f'Lighting bulb is dimmed',
+            'deviceType': 'SMART_TEMP',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+def error_blackout():
+    start_time = time.time()
+    while True:
+        time.sleep(10)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 3,
+            'logType': 'ERROR',
+            'message': f'Blackout occured',
+            'deviceType': 'SMART_TEMP',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+
+def error_short_circuit():
+    start_time = time.time()
+    while True:
+        time.sleep(10)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 3,
+            'logType': 'ERROR',
+            'message': f'Lighting bulb short-circuited',
+            'deviceType': 'SMART_TEMP',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
@@ -103,19 +150,28 @@ if __name__ == '__main__':
         else:
             DURATION = int(sys.argv[1])
 
-    print(f"THERMOMETER WILL RUN FOR {DURATION} SECONDS")
+    print(f"LIGHT WILL RUN FOR {DURATION} SECONDS")
     # Create threads for each function
-    info_thread = threading.Thread(target=info)
-    warn_thread = threading.Thread(target=warn)
-    error_thread = threading.Thread(target=error)
+    info_dark_thread = threading.Thread(target=info_dark)
+    info_light_thread = threading.Thread(target=info_light)
+    warn_flickering_thread = threading.Thread(target=warn_flickering)
+    warn_dim_thread = threading.Thread(target=warn_dim)
+    error_short_circuit_thread = threading.Thread(target=error_short_circuit)
+    error_blackout_thread = threading.Thread(target=error_blackout)
 
     # Start the threads
-    info_thread.start()
-    warn_thread.start()
-    error_thread.start()
+    info_dark_thread.start()
+    info_light_thread.start()
+    warn_flickering_thread.start()
+    warn_dim_thread.start()
+    error_short_circuit_thread.start()
+    error_blackout_thread.start()
 
     # Wait for all threads to complete
-    info_thread.join()
-    warn_thread.join()
-    error_thread.join()
+    info_dark_thread.join()
+    info_light_thread.join()
+    warn_flickering_thread.join()
+    warn_dim_thread.join()
+    error_short_circuit_thread.join()
+    error_blackout_thread.join()
 

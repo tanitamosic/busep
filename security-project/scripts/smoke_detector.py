@@ -48,21 +48,21 @@ def send_message(payload_json):
 def info():
     start_time = time.time()
     while True:
-        time.sleep(1)  # OR time.sleep(random.randint(0, 10))
+        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
         elapsed_time = time.time() - start_time
         if elapsed_time >= DURATION:
             break
         payload_json = {
             'deviceId': 3,
             'logType': 'INFO',
-            'message': f'{random.randint(17, 23)}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'Air is clean',
+            'deviceType': 'SMART_SMOKE',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
 
 
-def warn():
+def warn_cigars():
     start_time = time.time()
     while True:
         time.sleep(3)  # OR time.sleep(random.randint(0, 10))
@@ -72,8 +72,40 @@ def warn():
         payload_json = {
             'deviceId': 3,
             'logType': 'WARN',
-            'message': f'{random.choice([random.randint(9, 16), random.randint(24, 30)])}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'There is cigar smoke',
+            'deviceType': 'SMART_SMOKE',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+def warn_furnace():
+    start_time = time.time()
+    while True:
+        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 3,
+            'logType': 'WARN',
+            'message': f'Furnace is smoking',
+            'deviceType': 'SMART_SMOKE',
+            'timestamp': convert_to_iso(datetime.now())
+        }
+        send_message(payload_json)
+
+def warn_oven():
+    start_time = time.time()
+    while True:
+        time.sleep(3)  # OR time.sleep(random.randint(0, 10))
+        elapsed_time = time.time() - start_time
+        if elapsed_time >= DURATION:
+            break
+        payload_json = {
+            'deviceId': 3,
+            'logType': 'WARN',
+            'message': f'Oven is smoking',
+            'deviceType': 'SMART_SMOKE',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
@@ -89,8 +121,8 @@ def error():
         payload_json = {
             'deviceId': 3,
             'logType': 'ERROR',
-            'message': f'{random.choice([random.randint(0, 8), random.randint(30, 40)])}',
-            'deviceType': 'SMART_TEMP',
+            'message': f'FIRE FIRE FIRE ! ! !',
+            'deviceType': 'SMART_SMOKE',
             'timestamp': convert_to_iso(datetime.now())
         }
         send_message(payload_json)
@@ -103,19 +135,25 @@ if __name__ == '__main__':
         else:
             DURATION = int(sys.argv[1])
 
-    print(f"THERMOMETER WILL RUN FOR {DURATION} SECONDS")
+    print(f"SMOKE DETECTOR WILL RUN FOR {DURATION} SECONDS")
     # Create threads for each function
     info_thread = threading.Thread(target=info)
-    warn_thread = threading.Thread(target=warn)
+    warn_cigars_thread = threading.Thread(target=warn_cigars)
+    warn_furnace_thread = threading.Thread(target=warn_furnace)
+    warn_oven_thread = threading.Thread(target=warn_oven)
     error_thread = threading.Thread(target=error)
 
     # Start the threads
     info_thread.start()
-    warn_thread.start()
+    warn_cigars_thread.start()
+    warn_furnace_thread.start()
+    warn_oven_thread.start()
     error_thread.start()
 
     # Wait for all threads to complete
     info_thread.join()
-    warn_thread.join()
+    warn_cigars_thread.join()
+    warn_furnace_thread.join()
+    warn_oven_thread.join()
     error_thread.join()
 
