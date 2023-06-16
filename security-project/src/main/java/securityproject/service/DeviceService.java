@@ -9,7 +9,10 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import securityproject.dto.DeviceDTO;
 import securityproject.dto.device.SignedMessageDTO;
 import securityproject.dto.device.MessageToVerify;
 import securityproject.model.logs.DeviceLog;
@@ -26,6 +29,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.util.Objects;
 
 
 @Service
@@ -41,6 +45,8 @@ public class DeviceService {
     HomeService homeService;
     @Autowired
     AlarmService alarmService;
+    @Autowired
+    SimpMessagingTemplate messagingTemplate;
 
     static Path publicKeyPath = Paths.get("src/main/resources/keys/public_device_key.pem");
     static String publicKeyPEM;
@@ -99,11 +105,13 @@ public class DeviceService {
         if (verify(message, payload.signature)) {
             DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceId, payload.deviceType);
             logRepository.insert(log);
+            sendLog(log);
             logger.info("Inserted " +payload.logType + " device log; deviceId: {}", payload.deviceId);
             alarmService.handleDeviceLog(log);
         } else {
             DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceId,payload.deviceType);
             logRepository.insert(log);
+            sendLog(log);
             logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
         }
     }
@@ -113,6 +121,20 @@ public class DeviceService {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(mtv);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void sendLog(DeviceLog log) {
+        messagingTemplate.convertAndSend("/topic/log", Objects.requireNonNull(convertToJson(log)));
+    }
+
+    public static String convertToJson(Object obj) {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+        try {
+            return objectMapper.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;

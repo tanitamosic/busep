@@ -14,13 +14,13 @@ export const getToken = () => {
 
 export const getTokenWithNoQuotes = () => {
   const token = getToken();
-  
-  if (!!token){
-    const splitedtoken = token.slice(1, -1);
-   return splitedtoken;
- } else {
-   return "";
- }
+  return token;
+//   if (!!token){
+//     const splitedtoken = token.slice(1, -1);
+//    return splitedtoken;
+//  } else {
+//    return "";
+//  }
 }
 
 export const getLoggedUserEmail = () => {

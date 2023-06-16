@@ -27,5 +27,41 @@ public class DeviceController {
             return ResponseEntity.ok().build();
         }
     }
+    @PostMapping(value="light")
+    public ResponseEntity<String> logLight(HttpServletRequest request, @RequestBody SignedMessageDTO payload) {
+        try {
+            deviceService.handleDeviceMessage(request, payload);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.ok().build();
+        }
+    }
+    @PostMapping(value="camera")
+    public ResponseEntity<String> logCamera(HttpServletRequest request, @RequestBody SignedMessageDTO payload) {
+        try {
+            deviceService.handleDeviceMessage(request, payload);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.ok().build();
+        }
+    }
+    @PostMapping(value="lock")
+    public ResponseEntity<String> logLock(HttpServletRequest request, @RequestBody SignedMessageDTO payload) {
+        try {
+            deviceService.handleDeviceMessage(request, payload);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.ok().build();
+        }
+    }
+    @PostMapping(value="smoke_detector")
+    public ResponseEntity<String> logSmoke(HttpServletRequest request, @RequestBody SignedMessageDTO payload) {
+        try {
+            deviceService.handleDeviceMessage(request, payload);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.ok().build();
+        }
+    }
 
 }
