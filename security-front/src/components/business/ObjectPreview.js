@@ -12,7 +12,7 @@ import { getUserByEmail } from '../../services/api/UserApi';
 import ListedDevice from './ListedDevice';
 import { NewDeviceForm } from '../forms/NewDeviceForm';
 import { getObject } from '../../services/api/ObjectsApi';
-import { removeObjectRequest } from '../../services/api/ObjectsApi';
+import { removeObjectRequest, sendRemoveRenterRequest } from '../../services/api/ObjectsApi';
 import { UpdateObjectForm } from '../forms/UpdateObjectForm';
 
 export default function ObjectPreview(){
