@@ -2,10 +2,10 @@ INSERT INTO roles (name) VALUES ('ROLE_ADMIN') ON CONFLICT (name) DO UPDATE SET 
 INSERT INTO roles (name) VALUES ('ROLE_OWNER') ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name;
 INSERT INTO roles (name) VALUES ('ROLE_RENTER') ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name;
 
-INSERT INTO users (user_id, name, surname, password, email, locked, enabled, last_password_reset_date, type, failed_attempt, lock_time, act_string, pin)
-VALUES (1, 'AdminIme', 'AdminPrezime', '{bcrypt}$2a$10$a7zldOJKb..18dftiaRZmOqMlnt9lUxjG/6BYhLFVc5FEqhwgiz0u', 'admin@gmail.com', false, true, null, 'SuperAdmin', 0, null, 'actadmin', 100001),
-    (2, 'VlasnikIme', 'VlasnikPrezime', '{bcrypt}$2a$10$DAiZpF0xgqYi1RIKr/J1FOcFNMgbO8BQMhx02/UmBEqafS7e/czYa', 'vlasnik@gmail.com', false, true, null, 'StandardUser', 0, null, 'actvlasnik', 100002),
-   (3, 'StanarIme', 'StanarPrezime', '{bcrypt}$2a$10$2aQcJkVqNDeQHXunk25tLOgqRlZF4zlg1H9zqtayUzspusVugED5y', 'stanar@gmail.com', false, true, null, 'StandardUser', 0, null, 'actstanar', 100003)
+INSERT INTO users (user_id, name, surname, password, email, locked, enabled, last_password_reset_date, type, failed_attempt, lock_time, act_string, pin, is_active)
+VALUES (1, 'AdminIme', 'AdminPrezime', '{bcrypt}$2a$10$a7zldOJKb..18dftiaRZmOqMlnt9lUxjG/6BYhLFVc5FEqhwgiz0u', 'admin@gmail.com', false, true, null, 'SuperAdmin', 0, null, 'actadmin', 100001, true),
+    (2, 'VlasnikIme', 'VlasnikPrezime', '{bcrypt}$2a$10$DAiZpF0xgqYi1RIKr/J1FOcFNMgbO8BQMhx02/UmBEqafS7e/czYa', 'vlasnik@gmail.com', false, true, null, 'StandardUser', 0, null, 'actvlasnik', 100002, true),
+   (3, 'StanarIme', 'StanarPrezime', '{bcrypt}$2a$10$2aQcJkVqNDeQHXunk25tLOgqRlZF4zlg1H9zqtayUzspusVugED5y', 'stanar@gmail.com', false, true, null, 'StandardUser', 0, null, 'actstanar', 100003, true)
     ON CONFLICT (user_id) DO UPDATE SET
     name = EXCLUDED.name,
      surname = EXCLUDED.surname,
@@ -18,7 +18,8 @@ VALUES (1, 'AdminIme', 'AdminPrezime', '{bcrypt}$2a$10$a7zldOJKb..18dftiaRZmOqMl
      failed_attempt = EXCLUDED.failed_attempt,
      lock_time = EXCLUDED.lock_time,
      act_string = EXCLUDED.act_string,
-     pin = EXCLUDED.pin;
+     pin = EXCLUDED.pin,
+     is_active = EXCLUDED.is_active;
 
 -- passwords for users are: admin, vlasnik, stanar ^^^
 

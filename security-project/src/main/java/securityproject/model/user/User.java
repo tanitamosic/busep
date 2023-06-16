@@ -79,4 +79,9 @@ public abstract class User {
     @Column(name = "pin")
     @JsonIgnore
     private Integer pin;
+
+    @Column(name = "is_active")
+    @JsonIgnore
+    private Boolean isActive;
+
 }

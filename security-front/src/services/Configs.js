@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken, getTokenWithNoQuotes } from './utils/AuthService';
+import { getToken, getTokenWithNoQuotes, getCookie } from './utils/AuthService';
 
 export var getApiCall = () =>{
     const token = getTokenWithNoQuotes();
@@ -7,12 +7,8 @@ export var getApiCall = () =>{
         baseURL: "http://localhost:8081",
         headers:  {"Authorization" : `Bearer ` + token,
                     "Content-Type": "application/json",
-                "Cookiee": sessionStorage.getItem("cookie")}
+                "Cookiee": getCookie()}
     });
-
-    // headers:  {"Authorization" : `Bearer ${token}`,
-    //                 "Content-Type": "application/json"}
-
 } 
 
 export var getApiCallUrlEncoded = () =>{
@@ -22,10 +18,6 @@ export var getApiCallUrlEncoded = () =>{
         headers:  {"Authorization" : `Bearer ` + token,
                     'Content-Type': 'application/x-www-form-urlencoded'}
     });
-
-    // headers:  {"Authorization" : `Bearer ${token}`,
-    //                 "Content-Type": "application/json"}
-
 } 
 
 export var getApiCallUrlEncodedNoBearer = () =>{
@@ -33,12 +25,9 @@ export var getApiCallUrlEncodedNoBearer = () =>{
     return axios.create({
         baseURL: "http://localhost:8081",
         headers:  {
-                    'Content-Type': 'application/x-www-form-urlencoded'}
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
     });
-
-    // headers:  {"Authorization" : `Bearer ${token}`,
-    //                 "Content-Type": "application/json"}
-
 } 
 
 

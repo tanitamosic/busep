@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -25,4 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void updateFailedAttempts(@Param("failed_attempts")int i, @Param("email") String email);
 
     User getUserById(Long id);
+    List<User> getUsersByIsActive(Boolean isActive);
 }

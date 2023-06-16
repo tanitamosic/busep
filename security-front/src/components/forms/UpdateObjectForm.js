@@ -5,7 +5,7 @@ import { sendRegistrationRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";  
-import { sendObjectUpdateRequest } from '../../services/api/ObjectsApi';
+import { sendObjectUpdateRequest, sendRemoveRenterRequest} from '../../services/api/ObjectsApi';
 
 export function UpdateObjectForm({id}) {
     const [ownerEmail, setOwnerEmail] = useState("");
@@ -47,6 +47,21 @@ export function UpdateObjectForm({id}) {
         }, [id, ownerEmail, renterEmail, address]
     )
 
+    const postRemoveRenterRequest = useCallback(
+        (e) => {
+            e.preventDefault();
+
+            sendRemoveRenterRequest(id).then(
+                (response) => {
+                    console.log(response);
+                    window.location.reload();
+                }, (error) => {
+                  console.log(error);
+                }
+            );
+        }, [id]
+    )
+
     return (<>
             <Form>
                 <LabeledInput value={ownerEmail} label="Owner Email" inputName="ownerEmail" placeholder="Type owner email" required onChangeFunc={setOwnerEmail}/>
@@ -59,6 +74,15 @@ export function UpdateObjectForm({id}) {
                     <Col sm={4} align='center'>
                         <Button className='formButton' onClick={createButtonPressed}>
                             Update
+                        </Button>
+                    </Col>
+                    <Col sm={4}/>
+                </Row> 
+                <Row className='mt-2'>
+                    <Col sm={4}/>
+                    <Col sm={4} align='center'>
+                        <Button className='formButton' onClick={postRemoveRenterRequest}>
+                            Remove renter
                         </Button>
                     </Col>
                     <Col sm={4}/>

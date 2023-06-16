@@ -24,6 +24,8 @@ import { CreateObjectForm } from './components/forms/CreateObjectForm';
 import { getRole } from './services/utils/AuthService';
 import ObjectPreview from './components/business/ObjectPreview';
 import MyObjectsList from './components/business/MyObjectsList';
+import ClientPreview from './components/business/ClientPreview';
+import ClientsList from './components/business/ClientsList';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -41,6 +43,8 @@ function App() {
   const createObjectForm = <Container><CreateObjectForm /></Container>
   const objectPreview = <Container><ObjectPreview /></Container>
   const myObjects = <Container><MyObjectsList /></Container>
+  const clientPreview = <Container><ClientPreview /></Container>
+  const clientsList = <Container><ClientsList /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -74,14 +78,14 @@ function App() {
                   <Route path='/client/my-objects' element={myObjects} />
                   <Route path='/client' element={clientFirstPage} /> 
 
-                  <Route path='/admin/certificates/:id' element={certificatePreview}/> {/* preview, validate, remove - 6, 7, 8*/}
-                  <Route path='/admin/certificates' element={certificatesList}/> {/* list all, button for detailed view - 5 */}
+                  <Route path='/admin/certificates/:id' element={certificatePreview}/> 
+                  <Route path='/admin/certificates' element={certificatesList}/>
 
-                  <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
-                  <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
+                  <Route path='/admin/requests/:email' element={requestPreview}/> 
+                  <Route path='/admin/requests' element={requestsList}/>
 
-                  <Route path='/admin/clients/:email' element={unavailablePage}/> {/* TODO*/}
-                  <Route path='/admin/clients' element={unavailablePage}/> {/* TODO*/}
+                  <Route path='/admin/clients/:email' element={clientPreview}/> 
+                  <Route path='/admin/clients' element={clientsList}/> 
 
                   <Route path='/admin/all-objects' element={allObjectsList}/>
                   <Route path='/admin/objects/:email' element={userObjectsList}/>

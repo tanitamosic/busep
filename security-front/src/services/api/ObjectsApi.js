@@ -64,6 +64,16 @@ export async function getAllObjects(){
     }
   }
 
+  export async function sendRemoveRenterRequest(houseId){
+    try {
+        const responseData = await getApiCall().post('/home/remove-renter/' + houseId);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
   export async function sendDeviceCreationRequest(deviceJson){
     try {
         const responseData = await getApiCall().post('/home/add-device', deviceJson);

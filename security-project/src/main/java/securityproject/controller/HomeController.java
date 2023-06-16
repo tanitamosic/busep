@@ -94,6 +94,17 @@ public class HomeController {
         }
     }
 
+    @PostMapping("/remove-renter/{houseId}")
+    public ResponseEntity<String> removeRenter(@PathVariable Long houseId) {
+        try {
+            homeService.deactivateHouseUserRole(houseId, "RENTER");
+            return ResponseEntity.ok("Renter removed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @DeleteMapping("/delete-home-{id}")
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> deleteHome(@PathVariable Long id) {
