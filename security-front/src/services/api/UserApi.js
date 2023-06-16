@@ -40,3 +40,23 @@ export async function postClientFilterRequest(){
         return err.message
     }
   }
+
+export async function postClientDeletionRequest(email){
+    try {
+        const responseData = await getApiCall().post('/user/delete-client/' + email);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
+export async function postClientRoleChangeRequest(email){
+    try {
+        const responseData = await getApiCall().post('/user/change-client-role/' + email);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }

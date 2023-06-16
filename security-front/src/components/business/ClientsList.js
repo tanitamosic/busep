@@ -32,8 +32,20 @@ export default function ClientsList(){
                 }
             )
         } else {
-            // TODO filter users from back by params
-            // TODO set filter params into name, surname, email, role
+            setFilterName(filterParams.filterName);
+            setFilterSurname(filterParams.filterSurname);
+            setFilterEmail(filterParams.filterEmail);
+            setFilterRole(filterParams.filterRole);
+            
+            sendFilterClientsRequest(filterParams).then(
+                (response) => {
+                    console.log(response);
+                    setClients(!!response ? response.data : []);
+                    
+                }, (error) => {
+                  console.log(error);
+                }
+            );
         }
     }, [])
 
@@ -50,7 +62,7 @@ export default function ClientsList(){
     const validateInput = () => {
         let valid = (checkLettersInput(filterName) || filterName.length === 0 ) && 
                     (checkLettersInput(filterSurname) || filterSurname.length === 0 ) && 
-                    (checkEmailInput(filterEmail) || filterEmail.length === 0 ) && 
+                    // (checkEmailInput(filterEmail) || filterEmail.length === 0 ) && 
                     (filterRole.length === 0 || filterRole.toLowerCase() === "renter" || filterRole.toLowerCase() === "owner" ) 
                     ;
   
@@ -65,6 +77,10 @@ export default function ClientsList(){
             }
         );
         sessionStorage.removeItem("filterParams");
+        setFilterName("");
+        setFilterSurname("");
+        setFilterEmail("");
+        setFilterRole("");
     }
 
     const filterButtonPressed = (e) => {

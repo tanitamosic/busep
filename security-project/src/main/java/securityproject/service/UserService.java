@@ -2,9 +2,12 @@ package securityproject.service;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import securityproject.dto.FilterDTO;
+import securityproject.dto.HouseResponse;
 import securityproject.dto.RequestDto;
 import securityproject.dto.UserResponse;
 import securityproject.mail.MailingService;
+import securityproject.model.home.HouseUserRole;
 import securityproject.model.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 import securityproject.model.user.Role;
 import securityproject.model.user.StandardUser;
 import securityproject.model.user.User;
+import securityproject.repository.HouseUserRoleRepository;
+import securityproject.repository.RoleRepository;
 import securityproject.repository.UserRepository;
 import securityproject.util.Helper;
 import securityproject.util.ModelValidator;
@@ -27,6 +32,9 @@ public class UserService implements UserDetailsService {
     public static final int MAX_FAILED_ATTEMPTS = 3;
 
     private static final long LOCK_TIME_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -46,6 +54,11 @@ public class UserService implements UserDetailsService {
     
     @Autowired
     MailingService mailingService;
+
+//    @Autowired
+//    HomeService homeService;
+    @Autowired
+    HouseUserRoleRepository houseUserRoleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -68,6 +81,110 @@ public class UserService implements UserDetailsService {
                         .anyMatch(roleName -> roleName.equals("ROLE_OWNER") || roleName.equals("ROLE_RENTER"))
                         )
                 .collect(Collectors.toList());
+
+        return clients;
+    }
+
+    public void changeClientRole(String email) throws Exception {
+        User u = userRepository.getUserByEmail(email);
+
+        if (u != null && u.getIsActive()){
+            validateClientCanBeDeletedOrRoleChanged(email);
+
+            System.out.println("roles:");
+            System.out.println(u.getRoles().size());
+
+            for (Role r : u.getRoles()){
+                System.out.println(r.getName());
+
+                if (r.getName().equals("ROLE_OWNER")){
+                    u.getRoles().remove(r);
+                    u.getRoles().add(roleRepository.findByName("ROLE_RENTER"));
+                    break;
+                } else if (r.getName().equals("ROLE_RENTER")){
+                    u.getRoles().remove(r);
+                    u.getRoles().add(roleRepository.findByName("ROLE_OWNER"));
+                    break;
+                }
+            }
+
+            userRepository.saveAndFlush(u);
+        } else {
+            throw new Exception("User does not exist.");
+        }
+    }
+
+    public void deleteClient(String email) throws Exception {
+        User u = userRepository.getUserByEmail(email);
+
+        if (u != null && u.getIsActive()){
+            validateClientCanBeDeletedOrRoleChanged(email);
+            u.setIsActive(false);
+            userRepository.saveAndFlush(u);
+        } else {
+            throw new Exception("User does not exist.");
+        }
+    }
+
+    private void validateClientCanBeDeletedOrRoleChanged(String email) throws Exception {
+        List<HouseUserRole> houses;
+        MyUserDetails userDetails = (MyUserDetails) loadUserByUsername(email);
+        Role r = (Role) userDetails.getUser().getRoles().toArray()[0];
+
+        if (r.getName().equals("ROLE_OWNER")) {
+            houses = houseUserRoleRepository.getHouseUserRolesByUserIdAndRoleAndIsActive(userDetails.getUser().getId(), "OWNER", true);
+        } else {
+            houses = houseUserRoleRepository.getHouseUserRolesByUserIdAndRoleAndIsActive(userDetails.getUser().getId(), "RENTER", true);
+        }
+
+        if (houses.size() > 0){
+            throw new Exception("User has more than 0 objects - Can't be deleted or his role changed.");
+        }
+    }
+
+    public List<User> filterClients(FilterDTO filterDTO){
+        List<User> clients = getAllClients();
+
+        // name: startsWith
+        if (filterDTO.filterName != null && filterDTO.filterName.length() > 0){
+            clients = clients.stream()
+                    .filter(c ->
+                            c.getName().toLowerCase()
+                                    .startsWith(filterDTO.filterName.toLowerCase())
+                            )
+                    .collect(Collectors.toList());
+        }
+
+        // surname: startsWith
+        if (filterDTO.filterSurname != null && filterDTO.filterSurname.length() > 0){
+            clients = clients.stream()
+                    .filter(c ->
+                            c.getSurname().toLowerCase()
+                                    .startsWith(filterDTO.filterSurname.toLowerCase())
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        // email: contains
+        if (filterDTO.filterEmail != null && filterDTO.filterEmail.length() > 0){
+            clients = clients.stream()
+                    .filter(c ->
+                            c.getEmail().toLowerCase()
+                                    .contains(filterDTO.filterEmail.toLowerCase())
+                    )
+                    .collect(Collectors.toList());
+        }
+
+        // role: equals
+        if (filterDTO.filterRole != null && filterDTO.filterRole.length() > 0){
+            clients = clients.stream()
+                    .filter(c ->
+                            c.getRoles().stream().map(r -> r.getName())
+                                    .anyMatch(roleName ->
+                                            roleName.equals("ROLE_" + filterDTO.filterRole.toUpperCase()))
+                    )
+                    .collect(Collectors.toList());
+        }
 
         return clients;
     }

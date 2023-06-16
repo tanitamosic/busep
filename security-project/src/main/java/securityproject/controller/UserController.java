@@ -3,10 +3,9 @@ package securityproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import securityproject.dto.FilterDTO;
+import securityproject.dto.HouseDTO;
 import securityproject.dto.UserResponse;
 import securityproject.model.user.User;
 import securityproject.service.UserService;
@@ -38,5 +37,35 @@ public class UserController {
        List<UserResponse> responses = userService.makeUserResponses(clients);
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @PostMapping(value="filter-clients")
+    public ResponseEntity<List<UserResponse>> filterClients(@RequestBody FilterDTO filterDto) {
+        List<User> clients = userService.filterClients(filterDto);
+        List<UserResponse> responses = userService.makeUserResponses(clients);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @PostMapping(value="delete-client/{email}")
+    public ResponseEntity<String> deleteClient(@PathVariable String email) {
+        try {
+            userService.deleteClient(email);
+            return ResponseEntity.ok("Client was deleted successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value="change-client-role/{email}")
+    public ResponseEntity<String> changeClientRole(@PathVariable String email) {
+        try {
+            userService.changeClientRole(email);
+            return ResponseEntity.ok("Client role was changed successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

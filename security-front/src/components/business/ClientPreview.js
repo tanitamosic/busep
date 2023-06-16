@@ -8,7 +8,7 @@ import {isCertificateValid, deactivateCertificate } from '../../services/api/Cer
 import LabeledTextarea from '../forms/LabeledTextarea';
 import { useNavigate  } from "react-router-dom";
 import { getRole } from '../../services/utils/AuthService';
-import { getUserByEmail } from '../../services/api/UserApi';
+import { getUserByEmail, postClientRoleChangeRequest, postClientDeletionRequest } from '../../services/api/UserApi';
 import ListedDevice from './ListedDevice';
 import { NewDeviceForm } from '../forms/NewDeviceForm';
 import { getObject } from '../../services/api/ObjectsApi';
@@ -70,24 +70,45 @@ export default function ClientPreview(){
     // const removeObject = useCallback(
     //     (e) => {
     //         e.preventDefault();
-    //         removeObjectRequest(id).then(
-    //             (response) => {
-    //                 console.log(response);
-    //                 navigate("/admin/all-objects");
-    //             }, (error) => {
-    //                 console.log(error);
-    //             }
-    //         );
+            // removeObjectRequest(id).then(
+            //     (response) => {
+            //         console.log(response);
+            //         navigate("/admin/all-objects");
+            //     }, (error) => {
+            //         console.log(error);
+            //     }
+            // );
     //     }, []
     // )
 
     const removeClientButtonPressed = (e) => {
-        // TODO
-        // removeObject() 
+        e.preventDefault();
+
+        if (!!email){
+            postClientDeletionRequest(email).then(
+                (response) => {
+                    console.log(response);
+                    navigate("/admin/clients");
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+        }
     }
 
     const changeClientRoleButtonPressed = (e) => {
-        // TODO
+        e.preventDefault();
+
+        if (!!email){
+            postClientRoleChangeRequest(email).then(
+                (response) => {
+                    console.log(response);
+                    window.location.reload();
+                }, (error) => {
+                    console.log(error);
+                }
+            );
+        }
     }
 
     const clientObjectsButtonPressed = (e) => {
