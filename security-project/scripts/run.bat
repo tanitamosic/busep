@@ -1,6 +1,7 @@
 @echo off
-set dur=%1
-set DURATION=%dur%
+set "dur=%1"
+if "%dur%"=="" set "dur=30"
+set "DURATION=%dur%"
 
 start python thermometer.py     %DURATION%
 start python camera.py          %DURATION%
