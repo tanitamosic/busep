@@ -1,16 +1,9 @@
 import jwtDecode from "jwt-decode";
-
-export const setToken = (token) => {
-  if(token === null){
-    sessionStorage.setItem("jwt", null);
-  }
-  else{
-    sessionStorage.setItem("jwt", JSON.stringify(token));
-  }
-}
+import store from '../../secureStore/store';
 
 export const getToken = () => {
-   const token = sessionStorage.getItem("jwt");
+  const state = store.getState();
+  const token = state.auth.token;
    
    if (!!token){
     return token;
@@ -20,7 +13,7 @@ export const getToken = () => {
 }
 
 export const getTokenWithNoQuotes = () => {
-  const token = sessionStorage.getItem("jwt");
+  const token = getToken();
   
   if (!!token){
     const splitedtoken = token.slice(1, -1);
@@ -30,24 +23,16 @@ export const getTokenWithNoQuotes = () => {
  }
 }
 
-export const removeToken = () => {
-  return sessionStorage.removeItem("jwt");
-}
-
-export const removeLoggedUserData = () => {
-  removeToken();
-  sessionStorage.removeItem("role");
-  sessionStorage.removeItem("email");
-}
-
 export const getLoggedUserEmail = () => {
-  const email = sessionStorage.getItem("email");
+  const decodedToken = getDecodedToken();
+  const email = decodedToken.email;
 
   return email;
 }
 
 export const getRole = () => {
-  const role = sessionStorage.getItem("role");
+  const decodedToken = getDecodedToken();
+  const role = decodedToken.role;
 
   if (role === "ROLE_ADMIN"){
     return "admin";
@@ -60,10 +45,10 @@ export const getRole = () => {
 
 export const getDecodedToken = () => {
   const token = getToken();
+
   if (!!token){
     return jwtDecode(token);
   } else {
     return {};
   }
 }
-

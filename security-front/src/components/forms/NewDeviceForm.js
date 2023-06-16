@@ -56,51 +56,36 @@ export function NewDeviceForm({houseId}) {
       };
 
     return (<>
-    {/* <Row className='mt-5' >
-        <Col sm={2} />
-        <div className="borderedBlock">
-            <Col sm={true} > */}
-                <Form>
-                  {/* <Row className='mt-2'>
-                        <Col sm={4}/>
-                        <Col sm={4} align='center'>
-                            <h5>Add new device</h5>
-                        </Col>
-                        <Col sm={4}/>
-                  </Row>  */}
+        <Form>
 
-                  <LabeledInput value={name} label="Device name" inputName="deviceName" placeholder="Type device name" required onChangeFunc={setName}/>
+            <LabeledInput value={name} label="Device name" inputName="deviceName" placeholder="Type device name" required onChangeFunc={setName}/>
 
-                  <Row className='mt-2'>
-                        <Col sm={4}/>
-                        <Col sm={4} align='center'>
-                            <Form.Label>Select device type:</Form.Label>
-                            <Form.Select onChange={handleTypeChange}>
-                                {possibleTypes.map((option, index) => (
-                                    <option key={index} value={option}>{option}</option>
-                                ))}
-                            </Form.Select>
-                        </Col>
-                        <Col sm={4}/>
-                  </Row> 
+            <Row className='mt-2'>
+                <Col sm={4}/>
+                <Col sm={4} align='center'>
+                    <Form.Label>Select device type:</Form.Label>
+                    <Form.Select onChange={handleTypeChange}>
+                        {possibleTypes.map((option, index) => (
+                            <option key={index} value={option}>{option}</option>
+                        ))}
+                    </Form.Select>
+                </Col>
+                <Col sm={4}/>
+            </Row> 
 
-                  <LabeledInput value={readTime} label="Read time" inputName="readTime" placeholder="Type read time" required onChangeFunc={setReadTime}/>
-                  <LabeledInput value={filterRegex} label="Regex" inputName="regex" placeholder="Type device regex" required onChangeFunc={setRegex}/>
-                  
-                  <Row className='mt-2'>
-                        <Col sm={4}/>
-                        <Col sm={4} align='center'>
-                            <Button className='formButton' onClick={createButtonPressed}>
-                                Create
-                            </Button>
-                        </Col>
-                        <Col sm={4}/>
-                  </Row> 
-                </Form>
-            {/* </Col>
-        </div>
-        <Col sm={2} />
-    </Row> */}
+            <LabeledInput value={readTime} label="Read time" inputName="readTime" placeholder="Type read time" required onChangeFunc={setReadTime}/>
+            <LabeledInput value={filterRegex} label="Regex" inputName="regex" placeholder="Type device regex" required onChangeFunc={setRegex}/>
+            
+            <Row className='mt-2'>
+                <Col sm={4}/>
+                <Col sm={4} align='center'>
+                    <Button className='formButton' onClick={createButtonPressed}>
+                        Create
+                    </Button>
+                </Col>
+                <Col sm={4}/>
+            </Row> 
+        </Form>
     </>
     );
 }

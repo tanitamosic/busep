@@ -78,14 +78,14 @@ function App() {
                   <Route path='/client/my-objects' element={myObjects} />
                   <Route path='/client' element={clientFirstPage} /> 
 
-                  <Route path='/admin/certificates/:id' element={certificatePreview}/> {/* preview, validate, remove - 6, 7, 8*/}
-                  <Route path='/admin/certificates' element={certificatesList}/> {/* list all, button for detailed view - 5 */}
+                  <Route path='/admin/certificates/:id' element={certificatePreview}/> 
+                  <Route path='/admin/certificates' element={certificatesList}/>
 
-                  <Route path='/admin/requests/:email' element={requestPreview}/> {/* preview, accept, decline - 2, 3, 4*/} 
-                  <Route path='/admin/requests' element={requestsList}/> {/* list all, button for detailed view - 1*/}
+                  <Route path='/admin/requests/:email' element={requestPreview}/> 
+                  <Route path='/admin/requests' element={requestsList}/>
 
-                  <Route path='/admin/clients/:email' element={clientPreview}/> {/* TODO*/}
-                  <Route path='/admin/clients' element={clientsList}/> {/* TODO*/}
+                  <Route path='/admin/clients/:email' element={clientPreview}/> 
+                  <Route path='/admin/clients' element={clientsList}/> 
 
                   <Route path='/admin/all-objects' element={allObjectsList}/>
                   <Route path='/admin/objects/:email' element={userObjectsList}/>

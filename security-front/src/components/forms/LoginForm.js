@@ -5,8 +5,11 @@ import { sendLoginRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";    
-import { setToken, getToken, getDecodedToken } from '../../services/utils/AuthService';
+import { getToken, getDecodedToken } from '../../services/utils/AuthService';
 import { getRole } from '../../services/utils/AuthService';
+import { setAuthToken } from '../../secureStore/authSlice';
+import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie';
 
 export function LoginForm() {
     
@@ -16,7 +19,8 @@ export function LoginForm() {
     const [pin, setPin] = useState("");
 
     const navigate = useNavigate ();
-    const userRole = sessionStorage.getItem("userRole");
+    const dispatch = useDispatch();
+    const userRole = getRole();
 
     useEffect(() => {
         if(!!userRole){
@@ -50,25 +54,22 @@ export function LoginForm() {
             sendLoginRequest(userJson).then(
                 (response) => {
                     const token = response.data.jwt;
-                    setToken(token)
-                    let decodedToken = getDecodedToken();
+                    
+                    const oneHour = new Date();
+                    oneHour.setTime(oneHour.getTime() + 60 * 60 * 1000); // 1 hour in milliseconds
+                    Cookies.set('token', token, { expires: oneHour, path: '/' });
 
-                    console.log(decodedToken.sub);
-                    console.log(decodedToken.role);
-                    let email = decodedToken.sub;
-                    let role = decodedToken.role;
+                    dispatch(setAuthToken(token));
+                    let role = getRole();
 
-                    sessionStorage.setItem("email", email);
-                    sessionStorage.setItem("role", role);
-
-                    navigate("/" + getRole());
+                    navigate("/" + role);
                     window.dispatchEvent(new Event("userRoleUpdated"));
                     return response;
                 }, (error) => {
                   console.log(error);
                 }
             );
-        }, [email, navigate, password, pin]
+        }, [dispatch, email, navigate, password, pin]
     )
 
     return (<>

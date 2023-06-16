@@ -5,6 +5,7 @@ import { sendRegistrationRequest } from '../../services/api/LoginApi';
 import LabeledInput from './LabeledInput';
 import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";  
+import { getRole } from '../../services/utils/AuthService';
 
 export function RegistrationForm() {
     const [givenName, setName] = useState("");
@@ -17,7 +18,7 @@ export function RegistrationForm() {
     const [country, setCountry] = useState("");
     const [owner, setIsOwner] = useState(false);
 
-    const userRole = sessionStorage.getItem("userRole");
+    const userRole = getRole();
     const navigate = useNavigate();
 
     useEffect(() => {
