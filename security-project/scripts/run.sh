@@ -1,5 +1,5 @@
 #!/bin/bash
-dur=$${1:-30}
+dur=${1:-30}
 DURATION=$((dur))
 python thermometer.py     $DURATION &
 python camera.py          $DURATION &
