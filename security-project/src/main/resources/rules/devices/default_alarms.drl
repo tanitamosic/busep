@@ -1,0 +1,15 @@
+package rules.devices;
+dialect  "mvel"
+
+import securityproject.model.home.DeviceMessage;
+import securityproject.model.home.MessageType;
+import securityproject.model.home.AlarmEvent;
+import securityproject.model.home.AlarmSeverity;
+
+
+rule "error log"
+    when
+        DeviceMessage(type == MessageType.ERROR, $device: deviceId, $house: houseId, $message: message)
+    then
+        insert(new AlarmEvent($device, $house, $message, AlarmSeverity.LOW));
+end

@@ -1,0 +1,7 @@
+package rules.requests;
+dialect  "mvel"
+
+rule "login"
+    when
+    then
+end
