@@ -61,7 +61,10 @@ public class HomeService {
     }
 
     public List<HouseResponse> getAllHousesWithRenter(StandardUser user) {
-        return makeHouseResponses(getHousesByRenter(user.getId()));
+        List<House> houses = getHousesByRenter(user.getId());
+        List<HouseResponse> responses = makeHouseResponses(houses);
+
+        return responses;
     }
 
     public List<HouseResponse> makeHouseResponses(List<House> houses){
@@ -237,7 +240,7 @@ public class HomeService {
         if (hurs.size() > 0){
             houses = hurs.stream()
                     .map(hur -> hur.getHouseId())
-                    .map(houseId -> houseRepository.getReferenceById(houseId))
+                    .map(houseId -> houseRepository.findHouseByIdAndIsActive(houseId, true))
                     .collect(Collectors.toList());
         }
 

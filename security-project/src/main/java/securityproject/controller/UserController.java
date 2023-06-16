@@ -11,6 +11,8 @@ import securityproject.dto.UserResponse;
 import securityproject.model.user.User;
 import securityproject.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
@@ -28,5 +30,13 @@ public class UserController {
         System.out.println(response);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping(value="all-clients")
+    public ResponseEntity<List<UserResponse>> getAllClients() {
+       List<User> clients = userService.getAllClients();
+       List<UserResponse> responses = userService.makeUserResponses(clients);
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 }

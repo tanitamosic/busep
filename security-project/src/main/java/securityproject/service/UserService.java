@@ -3,6 +3,7 @@ package securityproject.service;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import securityproject.dto.RequestDto;
+import securityproject.dto.UserResponse;
 import securityproject.mail.MailingService;
 import securityproject.model.user.MyUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,8 @@ import securityproject.repository.UserRepository;
 import securityproject.util.Helper;
 import securityproject.util.ModelValidator;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -59,6 +58,25 @@ public class UserService implements UserDetailsService {
 
     public User getUserByEmail(String email){
         return userRepository.getUserByEmail(email);
+    }
+
+    public List<User> getAllClients(){
+        List<User> allUsers = userRepository.getUsersByIsActive(true);
+        List<User> clients = allUsers.stream()
+                .filter(u -> u.getRoles().stream()
+                        .map(r -> r.getName())
+                        .anyMatch(roleName -> roleName.equals("ROLE_OWNER") || roleName.equals("ROLE_RENTER"))
+                        )
+                .collect(Collectors.toList());
+
+        return clients;
+    }
+
+    public List<UserResponse> makeUserResponses(List<User> users){
+        List<UserResponse> responses = users.stream()
+                                            .map(u -> new UserResponse(u))
+                                            .collect(Collectors.toList());
+        return responses;
     }
 
     // DEPRECATED

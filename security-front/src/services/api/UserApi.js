@@ -10,3 +10,13 @@ export async function getUserByEmail(email){
         return err.message
     }
 }
+
+export async function getAllClients(){
+    try {
+        const responseData = await getApiCall().get('/user/all-clients');
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
