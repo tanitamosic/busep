@@ -1,7 +1,6 @@
-package securityproject.logger.logs;
+package securityproject.model.logs;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
@@ -10,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import securityproject.model.enums.LogType;
 import securityproject.util.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;

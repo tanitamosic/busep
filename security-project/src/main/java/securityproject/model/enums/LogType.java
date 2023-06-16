@@ -1,4 +1,4 @@
-package securityproject.logger.logs;
+package securityproject.model.enums;
 
 public enum LogType {
     INFO,

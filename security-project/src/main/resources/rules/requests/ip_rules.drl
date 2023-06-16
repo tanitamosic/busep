@@ -1,0 +1,14 @@
+package rules.requests;
+dialect  "mvel"
+
+import securityproject.model.RequestEvent;
+
+rule "ip_rules"
+    when
+        RequestEvent($ip: address)
+        Number(intValue >= 10) from accumulate(
+            $e: RequestEvent($ip) over window:time(1s),
+            count($e)
+        )
+    then
+end

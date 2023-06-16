@@ -12,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import securityproject.dto.device.SignedMessageDTO;
 import securityproject.dto.device.MessageToVerify;
-import securityproject.logger.logs.DeviceLog;
-import securityproject.logger.logs.LogType;
+import securityproject.model.logs.DeviceLog;
+import securityproject.model.enums.LogType;
+import securityproject.repository.DeviceRepository;
 import securityproject.repository.mongo.DeviceLogRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,6 +35,12 @@ public class DeviceService {
 
     @Autowired
     DeviceLogRepository logRepository;
+    @Autowired
+    DeviceRepository deviceRepository;
+    @Autowired
+    HomeService homeService;
+    @Autowired
+    AlarmService alarmService;
 
     static Path publicKeyPath = Paths.get("src/main/resources/keys/public_device_key.pem");
     static String publicKeyPEM;
@@ -90,12 +97,12 @@ public class DeviceService {
             return;
         }
         if (verify(message, payload.signature)) {
-            // TODO: DODAJ DROOLS PRAVILA
-            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceType);
+            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceId, payload.deviceType);
             logRepository.insert(log);
             logger.info("Inserted " +payload.logType + " device log; deviceId: {}", payload.deviceId);
+            alarmService.handleDeviceLog(log);
         } else {
-            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceType);
+            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceId,payload.deviceType);
             logRepository.insert(log);
             logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
         }

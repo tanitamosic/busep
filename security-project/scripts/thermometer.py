@@ -53,7 +53,7 @@ def info():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 1,
             'logType': 'INFO',
             'message': f'{random.randint(17, 23)}',
             'deviceType': 'SMART_TEMP',
@@ -70,7 +70,7 @@ def warn():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 1,
             'logType': 'WARN',
             'message': f'{random.choice([random.randint(9, 16), random.randint(24, 30)])}',
             'deviceType': 'SMART_TEMP',
@@ -87,7 +87,7 @@ def error():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 1,
             'logType': 'ERROR',
             'message': f'{random.choice([random.randint(0, 8), random.randint(30, 40)])}',
             'deviceType': 'SMART_TEMP',

@@ -3,8 +3,8 @@ package securityproject.repository.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import securityproject.logger.logs.LogType;
-import securityproject.logger.logs.UserRequestLog;
+import securityproject.model.enums.LogType;
+import securityproject.model.logs.UserRequestLog;
 
 import java.time.LocalDateTime;
 import java.util.List;

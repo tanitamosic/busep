@@ -2,17 +2,16 @@ package securityproject.dto.device;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import securityproject.logger.logs.LogType;
+import securityproject.model.enums.LogType;
+import securityproject.model.enums.DeviceType;
 
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageToVerify {
-    public Integer deviceId;
+    public Long deviceId;
     public LogType logType;
-    // TODO: DELETE NAME
-//    public String name = "";
     public String message;
-    public String deviceType; // TODO: CHANGE TO ENUM
+    public DeviceType deviceType;
     public String timestamp;
 
     public MessageToVerify(SignedMessageDTO dto) {

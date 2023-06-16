@@ -1,0 +1,18 @@
+package rules.devices;
+dialect  "mvel"
+
+import securityproject.model.logs.DeviceLog;
+import securityproject.model.enums.LogType;
+import securityproject.model.enums.AlarmSeverity;
+import securityproject.service.AlarmService
+import securityproject.model.alarms.DeviceAlarm;
+
+global AlarmService alarmService;
+
+rule "error log"
+    when
+        DeviceLog(logType == LogType.ERROR, $device: deviceId, $message: message, $timestamp: timestamp)
+    then
+        alarmService.raiseErrorAlarm($device, $message, $timestamp, AlarmSeverity.LOW);
+end
+

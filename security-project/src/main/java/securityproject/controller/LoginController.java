@@ -4,21 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import securityproject.model.user.MyUserDetails;
 import securityproject.model.user.Role;
-import securityproject.model.user.User;
+import securityproject.service.AlarmService;
 import securityproject.service.UserService;
 import securityproject.util.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +25,8 @@ public class LoginController {
     TokenUtils tokenUtils;
     @Autowired
     UserService userService;
+    @Autowired
+    AlarmService alarmService;
 
     private class ResponseBody {
         public String jwt;

@@ -1,0 +1,12 @@
+<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="deviceKbase" packages="devices">
+        <ksession name="deviceKsession"/>
+    </kbase>
+    <kbase name="requestKbase" packages="requests">
+        <ksession name="requestKsession"/>
+    </kbase>
+    <kbase name="alarmKbase" packages="devices">
+        <ksession name="alarmKsession"/>
+    </kbase>
+
+</kmodule>

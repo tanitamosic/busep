@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import securityproject.logger.logs.LogType;
-import securityproject.logger.logs.UserRequestLog;
-import securityproject.logger.logs.UserResponseLog;
+import securityproject.model.enums.LogType;
+import securityproject.model.logs.UserRequestLog;
+import securityproject.model.logs.UserResponseLog;
 import securityproject.repository.mongo.UserRequestLogRepository;
 import securityproject.repository.mongo.UserResponseLogRepository;
+import securityproject.service.AlarmService;
+import securityproject.service.RequestService;
 import securityproject.util.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,9 @@ public class RequestInterceptor implements HandlerInterceptor {
     UserRequestLogRepository requestLogRepository;
     @Autowired
     UserResponseLogRepository responseLogRepository;
+    @Autowired
+    AlarmService alarmService;
+
 
 
     public String index() {
@@ -49,6 +54,7 @@ public class RequestInterceptor implements HandlerInterceptor {
         logger.info("Request URL: {}", request.getRequestURL());
         logger.info("Request Method: {}", request.getMethod());
         logger.info("Request Parameters: {}", getParameters(request));
+        alarmService.parseAnyRequest(request);
 
         // device request
         if (request.getRequestURL().toString().startsWith("https://localhost:8081/device")) return true;

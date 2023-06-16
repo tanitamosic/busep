@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
 import securityproject.model.user.MyUserDetails;
+import securityproject.service.AlarmService;
 import securityproject.service.UserService;
 
 @Component
@@ -19,6 +20,8 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private AlarmService alarmService;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -34,6 +37,7 @@ public class CustomLoginFailureHandler extends SimpleUrlAuthenticationFailureHan
                     userService.lock(userDetails.getUser());
                     exception = new LockedException("Your account has been locked due to 3 failed attempts."
                             + " It will be unlocked after 24 hours.");
+                    alarmService.parseFailedLoginRequest(email);
                 }
             } else if (!userDetails.isAccountNonLocked()) {
                 if (userService.unlockWhenTimeExpired(userDetails.getUser())) {

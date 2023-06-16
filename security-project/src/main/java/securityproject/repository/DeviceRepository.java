@@ -10,4 +10,5 @@ import java.util.List;
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
     List<Device> getDevicesByHouseIdAndIsActive(Long houseId, boolean isActive);
+    Device getDeviceById(Long device_id);
 }
