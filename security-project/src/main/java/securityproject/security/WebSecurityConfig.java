@@ -53,7 +53,7 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
                 .authorizeRequests()
-                    .antMatchers("/admin/**").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/csr/**").permitAll()
                     .antMatchers("/home/**").permitAll()
                     .antMatchers("/**").permitAll().and()

@@ -52,3 +52,17 @@ export const getDecodedToken = () => {
     return {};
   }
 }
+
+export const getCookie = () => {
+  const state = store.getState();
+  const cookie = state.auth.cookie;
+
+  console.log("auth service cooke")
+  console.log(cookie)
+   
+   if (!!cookie){
+    return cookie;
+  } else {
+    return "";
+  }
+}

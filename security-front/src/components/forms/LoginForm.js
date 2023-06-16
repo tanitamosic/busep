@@ -7,7 +7,7 @@ import '../../assets/styles/buttons.css';
 import { useNavigate  } from "react-router-dom";    
 import { getToken, getDecodedToken } from '../../services/utils/AuthService';
 import { getRole } from '../../services/utils/AuthService';
-import { setAuthToken } from '../../secureStore/authSlice';
+import { setAuthToken, setAuthCookie } from '../../secureStore/authSlice';
 import { useDispatch } from 'react-redux';
 import Cookies from 'js-cookie';
 
@@ -54,12 +54,17 @@ export function LoginForm() {
             sendLoginRequest(userJson).then(
                 (response) => {
                     const token = response.data.jwt;
-                    
+                    const cookie = response.data.cookie;
+
                     const oneHour = new Date();
                     oneHour.setTime(oneHour.getTime() + 60 * 60 * 1000); // 1 hour in milliseconds
                     Cookies.set('token', token, { expires: oneHour, path: '/' });
+                    Cookies.set('cookie', cookie, { expires: oneHour, path: '/' });
 
                     dispatch(setAuthToken(token));
+                    dispatch(setAuthCookie(cookie));
+                    // sessionStorage.setItem("cookie", response.data.cookie);
+
                     let role = getRole();
 
                     navigate("/" + role);

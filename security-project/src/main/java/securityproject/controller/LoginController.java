@@ -34,6 +34,7 @@ public class LoginController {
 
     private class ResponseBody {
         public String jwt;
+        public String cookie;
     }
 
     @GetMapping(value="login-success/{email}")
@@ -51,6 +52,7 @@ public class LoginController {
 
         ResponseBody body = new ResponseBody();
         body.jwt = jwt;
+        body.cookie = cookie;
         return ResponseEntity.ok().headers(responseHeaders).body(body);
     }
 

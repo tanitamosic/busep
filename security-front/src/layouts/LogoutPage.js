@@ -3,7 +3,7 @@ import { useNavigate  } from "react-router-dom";
 import { removeLoggedUserData } from '../services/utils/AuthService';
 import { sendLogoutRequest } from '../services/api/LoginApi';
 import { useDispatch } from 'react-redux';
-import { resetToken } from '../secureStore/authSlice';
+import { resetToken, resetCookie } from '../secureStore/authSlice';
 import Cookies from 'js-cookie';
 
 export default function LogoutPage(){
@@ -16,6 +16,8 @@ export default function LogoutPage(){
             (response) => {
                 dispatch(resetToken());
                 Cookies.remove('token', { path: '/' });
+                dispatch(resetCookie());
+                Cookies.remove('cookie', { path: '/' });
                 window.dispatchEvent(new Event("userRoleUpdated"));
                 navigate('/login');
                 return response;
