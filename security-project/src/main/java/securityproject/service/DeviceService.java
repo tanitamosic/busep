@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import securityproject.dto.DeviceDTO;
 import securityproject.dto.device.SignedMessageDTO;
 import securityproject.dto.device.MessageToVerify;
+import securityproject.model.home.Device;
 import securityproject.model.logs.DeviceLog;
 import securityproject.model.enums.LogType;
+import securityproject.model.user.User;
 import securityproject.repository.DeviceRepository;
 import securityproject.repository.mongo.DeviceLogRepository;
 
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -47,6 +49,8 @@ public class DeviceService {
     public CustomAlarmService alarmService;
     @Autowired
     SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    UserService userService;
 
     static Path publicKeyPath = Paths.get("src/main/resources/keys/public_device_key.pem");
     static String publicKeyPEM;
@@ -103,13 +107,13 @@ public class DeviceService {
             return;
         }
         if (verify(message, payload.signature)) {
-            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceId, payload.deviceType);
+            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceId, payload.deviceType, payload.houseId);
             logRepository.insert(log);
             sendLog(log);
             logger.info("Inserted " +payload.logType + " device log; deviceId: {}", payload.deviceId);
             alarmService.handleDeviceLog(log);
         } else {
-            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceId,payload.deviceType);
+            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceId,payload.deviceType, payload.houseId);
             logRepository.insert(log);
             sendLog(log);
             logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
@@ -129,7 +133,16 @@ public class DeviceService {
     }
 
     public void sendLog(DeviceLog log) {
-        messagingTemplate.convertAndSend("/topic/log", Objects.requireNonNull(convertToJson(log)));
+        Device device = deviceRepository.getDeviceById(log.getDeviceId());
+        User owner = homeService.getOwner(device.getHouseId());
+        User renter = homeService.getRenter(device.getHouseId());
+        List<User> admins = userService.getAllAdmins();
+        String message = Objects.requireNonNull(convertToJson(log));
+        messagingTemplate.convertAndSend("/topic/log/" + owner.getEmail(), message);
+        messagingTemplate.convertAndSend("/topic/log/" + renter.getEmail(), message);
+        for (User u: admins) {
+            messagingTemplate.convertAndSend("/topic/log/" + u.getEmail(), message);
+        }
     }
 
     public static String convertToJson(Object obj) {

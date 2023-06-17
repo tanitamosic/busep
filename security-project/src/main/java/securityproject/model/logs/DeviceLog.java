@@ -31,8 +31,9 @@ public class DeviceLog {
     private String ipAddress;
     private String message;
     private LogType logType;
+    private Long houseId;
 
-    public DeviceLog(HttpServletRequest request, LogType type, String message, String timestamp, Long deviceId, DeviceType deviceType) {
+    public DeviceLog(HttpServletRequest request, LogType type, String message, String timestamp, Long deviceId, DeviceType deviceType, Long houseId) {
         String format = "yyyy-MM-dd'T'HH:mm:ss";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         UUID uuid = UUID.randomUUID();
@@ -44,6 +45,7 @@ public class DeviceLog {
         this.setLogType(type);
         this.setMessage(message);
         this.setDeviceType(deviceType);
+        this.setHouseId(houseId);
 
     }
 
