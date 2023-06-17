@@ -4,7 +4,7 @@ dialect  "mvel"
 import securityproject.model.logs.DeviceLog;
 import securityproject.model.enums.LogType;
 import securityproject.model.enums.AlarmSeverity;
-import securityproject.service.AlarmService
+import securityproject.service.AlarmService;
 import securityproject.model.alarms.DeviceAlarm;
 
 global AlarmService alarmService;
@@ -16,3 +16,12 @@ rule "error log"
         alarmService.raiseErrorAlarm($device, $message, $timestamp, AlarmSeverity.LOW);
 end
 
+//rule "too many requests"
+//    when
+//       RequestEvent($ip: address)
+//       Number(intValue >= 10) from accumulate(
+//           $e: RequestEvent($ip == address) over window:time(10s),
+//           count($e)
+//       )
+//   then
+//end

@@ -44,7 +44,7 @@ public class DeviceService {
     @Autowired
     HomeService homeService;
     @Autowired
-    AlarmService alarmService;
+    public CustomAlarmService alarmService;
     @Autowired
     SimpMessagingTemplate messagingTemplate;
 
@@ -113,6 +113,7 @@ public class DeviceService {
             logRepository.insert(log);
             sendLog(log);
             logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
+            alarmService.handleDeviceLog(log);
         }
     }
 

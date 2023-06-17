@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import securityproject.dto.device.SignedMessageDTO;
+import securityproject.model.alarms.CustomAlarm;
+import securityproject.service.CustomAlarmService;
 import securityproject.service.DeviceService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 
 @RestController
 @RequestMapping(value = "/device")
@@ -64,4 +67,9 @@ public class DeviceController {
         }
     }
 
+    @PostMapping(value = "custom-alarm")
+    public ResponseEntity<String> createCustomAlarm(@RequestBody CustomAlarm alarm) throws FileNotFoundException {
+        deviceService.alarmService.newCustomAlarm(alarm);
+        return ResponseEntity.ok("alarm created");
+    }
 }

@@ -1,0 +1,37 @@
+template header
+deviceType
+logType
+frequency
+window
+
+package rules.devices;
+
+import securityproject.model.logs.DeviceLog;
+import securityproject.model.enums.LogType;
+import securityproject.model.enums.DeviceType;
+import securityproject.model.enums.AlarmSeverity;
+import securityproject.service.AlarmService;
+import java.util.List;
+
+global AlarmService alarmService;
+
+template "custom alarms"
+
+rule "Custom Alarm @{row.rowNumber}"
+    when
+       $logs: List() from collect(
+                  DeviceLog(
+                    deviceType == DeviceType.@{deviceType},
+                    logType == LogType.@{logType})
+                  over window:time(@{window}m)
+              )
+              eval($logs.size() >= @{frequency})
+   then
+        for(Object $log : $logs) {
+           DeviceLog dl = (DeviceLog) $log;
+           alarmService.raiseErrorAlarm(dl.getDeviceId(), dl.getMessage(),
+           dl.getTimestamp(), AlarmSeverity.MEDIUM);
+        }
+end 
+
+end template

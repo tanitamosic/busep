@@ -65,7 +65,7 @@ public class AlarmService {
 
     public void logAlarm(DeviceAlarm alarm){
         deviceLogRepository.insert(new DeviceAlarmLog(alarm));
-        logger.info("Inserted " + alarm.getSeverity() + " alarm log; deviceId: {}", alarm.getDeviceId());
+        logger.error("Inserted " + alarm.getSeverity() + " alarm log; deviceId: {}", alarm.getDeviceId());
     }
 
     public void logAlarm(RequestAlarm alarm){
