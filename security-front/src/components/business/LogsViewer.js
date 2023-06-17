@@ -49,7 +49,8 @@ const LogsViewer = ({ logs }) => {
               }}>  
               {log.message} 
             </span> 
-             {"___from___" + log.ipAddress}
+             {/* {"___from___" + log.ipAddress + " " + log.id} */}
+             {"___from___" + log.id}
         </div>
       ))}
     </div>

@@ -5,29 +5,38 @@ import {Nav, Navbar, NavDropdown} from 'react-bootstrap';
 import { useEffect } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import { setWsLogs, resetWsLogs } from '../secureStore/authSlice';
+import { useWsLogs } from '../secureStore/authSlice';
+import { getLoggedUserEmail } from '../services/utils/AuthService';
+import { useState } from 'react';
+
 
 export default function AdminNavbar(){
+
     const logo = require('../assets/images/logosh.png')
 
-    const connectAndSubscribe = () => {
-        const socket = new SockJS('http://localhost:8081/ws');
-        const stompClient = Stomp.over(socket);
-        console.log("ws connectandsubscribe")
-
-        stompClient.connect({}, () => {
-            stompClient.subscribe('/topic/log', (message) => {
-                console.log("ws connect")
-                const receivedMessage = JSON.parse(message.body)
-            })
-        });
-
-        return () => {
-            console.log("ws disconnect");
-            stompClient.disconnect();  
-        };
-    };
+    const { wsLogs, updateWsLogs } = useWsLogs();
 
     useEffect(() => {
+        const connectAndSubscribe = () => {
+            const socket = new SockJS('http://localhost:8081/ws');
+            const stompClient = Stomp.over(socket);
+    
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/log/' + getLoggedUserEmail(), (message) => {
+                    const receivedMessage = JSON.parse(message.body)
+                    updateWsLogs(receivedMessage);
+                })
+            });
+    
+            return () => {
+                socket.close();
+                stompClient.disconnect();  
+                resetWsLogs();
+            };
+            
+        };
+
         connectAndSubscribe();
     } , []);
 
@@ -41,7 +50,7 @@ export default function AdminNavbar(){
                 <Nav.Link href="/admin/clients">Clients</Nav.Link>
                 <Nav.Link href="/admin/all-objects">All objects</Nav.Link> 
                 <Nav.Link href="/admin/new-object">New object</Nav.Link> 
-                <Nav.Link href="/admin/logs">Logs</Nav.Link> 
+                <Nav.Link href="/logs">Logs</Nav.Link> 
                 <Nav.Link href="/logout">Logout</Nav.Link>
             </Nav>
         </Navbar.Collapse>

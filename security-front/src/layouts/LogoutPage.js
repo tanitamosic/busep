@@ -12,19 +12,20 @@ export default function LogoutPage(){
     const dispatch = useDispatch();
 
     useEffect(() => {
-        sendLogoutRequest().then(
-            (response) => {
-                dispatch(resetToken());
-                Cookies.remove('token', { path: '/' });
-                dispatch(resetCookie());
-                Cookies.remove('cookie', { path: '/' });
-                window.dispatchEvent(new Event("userRoleUpdated"));
-                navigate('/login');
-                return response;
-            }, (error) => {
-              console.log(error);
-            }
-        );
+        dispatch(resetToken());
+        Cookies.remove('token', { path: '/' });
+        dispatch(resetCookie());
+        Cookies.remove('cookie', { path: '/' });
+        window.dispatchEvent(new Event("userRoleUpdated"));
+        navigate('/login');
+        // sendLogoutRequest().then(
+        //     (response) => {
+                
+        //         return response;
+        //     }, (error) => {
+        //       console.log(error);
+        //     }
+        // );
     })
 
     return <>Loging out...</>

@@ -25,7 +25,7 @@ export const getTokenWithNoQuotes = () => {
 
 export const getLoggedUserEmail = () => {
   const decodedToken = getDecodedToken();
-  const email = decodedToken.email;
+  const email = decodedToken.sub;
 
   return email;
 }

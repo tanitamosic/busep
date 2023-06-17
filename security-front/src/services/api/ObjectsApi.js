@@ -1,4 +1,5 @@
 import {getApiCall} from "../Configs.js"
+import { getLoggedUserEmail, getRole } from "../utils/AuthService.js";
 
 // TODO 
 export async function getAllObjects(){
@@ -96,7 +97,14 @@ export async function getAllObjects(){
 
   export async function getPreviosLogs(filterDto){
     try {
-        const responseData = await getApiCall().post('/home/logs', filterDto);
+        let responseData;
+
+        if (getRole() === "admin"){
+            responseData = await getApiCall().post('/home/logs', filterDto);
+        } else {
+            responseData = await getApiCall().post('/home/logs/' + getLoggedUserEmail(), filterDto);
+        }
+
         return responseData;
     } catch (err) {
         console.log(err.message);

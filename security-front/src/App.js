@@ -75,6 +75,7 @@ function App() {
                   <Route path="/register" element={registrationForm} />
                   <Route path="/login" element={loginForm} />
                   <Route path="/logout" element={logoutPage} />
+                  <Route path='/logs' element={logsPage}/>
 
                   <Route path='/client/my-objects/:id' element={objectPreview} />
                   <Route path='/client/my-objects' element={myObjects} />
@@ -94,8 +95,6 @@ function App() {
                   <Route path='/admin/object/:id' element={objectPreview}/>
                   
                   <Route path='/admin/new-object' element={createObjectForm}/>
-
-                  <Route path='/admin/logs' element={logsPage}/>
 
                   <Route path='/admin' element={adminFirstPage}/>
 

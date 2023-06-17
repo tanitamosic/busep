@@ -2,32 +2,27 @@ import React, { useCallback } from 'react';
 import '../../assets/styles/business.css';
 import {useEffect, useState} from 'react';
 import { Row, Col, Button, Form } from 'react-bootstrap';
-import { getCertificates } from '../../services/api/CertificatesApi';
-import ListedRequest from './ListedRequest';
-import ListedCertificate from './ListedCertificate';
-import { useNavigate } from 'react-router';
-import ListedObject from './ListedObject';
-import { getAllClients, postClientFilterRequest, sendFilterClientsRequest } from '../../services/api/UserApi';
-import { getRole } from '../../services/utils/AuthService';
-import ListedClient from './ListedClient';
 import LabeledInput from '../forms/LabeledInput';
 import { checkLettersInput, checkEmailInput, checkNumInput } from '../../services/utils/InputValidation';
 import LogsViewer from './LogsViewer';
 import { getPreviosLogs } from '../../services/api/ObjectsApi';
+import { useWsLogs } from '../../secureStore/authSlice';
 
 export default function LogsPage(){
-    //ListedLog
 
-    const [houseId, setHouseId] = useState();
-    const [deviceType, setDeviceType] = useState();
-    const [logType, setMessageType] = useState();
-    const [regex, setRegex ] = useState();
+    const [houseId, setHouseId] = useState("");
+    const [deviceType, setDeviceType] = useState("");
+    const [logType, setMessageType] = useState("");
+    const [regex, setRegex ] = useState("");
+
+    const [filterParams, setFilterParams] = useState();
+    const [prevWsLogs, setPrevWcLogs] = useState();
 
     const [logs, setLogs ] = useState();
-    const [listedLogs, setListedLogs] = useState();
+    const { wsLogs, updateWsLogs } = useWsLogs();
 
-    const possibleDeviceTypes = ["ALL", "SMART_CAM", "SMART_LIGHT", "SMART_LOCK", "SMART_SMOKE", "SMART_TEMP"];
-    const possibleLogTypes = ["ALL", "INFO", "WARN", "ERROR", "ALARM"];
+    const possibleDeviceTypes = ["", "SMART_CAM", "SMART_LIGHT", "SMART_LOCK", "SMART_SMOKE", "SMART_TEMP"];
+    const possibleLogTypes = ["", "INFO", "WARN", "ERROR", "ALARM"];
     
     const dummyLogs = [
         {
@@ -206,38 +201,61 @@ export default function LogsPage(){
         setLogs(dummyLogs);
     }, [])
 
+    // everytime when log comes from websocket
     useEffect(() => {
-        const filterParams = JSON.parse(sessionStorage.getItem("logsFilterParams"));
+        if (!!wsLogs && (!prevWsLogs || (wsLogs.id !== prevWsLogs.id))){
+            setPrevWcLogs(wsLogs)
 
-        if (!filterParams){
-            //  TODO 
-            getPreviosLogs({}).then(
-                (response) => {
-                    if (!!response && response.data) {
-                        setLogs(response.data);
-                    } else {
-                    setLogs(dummyLogs);
-                    }
-                }
-                // TODO connect to websocket
-            )
-        } else {
-            setHouseId(filterParams.houseId);
-            setDeviceType(filterParams.deviceType);
-            setMessageType(filterParams.messageType);
-            setRegex(filterParams.regex);
-            
-            getPreviosLogs(filterParams).then(
-                (response) => {
-                    if (!!response && response.data) {
-                        setLogs(response.data);
-                    } else {
-                    setLogs(dummyLogs);
-                    }
-                }
-                // TODO connect to websocket
-            )
+            if (!filterParams || isFilteredWsLog(wsLogs, filterParams)){ 
+                setLogs((prevLogs) => {
+                    const newLogs = [...prevLogs];
+                    newLogs.push(wsLogs);
+                    return newLogs;
+                  });
+            }
         }
+    }, [wsLogs, filterParams])
+
+    const isFilteredWsLog = (wsLogsMessage, _filterParams) => {
+        let valid;
+
+        if (!!_filterParams){
+            valid = isFilterParamsEmpty(_filterParams) 
+                        ||
+                    ((_filterParams.houseId.length === 0 || wsLogsMessage.houseId === _filterParams.houseId) && 
+                    (_filterParams.deviceType.length === 0 || wsLogsMessage.deviceType === _filterParams.deviceType) && 
+                    (_filterParams.logType.length === 0 || wsLogsMessage.logType === _filterParams.logType))
+            // TODO what to do for regex ???
+            ;
+        } else {
+            valid = true;
+        }
+        
+        return valid;
+    }
+
+    const isFilterParamsEmpty = (_filterParams) => {
+        let valid = ((_filterParams.houseId.length === 0 ) && 
+                    (_filterParams.deviceType.length === 0) && 
+                    (_filterParams.regex.length === 0) && 
+                    (_filterParams.logType.length === 0 ))
+                    ;
+        
+        return valid;
+    }
+
+    // when open the page
+    useEffect(() => {
+        getPreviosLogs({}).then(
+            (response) => {
+                if (!!response && response.data) {
+                    setLogs(response.data);
+                } else {
+                setLogs(dummyLogs);
+                }
+            }
+        )
+        // }
     }, [])
   
     const validateInput = () => {
@@ -250,6 +268,7 @@ export default function LogsPage(){
         return valid;
     }
 
+    // when reset filters button pressed
     const resetButtonPressed = (e) => {
         e.preventDefault();
 
@@ -261,47 +280,54 @@ export default function LogsPage(){
                 setLogs(dummyLogs);
                 }
             }
-            // TODO connect to websocket
         )
 
-        sessionStorage.removeItem("logsFilterParams");
         setHouseId("");
         setDeviceType("");
         setMessageType("");
         setRegex("");
+        setFilterParams();
     }
 
     const filterButtonPressed = (e) => {
         if (validateInput()) {
-            postFilterLogsRequest(e);
+            const _filterParams = {houseId, deviceType, logType, regex}
+            setFilterParams(_filterParams);
+
+            postFilterLogsRequest(e, _filterParams);
         } else {
           console.log("Invalid input")
           alert("Invalid input")
         }
     }
 
+    // when filter button pressed
     const postFilterLogsRequest = useCallback(
-        (e) => {
+        (e, _filterParams) => {
             e.preventDefault();
-
-            const filterParams = {houseId, deviceType, messageType: logType, regex}
-            sessionStorage.setItem("logsFilterParams", JSON.stringify(filterParams));
-
-            getPreviosLogs(filterParams).then(
-                (response) => {
-                    if (!!response && response.data) {
-                        setLogs(response.data);
-                    } else {
-                    setLogs(dummyLogs);
+            if (!!_filterParams){
+                getPreviosLogs(_filterParams).then(
+                    (response) => {
+                        if (!!response && response.data) {
+                            setLogs(response.data);
+                        } else {
+                        setLogs(dummyLogs);
+                        }
                     }
-                }
-                // TODO connect to websocket
-            )
-        }, [houseId, deviceType, logType, regex]
+                )
+            } else {
+                alert("No filter params selected.")
+            }
+            
+        }, []
     )
 
-    const handleTypeChange = (event) => {
+    const handleDeviceTypeChange = (event) => {
         setDeviceType(event.target.value);
+      };
+
+      const handleLogTypeChange = (event) => {
+        setMessageType(event.target.value);
       };
 
     if (!!logs){
@@ -315,7 +341,7 @@ export default function LogsPage(){
                     <Col sm={4}/>
                     <Col sm={4} align='center'>
                         <Form.Label>Select device type:</Form.Label>
-                        <Form.Select onChange={handleTypeChange}>
+                        <Form.Select onChange={handleDeviceTypeChange}>
                             {possibleDeviceTypes.map((option, index) => (
                                 <option key={index} value={option}>{option}</option>
                             ))}
@@ -328,7 +354,7 @@ export default function LogsPage(){
                     <Col sm={4}/>
                     <Col sm={4} align='center'>
                         <Form.Label>Select log type:</Form.Label>
-                        <Form.Select onChange={handleTypeChange}>
+                        <Form.Select onChange={handleLogTypeChange}>
                             {possibleLogTypes.map((option, index) => (
                                 <option key={index} value={option}>{option}</option>
                             ))}
