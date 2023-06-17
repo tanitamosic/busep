@@ -63,7 +63,7 @@ public class WebSecurityConfig {
                 .and().cors();
 
         http.csrf().disable();
-        http.headers().contentSecurityPolicy("script 'self'");
+        http.headers().xssProtection().and().contentSecurityPolicy("script 'self'");
         return http.build();
     }
 }
