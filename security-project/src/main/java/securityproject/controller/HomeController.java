@@ -1,6 +1,5 @@
 package securityproject.controller;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +9,12 @@ import securityproject.dto.HouseDTO;
 import securityproject.dto.HouseResponse;
 import securityproject.dto.HouseResponses;
 import securityproject.model.home.Device;
-import securityproject.model.home.House;
 import securityproject.model.user.MyUserDetails;
 import securityproject.model.user.Role;
 import securityproject.model.user.StandardUser;
 import securityproject.service.HomeService;
 import securityproject.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -64,7 +61,7 @@ public class HomeController {
     @GetMapping("/get-home/{houseId}")
     public ResponseEntity<HouseResponse> getHouse(@PathVariable Long houseId) {
         try {
-            HouseResponse house = homeService.getHouseById(houseId);
+            HouseResponse house = homeService.getHouseResponseById(houseId);
             return new ResponseEntity<>(house, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

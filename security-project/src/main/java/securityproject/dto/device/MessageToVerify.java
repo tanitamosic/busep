@@ -13,6 +13,7 @@ public class MessageToVerify {
     public String message;
     public DeviceType deviceType;
     public String timestamp;
+    public Long houseId;
 
     public MessageToVerify(SignedMessageDTO dto) {
         this.deviceId = dto.deviceId;
@@ -20,5 +21,6 @@ public class MessageToVerify {
         this.timestamp = dto.timestamp;
         this.logType = dto.logType;
         this.deviceType = dto.deviceType;
+        this.houseId = dto.houseId;
     }
 }

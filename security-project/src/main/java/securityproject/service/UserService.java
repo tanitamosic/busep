@@ -73,6 +73,10 @@ public class UserService implements UserDetailsService {
         return userRepository.getUserByEmail(email);
     }
 
+    public List<User> getAllAdmins() {
+        return userRepository.getAllAdmins();
+    }
+
     public List<User> getAllClients(){
         List<User> allUsers = userRepository.getUsersByIsActive(true);
         List<User> clients = allUsers.stream()
