@@ -81,8 +81,8 @@ public class RequestInterceptor implements HandlerInterceptor {
         if (blacklistedAddresses.contains(remoteAddr)) {
             BlacklistedIpLog log = new BlacklistedIpLog(remoteAddr);
             blacklistedIpLogRepository.insert(log);
-            // TODO: DODAJ ALARM
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "IP address is blacklisted");
+            alarmService.parseMaliciousRequest(remoteAddr);
             return false;}
         // device request
         if (request.getRequestURL().toString().startsWith("https://localhost:8081/device")) return true;

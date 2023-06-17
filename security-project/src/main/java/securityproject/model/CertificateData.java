@@ -56,7 +56,7 @@ public class CertificateData {
     private String publicKey;
 
     @Column(name = "issuer")
-    private String issuer; // issuer alias TODO: sta treba biti identifikator issueru?
+    private String issuer; // issuer alias
     @NotNull(message = "Start date field can't be null.")
     @Column(name = "start_date", nullable = false)
     private Date startDate;
