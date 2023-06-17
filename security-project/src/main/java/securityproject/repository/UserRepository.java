@@ -27,4 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User getUserById(Long id);
     List<User> getUsersByIsActive(Boolean isActive);
+
+    @Query(nativeQuery = true, value="SELECT * FROM users AS u WHERE u.type='SuperAdmin'")
+    List<User> getAllAdmins();
 }

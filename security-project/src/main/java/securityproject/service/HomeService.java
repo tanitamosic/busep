@@ -40,7 +40,7 @@ public class HomeService {
         return response;
     }
 
-    public HouseResponse getHouseById(Long id) {
+    public HouseResponse getHouseResponseById(Long id) {
         House house = houseRepository.findHouseByIdAndIsActive(id, true);
 
         if (house == null){
@@ -48,6 +48,9 @@ public class HomeService {
         }
 
         return makeHouseResponse(house);
+    }
+    public House getHouseById(Long id) {
+        return houseRepository.findHouseByIdAndIsActive(id, true);
     }
 
     public List<HouseResponse> getAllHousesWithOwner(StandardUser user) {
