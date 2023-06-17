@@ -11,7 +11,8 @@ import warnings
 # Disable insecure request warnings
 warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
-URL = 'https://localhost:8081/device/lock'
+# URL = 'https://localhost:8081/device/lock'
+URL = 'http://localhost:8081/device/lock'
 DURATION = 30
 key = open('private_device_key.pem', 'rb')
 PRIVATE_KEY = serialization.load_pem_private_key(key.read(), password=None)
@@ -55,7 +56,7 @@ def info_locked():
         payload_json = {
             'deviceId': 4,
             'logType': 'INFO',
-            'message': f'Lock is locked and still',
+            'message': 'Lock is locked and still',
             'deviceType': 'SMART_LOCK',
             'timestamp': convert_to_iso(datetime.now())
         }

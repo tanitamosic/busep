@@ -48,7 +48,10 @@ VALUES (1, 1, 2, 'OWNER', true),
 
 INSERT INTO devices (device_id, house_id, type, read_time, filter_regex, name, is_active)
 VALUES (1, 1, 'SMART_CAM', 3, '', 'CAM_1', true),
-       (2, 1, 'SMART_SMOKE', 5, '', 'SMOKE_1', true)
+       (2, 1, 'SMART_SMOKE', 5, '', 'SMOKE_1', true),
+       (3, 1, 'SMART_LIGHT', 4, '', 'LIGHT_1', true),
+       (4, 1, 'SMART_LOCK', 2, '', 'LOCK_1', true),
+       (5, 1, 'SMART_TEMP', 5, '', 'TEMP_1', true)
     ON CONFLICT (device_id) DO UPDATE SET
     house_id = EXCLUDED.house_id,
    type = EXCLUDED.type,
