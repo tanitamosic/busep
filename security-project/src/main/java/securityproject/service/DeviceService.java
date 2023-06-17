@@ -106,15 +106,18 @@ public class DeviceService {
             logger.error("Device message serialization failed; deviceId: {}", payload.deviceId);
             return;
         }
+        Device device = deviceRepository.getDeviceById(payload.deviceId);
         if (verify(message, payload.signature)) {
-            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceId, payload.deviceType, payload.houseId);
+            DeviceLog log = new DeviceLog(request, payload.logType, payload.message, payload.timestamp, payload.deviceId, payload.deviceType, device.getHouseId());
             logRepository.insert(log);
+            logToConsole(log);
             sendLog(log);
             logger.info("Inserted " +payload.logType + " device log; deviceId: {}", payload.deviceId);
             alarmService.handleDeviceLog(log);
         } else {
-            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceId,payload.deviceType, payload.houseId);
+            DeviceLog log = new DeviceLog(request, LogType.ERROR, "INVALID SIGNATURE", payload.timestamp, payload.deviceId,payload.deviceType, device.getHouseId());
             logRepository.insert(log);
+            logToConsole(log);
             sendLog(log);
             logger.error("Inserted ERROR device log; INVALID SIGNATURE; deviceId: {}", payload.deviceId);
             alarmService.handleDeviceLog(log);
@@ -152,6 +155,21 @@ public class DeviceService {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    private void logToConsole(DeviceLog log) {
+        String fullMessagee = "Log message: " +log.getMessage() + "; device type: " + log.getDeviceType() + "; device id: " + log.getDeviceId() + "; house id: " + log.getHouseId() + "; IP address: " + log.getIpAddress();
+        switch (log.getLogType()) {
+            case INFO:
+                logger.info(fullMessagee);
+                break;
+            case WARN:
+                logger.warn(fullMessagee);
+                break;
+            case ERROR:
+                logger.error(fullMessagee);
+                break;
+            default: break;
         }
     }
 }

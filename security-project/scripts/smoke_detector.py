@@ -53,7 +53,7 @@ def info():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 2,
             'logType': 'INFO',
             'message': f'Air is clean',
             'deviceType': 'SMART_SMOKE',
@@ -70,7 +70,7 @@ def warn_cigars():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 2,
             'logType': 'WARN',
             'message': f'There is cigar smoke',
             'deviceType': 'SMART_SMOKE',
@@ -86,7 +86,7 @@ def warn_furnace():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 2,
             'logType': 'WARN',
             'message': f'Furnace is smoking',
             'deviceType': 'SMART_SMOKE',
@@ -102,7 +102,7 @@ def warn_oven():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 2,
             'logType': 'WARN',
             'message': f'Oven is smoking',
             'deviceType': 'SMART_SMOKE',
@@ -119,7 +119,7 @@ def error():
         if elapsed_time >= DURATION:
             break
         payload_json = {
-            'deviceId': 3,
+            'deviceId': 2,
             'logType': 'ERROR',
             'message': f'FIRE FIRE FIRE ! ! !',
             'deviceType': 'SMART_SMOKE',

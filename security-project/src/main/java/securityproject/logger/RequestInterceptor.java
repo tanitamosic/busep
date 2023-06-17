@@ -4,12 +4,15 @@ package securityproject.logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import securityproject.model.enums.LogType;
+import securityproject.model.logs.BlacklistedIpLog;
 import securityproject.model.logs.UserRequestLog;
 import securityproject.model.logs.UserResponseLog;
+import securityproject.repository.mongo.BlacklistedIpLogRepository;
 import securityproject.repository.mongo.UserRequestLogRepository;
 import securityproject.repository.mongo.UserResponseLogRepository;
 import securityproject.service.AlarmService;
@@ -18,8 +21,12 @@ import securityproject.util.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class RequestInterceptor implements HandlerInterceptor {
@@ -35,7 +42,24 @@ public class RequestInterceptor implements HandlerInterceptor {
     @Autowired
     UserResponseLogRepository responseLogRepository;
     @Autowired
+    BlacklistedIpLogRepository blacklistedIpLogRepository;
+    @Autowired
     AlarmService alarmService;
+
+    private final List<String> blacklistedAddresses = new ArrayList<>() {{
+        add("1.0.136.29");
+        add("1.0.136.215");
+        add("1.0.156.75");
+        add("52.179.4.12");
+        add("52.179.5.76");
+        add("103.15.245.145");
+        add("103.16.61.130");
+        add("103.16.71.13");
+        add("150.136.149.141");
+        add("170.147.251.215");
+        add("197.255.255.68");
+//        add("0:0:0:0:0:0:0:1");
+    }};
 
 
 
@@ -50,12 +74,16 @@ public class RequestInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  {
-        logger.info("Request URL: {}", request.getRequestURL());
-        logger.info("Request Method: {}", request.getMethod());
-        logger.info("Request Parameters: {}", getParameters(request));
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        logger.info("Request URL: " + request.getRequestURL() + "; Request params " + getParameters(request) + "; IP: " + request.getRemoteAddr());
         alarmService.parseAnyRequest(request);
-
+        String remoteAddr = request.getRemoteAddr();
+        if (blacklistedAddresses.contains(remoteAddr)) {
+            BlacklistedIpLog log = new BlacklistedIpLog(remoteAddr);
+            blacklistedIpLogRepository.insert(log);
+            // TODO: DODAJ ALARM
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "IP address is blacklisted");
+            return false;}
         // device request
         if (request.getRequestURL().toString().startsWith("https://localhost:8081/device")) return true;
 
