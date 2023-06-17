@@ -13,6 +13,7 @@ import ListedClient from './ListedClient';
 import LabeledInput from '../forms/LabeledInput';
 import { checkLettersInput, checkEmailInput, checkNumInput } from '../../services/utils/InputValidation';
 import LogsViewer from './LogsViewer';
+import { getPreviosLogs } from '../../services/api/ObjectsApi';
 
 export default function LogsPage(){
     //ListedLog
@@ -26,7 +27,7 @@ export default function LogsPage(){
     const [listedLogs, setListedLogs] = useState();
 
     const possibleDeviceTypes = ["ALL", "SMART_CAM", "SMART_LIGHT", "SMART_LOCK", "SMART_SMOKE", "SMART_TEMP"];
-    const possibleLogTypes = ["ALL", "INFO", "WARN", "ERROR"];
+    const possibleLogTypes = ["ALL", "INFO", "WARN", "ERROR", "ALARM"];
     
     const dummyLogs = [
         {
@@ -106,7 +107,7 @@ export default function LogsPage(){
             "deviceType": "SMART_LOCK",
             "ipAddress": "0:0:0:0:0:0:0:1",
             "message": "Door locked",
-            "logType": "INFO",
+            "logType": "ALARM",
             "houseId": 1
           },
           {
@@ -170,35 +171,35 @@ export default function LogsPage(){
               "houseId": 1
             },
             {
-                "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
-                  "timestamp": [2023, 6, 17, 18, 3, 28],
-                  "deviceId": 1,
-                  "deviceType": "SMART_CAM",
-                  "ipAddress": "0:0:0:0:0:0:0:1",
-                  "message": "Motion detected",
-                  "logType": "INFO",
-                  "houseId": 1
-                },
-                {
-                  "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
-                  "timestamp": [2023, 6, 17, 18, 5, 12],
-                  "deviceId": 2,
-                  "deviceType": "SMART_LIGHT",
-                  "ipAddress": "0:0:0:0:0:0:0:1",
-                  "message": "Light turned on",
-                  "logType": "INFO",
-                  "houseId": 2
-                },
-                {
-                  "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
-                  "timestamp": [2023, 6, 17, 18, 7, 45],
-                  "deviceId": 3,
-                  "deviceType": "SMART_LOCK",
-                  "ipAddress": "0:0:0:0:0:0:0:1",
-                  "message": "Door locked",
-                  "logType": "INFO",
-                  "houseId": 1
-                }
+            "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
+                "timestamp": [2023, 6, 17, 18, 3, 28],
+                "deviceId": 1,
+                "deviceType": "SMART_CAM",
+                "ipAddress": "0:0:0:0:0:0:0:1",
+                "message": "Motion detected",
+                "logType": "INFO",
+                "houseId": 1
+            },
+            {
+                "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
+                "timestamp": [2023, 6, 17, 18, 5, 12],
+                "deviceId": 2,
+                "deviceType": "SMART_LIGHT",
+                "ipAddress": "0:0:0:0:0:0:0:1",
+                "message": "Light turned on",
+                "logType": "INFO",
+                "houseId": 2
+            },
+            {
+                "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
+                "timestamp": [2023, 6, 17, 18, 7, 45],
+                "deviceId": 3,
+                "deviceType": "SMART_LOCK",
+                "ipAddress": "0:0:0:0:0:0:0:1",
+                "message": "Door locked",
+                "logType": "INFO",
+                "houseId": 1
+            }
     ]
 
     useEffect(() => {
@@ -209,48 +210,41 @@ export default function LogsPage(){
         const filterParams = JSON.parse(sessionStorage.getItem("logsFilterParams"));
 
         if (!filterParams){
-            //  TODO get all logs and continue adding from websocket
-            //
-            // getAllClients().then(
-            //     (response) => {
-            //         setClients(!!response ? response.data : []);
-            //     }
-            // )
+            //  TODO 
+            getPreviosLogs({}).then(
+                (response) => {
+                    if (!!response && response.data) {
+                        setLogs(response.data);
+                    } else {
+                    setLogs(dummyLogs);
+                    }
+                }
+                // TODO connect to websocket
+            )
         } else {
             setHouseId(filterParams.houseId);
             setDeviceType(filterParams.deviceType);
             setMessageType(filterParams.messageType);
             setRegex(filterParams.regex);
             
-            // TODO get filtered logs and contue filtering from websocket
-            // 
-            // sendFilterClientsRequest(filterParams).then(
-            //     (response) => {
-            //         console.log(response);
-            //         setClients(!!response ? response.data : []);
-                    
-            //     }, (error) => {
-            //       console.log(error);
-            //     }
-            // );
+            getPreviosLogs(filterParams).then(
+                (response) => {
+                    if (!!response && response.data) {
+                        setLogs(response.data);
+                    } else {
+                    setLogs(dummyLogs);
+                    }
+                }
+                // TODO connect to websocket
+            )
         }
     }, [])
-
-    useEffect(() => {
-        // TODO ListedLog
-        //
-        // if (!!logs){
-        //     let mappedLogs = logs.map((log) => <ListedLog log={log} key={client.email}/>)
-        //     setListedLogs(mappedLogs);
-        // }
-    }, [logs])
-    
   
     const validateInput = () => {
         let valid = (checkNumInput(houseId) || houseId.length === 0 ) && 
                     (checkLettersInput(deviceType) || deviceType.length === 0 ) && 
                     (checkLettersInput(logType) || logType.length === 0 )
-                    // for regex no need to check?
+                    // for regex no need to check
                     ;
   
         return valid;
@@ -259,13 +253,16 @@ export default function LogsPage(){
     const resetButtonPressed = (e) => {
         e.preventDefault();
 
-        // TODO get all logs and continue getting from websocket
-        // 
-        // getAllClients().then(
-        //     (response) => {
-        //         setClients(!!response ? response.data : []);
-        //     }
-        // );
+        getPreviosLogs({}).then(
+            (response) => {
+                if (!!response && response.data) {
+                    setLogs(response.data);
+                } else {
+                setLogs(dummyLogs);
+                }
+            }
+            // TODO connect to websocket
+        )
 
         sessionStorage.removeItem("logsFilterParams");
         setHouseId("");
@@ -290,17 +287,16 @@ export default function LogsPage(){
             const filterParams = {houseId, deviceType, messageType: logType, regex}
             sessionStorage.setItem("logsFilterParams", JSON.stringify(filterParams));
 
-            // TODO filter logs method
-            // 
-            // sendFilterLogsRequest(filterParams).then(
-            //     (response) => {
-            //         console.log(response);
-            //         setClients(!!response ? response.data : []);
-                    
-            //     }, (error) => {
-            //       console.log(error);
-            //     }
-            // );
+            getPreviosLogs(filterParams).then(
+                (response) => {
+                    if (!!response && response.data) {
+                        setLogs(response.data);
+                    } else {
+                    setLogs(dummyLogs);
+                    }
+                }
+                // TODO connect to websocket
+            )
         }, [houseId, deviceType, logType, regex]
     )
 
@@ -313,7 +309,6 @@ export default function LogsPage(){
             <center><h3>Logs</h3></center>
             <br/>
             <div className="borderedBlock">
-                {/* TODO search form */}
                 <LabeledInput value={houseId} label="House id" inputName="houseId" placeholder="Type house id" required onChangeFunc={setHouseId}/>
 
                 <Row className='mt-2'>
@@ -360,24 +355,8 @@ export default function LogsPage(){
                   </Row> 
             </div>
             <br/>
-            {/* <Row>
-                <Col sm="2">
-                    House Id
-                </Col>
-                <Col sm="2">
-                    Device type
-                </Col>
-                <Col sm="2">
-                    Message type
-                </Col>
-                <Col sm="5">
-                    Message
-                </Col>
-                <Col sm="1" /> {/* for alarms */}
-            {/* </Row> */}
 
             <LogsViewer logs={logs} />
-            {/* {listedLogs} */}
             {/* just gives nice space in the bottom */}
             <p className='mt-3'></p> 
         </>

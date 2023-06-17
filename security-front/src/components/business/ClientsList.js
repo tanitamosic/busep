@@ -115,7 +115,6 @@ export default function ClientsList(){
             <center><h3>Clients</h3></center>
             <br/>
             <div className="borderedBlock">
-                {/* TODO search form */}
                 <LabeledInput value={filterName} label="Name" inputName="name" placeholder="Type client name" required onChangeFunc={setFilterName}/>
                 <LabeledInput value={filterSurname} label="Last name" inputName="lastname" placeholder="Type client lastname" required onChangeFunc={setFilterSurname}/>
                 <LabeledInput value={filterEmail} label="Email" inputName="email" placeholder="Type client email" required onChangeFunc={setFilterEmail}/>

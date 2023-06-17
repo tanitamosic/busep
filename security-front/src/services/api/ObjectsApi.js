@@ -93,3 +93,13 @@ export async function getAllObjects(){
         return err.message
     }
   }
+
+  export async function getPreviosLogs(filterDto){
+    try {
+        const responseData = await getApiCall().post('/home/logs', filterDto);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }

@@ -38,14 +38,14 @@ const LogsViewer = ({ logs }) => {
         >
           {formatTimestamp(log.timestamp) + " "} 
           <span style={{
-                color: log.logType === 'WARN' ? 'yellow' : log.logType === 'ERROR' ? 'red' : 'lightblue',
+                color: log.logType === 'WARN' ? 'yellow' : log.logType === 'ERROR' ? 'red' : log.logType === 'ALARM' ? 'red' : 'lightblue',
               }}>  
-              {log.logType} 
+              {log.logType === "ALARM" && "*"}{log.logType} {log.logType === "ALARM" && "*"}
             </span> 
             {"___houseId:" + log.houseId + "___device:_" + log.deviceType + "(" + log.deviceId + ")___"}
             
             <span style={{
-                color: log.logType === 'WARN' ? 'yellow' : log.logType === 'ERROR' ? 'red' : 'lightblue',
+                color: log.logType === 'WARN' ? 'yellow' : log.logType === 'ERROR' ? 'red' : log.logType === 'ALARM' ? 'red' : 'lightblue',
               }}>  
               {log.message} 
             </span> 
