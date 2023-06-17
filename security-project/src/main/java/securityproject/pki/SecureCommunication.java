@@ -19,12 +19,6 @@ public class SecureCommunication {
     private static final String HASH_ALGORITHM = "SHA256PRNG";
     private static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
 
-    public void testIt() {
-        String message = "Ovo su podaci koje Alisa treba da posalje Bobu";
-
-        // TODO: Implementirati pozivanje operacija tako da se simulira sifrovanje i digitalno potpisivanje poruke od strane Alise i desifrovanje i provera digitalnog potpisa od strane Boba
-        // Dozvoljeno je kreiranje nove klase za DTO (data transfer object) ukoliko ima potrebe
-    }
 
     private SecretKey generateSecretKey() {
         try {

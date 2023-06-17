@@ -59,13 +59,16 @@ public class AlarmService {
     }
 
     public void raiseEmailAlarm(String email, LocalDateTime timestamp, AlarmSeverity severity){
-
         logAlarm(new RequestAlarm(timestamp, email, RequestType.LOGIN, severity ));
+    }
+
+    public void raiseMaliciousAlarm(String email, AlarmSeverity severity){
+        logAlarm(new RequestAlarm(LocalDateTime.now(), email, RequestType.MALICIOUS, severity));
     }
 
     public void logAlarm(DeviceAlarm alarm){
         deviceLogRepository.insert(new DeviceAlarmLog(alarm));
-        logger.info("Inserted " + alarm.getSeverity() + " alarm log; deviceId: {}", alarm.getDeviceId());
+        logger.error("Inserted " + alarm.getSeverity() + " alarm log; deviceId: {}", alarm.getDeviceId());
     }
 
     public void logAlarm(RequestAlarm alarm){
@@ -81,12 +84,13 @@ public class AlarmService {
     public void parseFailedLoginRequest(String email) {
         kieSession.insert(new FailedLoginEvent(email, LocalDateTime.now()));
         kieSession.fireAllRules();
-    }
-
-    public void handleRequest(HttpServletRequest request, Boolean login) {
-
+        raiseEmailAlarm(email, LocalDateTime.now(), AlarmSeverity.LOW);
     }
 
     public void parseAnyRequest(HttpServletRequest request) {
+    }
+
+    public void parseMaliciousRequest(String remoteAddr) {
+        raiseMaliciousAlarm(remoteAddr, AlarmSeverity.MEDIUM);
     }
 }
