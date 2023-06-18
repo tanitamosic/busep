@@ -1,9 +1,6 @@
 package securityproject.dto;
 
-import securityproject.model.enums.AlarmSeverity;
-import securityproject.model.enums.DeviceType;
-import securityproject.model.enums.LogType;
-import securityproject.model.enums.RequestType;
+import securityproject.model.enums.*;
 import securityproject.model.logs.DeviceAlarmLog;
 import securityproject.model.logs.DeviceLog;
 import securityproject.model.logs.RequestAlarmLog;
@@ -23,7 +20,8 @@ public class GenericLogDTO {
     private String ipAddress;
     private LogType logType;
     private Long houseId;
-    
+    private GenericLogType genericLogType;
+
     public GenericLogDTO(RequestAlarmLog ral){
         this.setId(ral.getId());
         this.setTimestamp(ral.getTimestamp());
@@ -31,6 +29,7 @@ public class GenericLogDTO {
         this.setMessage(ral.getMessage());
         this.setRequestType(ral.getRequestType());
         this.setSource(ral.getSource());
+        this.genericLogType = GenericLogType.REQUEST_ALARM;
 
     }
     
@@ -41,6 +40,7 @@ public class GenericLogDTO {
         this.setSeverity(dal.getSeverity());
         this.setMessage(dal.getMessage());
         this.setDeviceType(dal.getDeviceType());
+        this.genericLogType = GenericLogType.DEVICE_ALARM;
     }
     
     public GenericLogDTO(DeviceLog dl){
@@ -52,6 +52,7 @@ public class GenericLogDTO {
         this.setMessage(dl.getMessage());
         this.setDeviceType(dl.getDeviceType());
         this.setHouseId(dl.getHouseId());
+        this.genericLogType = GenericLogType.DEVICE;
     }
 
     public String getId() {
@@ -140,5 +141,14 @@ public class GenericLogDTO {
 
     public void setHouseId(Long houseId) {
         this.houseId = houseId;
+    }
+
+
+    public GenericLogType getGenericLogType() {
+        return genericLogType;
+    }
+
+    public void setGenericLogType(GenericLogType genericLogType) {
+        this.genericLogType = genericLogType;
     }
 }
