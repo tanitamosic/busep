@@ -3,6 +3,7 @@ package securityproject.model.alarms;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import securityproject.model.enums.AlarmSeverity;
+import securityproject.model.enums.DeviceType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +20,7 @@ public class DeviceAlarm {
     private AlarmSeverity severity;
 
     private LocalDateTime timestamp;
+    private DeviceType deviceType;
 
     public Long getDeviceId() {
         return deviceId;
@@ -68,7 +70,15 @@ public class DeviceAlarm {
         this.timestamp = timestamp;
     }
 
-    public DeviceAlarm(Long deviceId, Long houseId, String message, LocalDateTime timestamp, AlarmSeverity severity) {
+    public DeviceType getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(DeviceType deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public DeviceAlarm(Long deviceId, Long houseId, String message, LocalDateTime timestamp, AlarmSeverity severity, DeviceType deviceType) {
         String format = "yyyy-MM-dd'T'HH:mm:ss";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         UUID uuid = UUID.randomUUID();
@@ -78,5 +88,6 @@ public class DeviceAlarm {
         this.message = message;
         this.severity = severity;
         this.timestamp = timestamp;
+        this.deviceType = deviceType;
     }
 }

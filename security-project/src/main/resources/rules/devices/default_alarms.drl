@@ -11,9 +11,9 @@ global AlarmService alarmService;
 
 rule "error log"
     when
-        DeviceLog(logType == LogType.ERROR, $device: deviceId, $message: message, $timestamp: timestamp)
+        DeviceLog(logType == LogType.ERROR, $device: deviceId, $message: message, $timestamp: timestamp, $deviceType: deviceType)
     then
-        alarmService.raiseErrorAlarm($device, $message, $timestamp, AlarmSeverity.LOW);
+        alarmService.raiseErrorAlarm($device, $message, $timestamp, AlarmSeverity.LOW, $deviceType);
 end
 
 //rule "too many requests"

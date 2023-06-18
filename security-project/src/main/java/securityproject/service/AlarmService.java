@@ -12,6 +12,7 @@ import securityproject.dto.GenericLogDTO;
 import securityproject.model.alarms.FailedLoginEvent;
 import securityproject.model.alarms.RequestAlarm;
 import securityproject.model.enums.AlarmSeverity;
+import securityproject.model.enums.DeviceType;
 import securityproject.model.enums.RequestType;
 import securityproject.model.logs.DeviceAlarmLog;
 import securityproject.model.logs.DeviceLog;
@@ -62,9 +63,9 @@ public class AlarmService {
         kieSession.fireAllRules();
     }
 
-    public void raiseErrorAlarm(Long deviceId, String message, LocalDateTime timestamp, AlarmSeverity severity){
+    public void raiseErrorAlarm(Long deviceId, String message, LocalDateTime timestamp, AlarmSeverity severity, DeviceType deviceType){
         Long houseId = getHouseIdFromDevice(deviceId);
-        DeviceAlarm alarm = new DeviceAlarm(deviceId,houseId,message,timestamp,severity);
+        DeviceAlarm alarm = new DeviceAlarm(deviceId,houseId,message,timestamp,severity, deviceType);
         logAlarm(alarm);
     }
 

@@ -25,6 +25,7 @@ public class DeviceAlarmLog {
     private DeviceType deviceType;
     private String message;
     private AlarmSeverity severity;
+    private Long houseId;
 
     public DeviceAlarmLog(String message, LocalDateTime timestamp, Long deviceId, AlarmSeverity alarmSeverity) {
         UUID uuid = UUID.randomUUID();
@@ -42,9 +43,10 @@ public class DeviceAlarmLog {
         String uuidString = uuid.toString();
         this.setId(uuidString);
         this.setTimestamp(alarm.getTimestamp());
-        this.setDeviceId(deviceId);
-        this.setSeverity(severity);
-        this.setMessage(message);
-        this.setDeviceType(deviceType);
+        this.setDeviceId(alarm.getDeviceId());
+        this.setSeverity(alarm.getSeverity());
+        this.setMessage(alarm.getMessage());
+        this.setDeviceType(alarm.getDeviceType());
+        this.setHouseId(alarm.getHouseId());
     }
 }

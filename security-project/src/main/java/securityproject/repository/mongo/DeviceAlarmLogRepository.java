@@ -14,5 +14,7 @@ public interface DeviceAlarmLogRepository extends MongoRepository<DeviceAlarmLog
     List<DeviceAlarmLog> findByDeviceId(Long id);
     List<DeviceAlarmLog> findBySeverityRegex(AlarmSeverity severity);
     List<DeviceAlarmLog> findByTimestampBetween(LocalDateTime start, LocalDateTime end);
+    List<DeviceAlarmLog> findAllByHouseIdInAndTimestampBetween(List<Long> houseId, LocalDateTime start, LocalDateTime end);
+    List<DeviceAlarmLog> findAllByHouseIdAndTimestampBetween(Long houseId, LocalDateTime start, LocalDateTime end);
 }
 
