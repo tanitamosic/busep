@@ -111,3 +111,13 @@ export async function getAllObjects(){
         return err.message
     }
   }
+
+  export async function postCreateAlarmRequest(alarmDto){
+    try {
+        const responseData = await getApiCall().post('/device/custom-alarm', alarmDto);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
