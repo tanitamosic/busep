@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import securityproject.dto.GenericLogDTO;
 import securityproject.dto.device.SignedMessageDTO;
 import securityproject.dto.device.MessageToVerify;
+import securityproject.model.enums.DeviceType;
 import securityproject.model.home.Device;
+import securityproject.model.home.House;
 import securityproject.model.logs.DeviceLog;
 import securityproject.model.enums.LogType;
 import securityproject.model.user.User;
@@ -31,7 +33,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PublicKey;
 import java.security.Signature;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -160,5 +164,35 @@ public class DeviceService {
                 break;
             default: break;
         }
+    }
+
+    public String adminFilterLogs(Long houseId, DeviceType deviceType, LogType logType, String regex) {
+        return filter(houseId, deviceType, logType, regex);
+    }
+
+    private String filter(Long houseId, DeviceType deviceType, LogType logType, String regex) {
+        List<DeviceLog> logs1 = logRepository.findAllByHouseId(houseId);
+        List<DeviceLog> logs2 = logRepository.findAllByDeviceType(deviceType);
+        List<DeviceLog> logs3 = logRepository.findAllByLogType(logType);
+        List<DeviceLog> logs4 = logRepository.findAllByIpAddressRegex(regex);
+
+        List<DeviceLog> total = logs1.stream().filter(e -> logs2.contains(e) && logs3.contains(e) && logs4.contains(e)).collect(Collectors.toList());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(total);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "[]";
+        }
+    }
+
+    public String userFilterLogs(String email, Long houseId, DeviceType deviceType, LogType logType, String regex) {
+        User u = userService.getUserByEmail(email);
+        List<House> houses = homeService.getHousesByOwner(u.getId());
+        List<House> houses2 = homeService.getHousesByRenter(u.getId());
+        if (!houses.stream().map(House::getId).collect(Collectors.toList()).contains(houseId) && !houses2.stream().map(House::getId).collect(Collectors.toList()).contains(houseId)){
+            return "[]";
+        }
+        return filter(houseId, deviceType, logType, regex);
     }
 }
