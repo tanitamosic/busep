@@ -27,6 +27,7 @@ import MyObjectsList from './components/business/MyObjectsList';
 import ClientPreview from './components/business/ClientPreview';
 import ClientsList from './components/business/ClientsList';
 import LogsPage from './components/business/LogsPage';
+import CreateAlarmForm from './components/forms/CreateAlarmForm';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -47,6 +48,7 @@ function App() {
   const clientPreview = <Container><ClientPreview /></Container>
   const clientsList = <Container><ClientsList /></Container>
   const logsPage = <Container><LogsPage /></Container>
+  const createAlarmForm = <Container><CreateAlarmForm /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -95,6 +97,7 @@ function App() {
                   <Route path='/admin/object/:id' element={objectPreview}/>
                   
                   <Route path='/admin/new-object' element={createObjectForm}/>
+                  <Route path='/admin/create-alarm' element={createAlarmForm}/>
 
                   <Route path='/admin' element={adminFirstPage}/>
 

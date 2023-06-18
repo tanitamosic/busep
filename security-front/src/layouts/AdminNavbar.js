@@ -50,6 +50,7 @@ export default function AdminNavbar(){
                 <Nav.Link href="/admin/clients">Clients</Nav.Link>
                 <Nav.Link href="/admin/all-objects">All objects</Nav.Link> 
                 <Nav.Link href="/admin/new-object">New object</Nav.Link> 
+                <Nav.Link href="/admin/create-alarm">Create alarm</Nav.Link> 
                 <Nav.Link href="/logs">Logs</Nav.Link> 
                 <Nav.Link href="/logout">Logout</Nav.Link>
             </Nav>
