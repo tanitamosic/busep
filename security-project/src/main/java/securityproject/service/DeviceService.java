@@ -9,9 +9,9 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import securityproject.dto.GenericLogDTO;
 import securityproject.dto.device.SignedMessageDTO;
 import securityproject.dto.device.MessageToVerify;
 import securityproject.model.home.Device;
@@ -20,6 +20,7 @@ import securityproject.model.enums.LogType;
 import securityproject.model.user.User;
 import securityproject.repository.DeviceRepository;
 import securityproject.repository.mongo.DeviceLogRepository;
+import securityproject.util.Helper;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -30,7 +31,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PublicKey;
 import java.security.Signature;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -136,27 +136,16 @@ public class DeviceService {
     }
 
     public void sendLog(DeviceLog log) {
+        GenericLogDTO genericLog = new GenericLogDTO(log);
         Device device = deviceRepository.getDeviceById(log.getDeviceId());
         User owner = homeService.getOwner(device.getHouseId());
         User renter = homeService.getRenter(device.getHouseId());
-        List<User> admins = userService.getAllAdmins();
-        String message = Objects.requireNonNull(convertToJson(log));
+        String message = Objects.requireNonNull(Helper.convertToJson(genericLog));
         messagingTemplate.convertAndSend("/topic/log/" + owner.getEmail(), message);
         messagingTemplate.convertAndSend("/topic/log/" + renter.getEmail(), message);
-        for (User u: admins) {
-            messagingTemplate.convertAndSend("/topic/log/" + u.getEmail(), message);
-        }
+        messagingTemplate.convertAndSend("/topic/log", message);
     }
 
-    public static String convertToJson(Object obj) {
-        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
-        try {
-            return objectMapper.writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
     private void logToConsole(DeviceLog log) {
         String fullMessagee = "Log message: " +log.getMessage() + "; device type: " + log.getDeviceType() + "; device id: " + log.getDeviceId() + "; house id: " + log.getHouseId() + "; IP address: " + log.getIpAddress();
         switch (log.getLogType()) {

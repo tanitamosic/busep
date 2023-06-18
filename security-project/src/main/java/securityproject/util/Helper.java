@@ -1,11 +1,14 @@
 package securityproject.util;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
@@ -91,5 +94,15 @@ public class Helper {
             throw new RuntimeException(e);
         }
         return sw.toString();
+    }
+
+    public static String convertToJson(Object obj) {
+        ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
