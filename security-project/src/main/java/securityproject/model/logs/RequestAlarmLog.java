@@ -43,8 +43,10 @@ public class RequestAlarmLog {
         String uuidString = uuid.toString();
         this.setId(uuidString);
         this.setTimestamp(alarm.getTimestamp());
-        this.setSeverity(severity);
-        this.setMessage(message);
+        this.setSeverity(alarm.getSeverity());
+        this.setMessage(alarm.getMessage());
+        this.setSource(alarm.getSource());
+        this.setRequestType(alarm.getRequestType());
 
     }
 
