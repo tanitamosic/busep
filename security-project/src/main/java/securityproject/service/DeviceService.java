@@ -2,6 +2,7 @@ package securityproject.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
@@ -173,16 +174,19 @@ public class DeviceService {
     }
 
     private String filter(Long houseId, DeviceType deviceType, LogType logType, String regex) {
-        List<DeviceLog> logs1 = logRepository.findAllByHouseId(houseId);
-        List<DeviceLog> logs2 = logRepository.findAllByDeviceType(deviceType);
-        List<DeviceLog> logs3 = logRepository.findAllByLogType(logType);
-        List<DeviceLog> logs4 = logRepository.findAllByIpAddressRegex(regex);
-
-        List<DeviceLog> total = logs1.stream().filter(e -> logs2.contains(e) && logs3.contains(e) && logs4.contains(e)).collect(Collectors.toList());
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.writeValueAsString(total);
-        } catch (JsonProcessingException e) {
+            List<DeviceLog> logs1 = logRepository.findAllByHouseId(houseId);
+            List<DeviceLog> logs2 = logRepository.findAllByDeviceType(deviceType);
+            List<DeviceLog> logs3 = logRepository.findAllByLogType(logType);
+            List<DeviceLog> logs4 = logRepository.findAllByIpAddressRegex(regex);
+
+            List<DeviceLog> total = logs1.stream().filter(e -> logs2.contains(e) && logs3.contains(e) && logs4.contains(e)).collect(Collectors.toList());
+            List<GenericLogDTO> totalGenerics = total.stream().map(GenericLogDTO::new).collect(Collectors.toList());
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule()); // Register the module
+
+            return objectMapper.writeValueAsString(totalGenerics);
+        } catch (Exception e) {
             e.printStackTrace();
             return "[]";
         }

@@ -198,9 +198,9 @@ export default function LogsPage(){
         //     }
     ]
 
-    useEffect(() => {
-        setLogs(dummyLogs);
-    }, [])
+    // useEffect(() => {
+    //     setLogs(dummyLogs);
+    // }, [])
 
     // everytime when log comes from websocket
     useEffect(() => {
@@ -247,17 +247,18 @@ export default function LogsPage(){
 
     // when open the page
     useEffect(() => {
-        // getPreviosLogs({houseId, deviceType, logType, regex}).then(
-        //     (response) => {
-        //         if (!!response && response.data) {
-        //             setLogs(response.data);
-        //         } else {
-        //         setLogs(dummyLogs);
-        //         }
-        //     }
-        // )
+        getPreviosLogs({houseId, deviceType, logType, regex}).then(
+            (response) => {
+                if (!!response && response.data) {
+                    console.log(response.data);
+                    setLogs(response.data);
+                } else {
+                setLogs(dummyLogs);
+                }
+            }
+        )
         // }
-        setLogs([])
+        // setLogs([])
     }, [])
   
     const validateInput = () => {
