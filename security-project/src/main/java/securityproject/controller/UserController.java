@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import securityproject.dto.FilterDTO;
 import securityproject.dto.HouseDTO;
 import securityproject.dto.UserResponse;
+import securityproject.model.enums.DeviceType;
+import securityproject.model.enums.LogType;
 import securityproject.model.user.User;
+import securityproject.service.DeviceService;
 import securityproject.service.UserService;
 
 import java.util.List;
@@ -17,6 +20,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     UserService userService;
+    @Autowired
+    DeviceService deviceService;
 
     @GetMapping(value="info/{email}")
     public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
@@ -67,5 +72,17 @@ public class UserController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private static class FilterParams {
+        Long houseId;
+        DeviceType deviceType;
+        LogType logType;
+        String regex;
+    }
+
+    @PostMapping(value="filter-logs/{email}")
+    public ResponseEntity<String> filterLogs(@RequestBody FilterParams dto, @PathVariable String email) {
+        return ResponseEntity.ok().body(deviceService.userFilterLogs(email, dto.houseId, dto.deviceType, dto.logType, dto.regex));
     }
 }

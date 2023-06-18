@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import securityproject.dto.CertificateDto;
 import securityproject.model.CertificateData;
 import securityproject.model.Csr;
+import securityproject.model.enums.DeviceType;
+import securityproject.model.enums.LogType;
 import securityproject.service.CertificateService;
 import securityproject.service.CsrService;
+import securityproject.service.DeviceService;
 
 import java.util.List;
 
@@ -24,6 +27,9 @@ public class AdminController {
     CsrService csrService;
     @Autowired
     CertificateService certificateService;
+
+    @Autowired
+    DeviceService deviceService;
 
     @GetMapping(value="/get-all-csrs")
     public ResponseEntity<List<Csr>> getCSRRequests() {
@@ -72,5 +78,18 @@ public class AdminController {
     public ResponseEntity<Boolean> isCertValid(@PathVariable Long id) {
         Boolean isValid = certificateService.isCertificateValid(id);
         return new ResponseEntity<>(isValid, HttpStatus.OK);
+    }
+
+
+    private static class FilterParams {
+        Long houseId;
+        DeviceType deviceType;
+        LogType logType;
+        String regex;
+    }
+
+    @PostMapping(value="filter-logs")
+    public ResponseEntity<String> filterLogs(@RequestBody FilterParams dto) {
+        return ResponseEntity.ok().body(deviceService.adminFilterLogs(dto.houseId, dto.deviceType, dto.logType, dto.regex));
     }
 }
