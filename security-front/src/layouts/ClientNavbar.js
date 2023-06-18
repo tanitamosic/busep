@@ -44,6 +44,7 @@ export default function ClientNavbar(){
             <Nav className="ms-auto">
                 <Nav.Link href="/client/my-objects">My objects</Nav.Link>
                 <Nav.Link href="/logs">Logs</Nav.Link> 
+                <Nav.Link href="/reports">Reports</Nav.Link> 
                 <Nav.Link href="/logout">Logout</Nav.Link>
             </Nav>
         </Navbar.Collapse>

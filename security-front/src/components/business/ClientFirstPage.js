@@ -24,6 +24,10 @@ export default function ClientFirstPage(){
         navigate('/logs');
     }
 
+    const reportsButtonPressed = (e) => {
+        navigate('/reports');
+    }
+
     const myObjectsButtonPressed = (e) => {
         navigate('/client/my-objects');
     }
@@ -43,6 +47,15 @@ export default function ClientFirstPage(){
                 <Col sm={4} align='center'>
                     <Button className='formButton' onClick={logsButtonPressed}>
                         Logs
+                    </Button>
+                </Col>
+                <Col sm={4}/>
+            </Row> 
+            <Row className='mt-2'>
+                <Col sm={4}/>
+                <Col sm={4} align='center'>
+                    <Button className='formButton' onClick={reportsButtonPressed}>
+                        Reports
                     </Button>
                 </Col>
                 <Col sm={4}/>

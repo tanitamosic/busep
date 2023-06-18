@@ -28,6 +28,7 @@ import ClientPreview from './components/business/ClientPreview';
 import ClientsList from './components/business/ClientsList';
 import LogsPage from './components/business/LogsPage';
 import CreateAlarmForm from './components/forms/CreateAlarmForm';
+import ReportsPage from './components/business/ReportsPage';
 
 function App() {
   const registrationForm = <Container><RegistrationForm /></Container>
@@ -49,6 +50,7 @@ function App() {
   const clientsList = <Container><ClientsList /></Container>
   const logsPage = <Container><LogsPage /></Container>
   const createAlarmForm = <Container><CreateAlarmForm /></Container>
+  const reportsPage = <Container><ReportsPage /></Container>
 
   const [navBar, setNavBar] = useState(getNavbarByUserRole());
 
@@ -78,6 +80,7 @@ function App() {
                   <Route path="/login" element={loginForm} />
                   <Route path="/logout" element={logoutPage} />
                   <Route path='/logs' element={logsPage}/>
+                  <Route path='/reports' element={reportsPage} />
 
                   <Route path='/client/my-objects/:id' element={objectPreview} />
                   <Route path='/client/my-objects' element={myObjects} />

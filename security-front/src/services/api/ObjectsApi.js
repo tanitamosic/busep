@@ -1,5 +1,6 @@
 import {getApiCall} from "../Configs.js"
 import { getLoggedUserEmail, getRole } from "../utils/AuthService.js";
+import { checkEmailInput, checkNumInput } from "../utils/InputValidation.js";
 
 // TODO 
 export async function getAllObjects(){
@@ -115,6 +116,35 @@ export async function getAllObjects(){
   export async function postCreateAlarmRequest(alarmDto){
     try {
         const responseData = await getApiCall().post('/device/custom-alarm', alarmDto);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
+  export async function postReportRequest(reportDto, isAdmin){
+    try {
+        let responseData;
+
+        if (isAdmin){
+            if (reportDto.reportSource === ""){
+                responseData = await getApiCall().post('/report/all-houses', reportDto);    
+            } else if (reportDto.reportSource === "0"){
+                responseData = await getApiCall().post('/report/all-devices', reportDto);    
+            } else if (checkEmailInput(reportDto.reportSource)){
+                responseData = await getApiCall().post('/report/user-houses', reportDto);    
+            } else if (checkNumInput(reportDto.reportSource)){
+                responseData = await getApiCall().post('/report/house-devices', reportDto);    
+            }
+        } else {
+            if (reportDto.reportSource === "0"){ // reports for all houses
+                responseData = await getApiCall().post('/report/user-houses' + getLoggedUserEmail(), reportDto);  
+            } else {
+                responseData = await getApiCall().post('/report/user-house/' + getLoggedUserEmail(), reportDto);  
+            }
+        }
+        
         return responseData;
     } catch (err) {
         console.log(err.message);
