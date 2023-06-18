@@ -101,9 +101,9 @@ export async function getAllObjects(){
         let responseData;
 
         if (getRole() === "admin"){
-            responseData = await getApiCall().post('/home/logs', filterDto);
+            responseData = await getApiCall().post('/admin/filter-logs', filterDto);
         } else {
-            responseData = await getApiCall().post('/home/logs/' + getLoggedUserEmail(), filterDto);
+            responseData = await getApiCall().post('/user/filter-logs/' + getLoggedUserEmail(), filterDto);
         }
 
         return responseData;

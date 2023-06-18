@@ -25,176 +25,177 @@ export default function LogsPage(){
     const possibleLogTypes = ["", "INFO", "WARN", "ERROR", "ALARM"];
     
     const dummyLogs = [
-        {
-            "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
-            "timestamp": [2023, 6, 17, 18, 3, 28],
-            "deviceId": 1,
-            "deviceType": "SMART_CAM",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Motion detected",
-            "logType": "INFO",
-            "houseId": 1
-          },
-          {
-            "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
-            "timestamp": [2023, 6, 17, 18, 5, 12],
-            "deviceId": 2,
-            "deviceType": "SMART_LIGHT",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Light turned on",
-            "logType": "INFO",
-            "houseId": 2
-          },
-          {
-            "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
-            "timestamp": [2023, 6, 17, 18, 7, 45],
-            "deviceId": 3,
-            "deviceType": "SMART_LOCK",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Door locked",
-            "logType": "INFO",
-            "houseId": 1
-          },
-          {
-            "id": "293d6e59-4b61-4866-87dd-95f4ac9721d2",
-            "timestamp": [2023, 6, 17, 18, 9, 20],
-            "deviceId": 4,
-            "deviceType": "SMART_SMOKE",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Smoke detected",
-            "logType": "WARN",
-            "houseId": 3
-          },
-          {
-            "id": "db269f7a-9c52-4fd1-b02a-37e27ee9b8c9",
-            "timestamp": [2023, 6, 17, 18, 11, 5],
-            "deviceId": 5,
-            "deviceType": "SMART_TEMP",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Temperature above threshold",
-            "logType": "ERROR",
-            "houseId": 1
-          },
-          {
-          "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
-            "timestamp": [2023, 6, 17, 18, 3, 28],
-            "deviceId": 1,
-            "deviceType": "SMART_CAM",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Motion detected",
-            "logType": "INFO",
-            "houseId": 1
-          },
-          {
-            "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
-            "timestamp": [2023, 6, 17, 18, 5, 12],
-            "deviceId": 2,
-            "deviceType": "SMART_LIGHT",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Light turned on",
-            "logType": "INFO",
-            "houseId": 2
-          },
-          {
-            "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
-            "timestamp": [2023, 6, 17, 18, 7, 45],
-            "deviceId": 3,
-            "deviceType": "SMART_LOCK",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Door locked",
-            "logType": "ALARM",
-            "houseId": 1
-          },
-          {
-            "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
-            "timestamp": [2023, 6, 17, 18, 7, 45],
-            "deviceId": 3,
-            "deviceType": "SMART_LOCK",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Door locked",
-            "logType": "INFO",
-            "houseId": 1
-          },
-          {
-            "id": "293d6e59-4b61-4866-87dd-95f4ac9721d2",
-            "timestamp": [2023, 6, 17, 18, 9, 20],
-            "deviceId": 4,
-            "deviceType": "SMART_SMOKE",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Smoke detected",
-            "logType": "WARN",
-            "houseId": 3
-          },
-          {
-            "id": "db269f7a-9c52-4fd1-b02a-37e27ee9b8c9",
-            "timestamp": [2023, 6, 17, 18, 11, 5],
-            "deviceId": 5,
-            "deviceType": "SMART_TEMP",
-            "ipAddress": "0:0:0:0:0:0:0:1",
-            "message": "Temperature above threshold",
-            "logType": "ERROR",
-            "houseId": 1
-          },
-          {
-            "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
-              "timestamp": [2023, 6, 17, 18, 3, 28],
-              "deviceId": 1,
-              "deviceType": "SMART_CAM",
-              "ipAddress": "0:0:0:0:0:0:0:1",
-              "message": "Motion detected",
-              "logType": "INFO",
-              "houseId": 1
-            },
-            {
-              "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
-              "timestamp": [2023, 6, 17, 18, 5, 12],
-              "deviceId": 2,
-              "deviceType": "SMART_LIGHT",
-              "ipAddress": "0:0:0:0:0:0:0:1",
-              "message": "Light turned on",
-              "logType": "INFO",
-              "houseId": 2
-            },
-            {
-              "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
-              "timestamp": [2023, 6, 17, 18, 7, 45],
-              "deviceId": 3,
-              "deviceType": "SMART_LOCK",
-              "ipAddress": "0:0:0:0:0:0:0:1",
-              "message": "Door locked",
-              "logType": "INFO",
-              "houseId": 1
-            },
-            {
-            "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
-                "timestamp": [2023, 6, 17, 18, 3, 28],
-                "deviceId": 1,
-                "deviceType": "SMART_CAM",
-                "ipAddress": "0:0:0:0:0:0:0:1",
-                "message": "Motion detected",
-                "logType": "INFO",
-                "houseId": 1
-            },
-            {
-                "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
-                "timestamp": [2023, 6, 17, 18, 5, 12],
-                "deviceId": 2,
-                "deviceType": "SMART_LIGHT",
-                "ipAddress": "0:0:0:0:0:0:0:1",
-                "message": "Light turned on",
-                "logType": "INFO",
-                "houseId": 2
-            },
-            {
-                "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
-                "timestamp": [2023, 6, 17, 18, 7, 45],
-                "deviceId": 3,
-                "deviceType": "SMART_LOCK",
-                "ipAddress": "0:0:0:0:0:0:0:1",
-                "message": "Door locked",
-                "logType": "INFO",
-                "houseId": 1
-            }
+        // {
+        //     "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
+        //     "timestamp": [2023, 6, 17, 18, 3, 28],
+        //     "deviceId": 1,
+        //     "deviceType": "SMART_CAM",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Motion detected",
+        //     "logType": "INFO",
+        //     "houseId": 1
+        //   },
+        //   {
+        //     "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
+        //     "timestamp": [2023, 6, 17, 18, 5, 12],
+        //     "deviceId": 2,
+        //     "deviceType": "SMART_LIGHT",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Light turned on",
+        //     "logType": "INFO",
+        //     "houseId": 2
+        //   },
+        //   {
+        //     "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
+        //     "timestamp": [2023, 6, 17, 18, 7, 45],
+        //     "deviceId": 3,
+        //     "deviceType": "SMART_LOCK",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Door locked",
+        //     "logType": "INFO",
+        //     "houseId": 1
+        //   },
+        //   {
+        //     "id": "293d6e59-4b61-4866-87dd-95f4ac9721d2",
+        //     "timestamp": [2023, 6, 17, 18, 9, 20],
+        //     "deviceId": 4,
+        //     "deviceType": "SMART_SMOKE",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Smoke detected",
+        //     "logType": "WARN",
+        //     "houseId": 3
+        //   },
+        //   {
+        //     "id": "db269f7a-9c52-4fd1-b02a-37e27ee9b8c9",
+        //     "timestamp": [2023, 6, 17, 18, 11, 5],
+        //     "deviceId": 5,
+        //     "deviceType": "SMART_TEMP",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Temperature above threshold",
+        //     "logType": "ERROR",
+        //     "houseId": 1
+        //   },
+        //   {
+        //   "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
+        //     "timestamp": [2023, 6, 17, 18, 3, 28],
+        //     "deviceId": 1,
+        //     "deviceType": "SMART_CAM",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Motion detected",
+        //     "logType": "INFO",
+        //     "houseId": 1
+        //   },
+        //   {
+        //     "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
+        //     "timestamp": [2023, 6, 17, 18, 5, 12],
+        //     "deviceId": 2,
+        //     "deviceType": "SMART_LIGHT",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Light turned on",
+        //     "logType": "INFO",
+        //     "houseId": 2
+        //   },
+        //   {
+        //     "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
+        //     "timestamp": [2023, 6, 17, 18, 7, 45],
+        //     "deviceId": 3,
+        //     "deviceType": "SMART_LOCK",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Door locked",
+        //     "logType": "ALARM",
+        //     "houseId": 1
+        //   },
+        //   {
+        //     "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
+        //     "timestamp": [2023, 6, 17, 18, 7, 45],
+        //     "deviceId": 3,
+        //     "deviceType": "SMART_LOCK",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Door locked",
+        //     "logType": "INFO",
+        //     "houseId": 1
+        //   },
+        //   {
+        //     "id": "293d6e59-4b61-4866-87dd-95f4ac9721d2",
+        //     "timestamp": [2023, 6, 17, 18, 9, 20],
+        //     "deviceId": 4,
+        //     "deviceType": "SMART_SMOKE",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Smoke detected",
+        //     "logType": "WARN",
+        //     "houseId": 3
+        //   },
+        //   {
+        //     "id": "db269f7a-9c52-4fd1-b02a-37e27ee9b8c9",
+        //     "timestamp": [2023, 6, 17, 18, 11, 5],
+        //     "deviceId": 5,
+        //     "deviceType": "SMART_TEMP",
+        //     "ipAddress": "0:0:0:0:0:0:0:1",
+        //     "message": "Temperature above threshold",
+        //     "logType": "ERROR",
+        //     "houseId": 1
+        //   },
+        //   {
+        //     "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
+        //       "timestamp": [2023, 6, 17, 18, 3, 28],
+        //       "deviceId": 1,
+        //       "deviceType": "SMART_CAM",
+        //       "ipAddress": "0:0:0:0:0:0:0:1",
+        //       "message": "Motion detected",
+        //       "logType": "INFO",
+        //       "houseId": 1
+        //     },
+        //     {
+        //       "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
+        //       "timestamp": [2023, 6, 17, 18, 5, 12],
+        //       "deviceId": 2,
+        //       "deviceType": "SMART_LIGHT",
+        //       "ipAddress": "0:0:0:0:0:0:0:1",
+        //       "message": "Light turned on",
+        //       "logType": "INFO",
+        //       "houseId": 2
+        //     },
+        //     {
+        //       "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
+        //       "timestamp": [2023, 6, 17, 18, 7, 45],
+        //       "deviceId": 3,
+        //       "deviceType": "SMART_LOCK",
+        //       "ipAddress": "0:0:0:0:0:0:0:1",
+        //       "message": "Door locked",
+        //       "logType": "INFO",
+        //       "houseId": 1
+        //     },
+        //     {
+        //     "id": "f012e5f5-ac1e-4798-bd02-0c2f8ba8a1fe",
+        //         "timestamp": [2023, 6, 17, 18, 3, 28],
+        //         "deviceId": 1,
+        //         "deviceType": "SMART_CAM",
+        //         "ipAddress": "0:0:0:0:0:0:0:1",
+        //         "message": "Motion detected",
+        //         "logType": "INFO",
+        //         "houseId": 1
+        //     },
+        //     {
+        //         "id": "8e5679ac-874b-43a7-a788-2d1c3f82c34b",
+        //         "timestamp": [2023, 6, 17, 18, 5, 12],
+        //         "deviceId": 2,
+        //         "deviceType": "SMART_LIGHT",
+        //         "ipAddress": "0:0:0:0:0:0:0:1",
+        //         "message": "Light turned on",
+        //         "logType": "INFO",
+        //         "houseId": 2
+        //     },
+        //     {
+        //         "id": "9bf0c610-62f0-41d6-8a27-8d4e583e77d8",
+        //         "timestamp": [2023, 6, 17, 18, 7, 45],
+        //         "deviceId": 3,
+        //         "deviceType": "SMART_LOCK",
+        //         "ipAddress": "0:0:0:0:0:0:0:1",
+        //         "message": "Door locked",
+        //         "logType": "INFO",
+        //         "houseId": 1,
+        //         "genericLogType": "DEVICE"
+        //     }
     ]
 
     useEffect(() => {

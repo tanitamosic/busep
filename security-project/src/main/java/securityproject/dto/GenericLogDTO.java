@@ -40,6 +40,7 @@ public class GenericLogDTO {
         this.setSeverity(dal.getSeverity());
         this.setMessage(dal.getMessage());
         this.setDeviceType(dal.getDeviceType());
+        this.setHouseId(dal.getHouseId());
         this.genericLogType = GenericLogType.DEVICE_ALARM;
     }
     
