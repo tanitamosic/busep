@@ -12,7 +12,7 @@ import warnings
 warnings.filterwarnings('ignore', category=requests.packages.urllib3.exceptions.InsecureRequestWarning)
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
 # URL = 'https://localhost:8081/device/thermometer'
-URL = 'http://localhost:8081/device/thermometer'
+URL = 'https://localhost:8081/device/thermometer'
 DURATION = 30
 key = open('private_device_key.pem', 'rb')
 PRIVATE_KEY = serialization.load_pem_private_key(key.read(), password=None)

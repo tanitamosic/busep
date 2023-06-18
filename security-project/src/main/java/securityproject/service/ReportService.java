@@ -50,7 +50,7 @@ public class ReportService {
         } else {
             if (!type.equals("ALARM")) {
                 LogType logType = LogType.valueOf(type);
-                logs = deviceLogRepository.findAllByLogTypeAndTimestampBetween(logType, from, to);
+                logs = deviceLogRepository.findAllByLogTypeAndTimestampIsBetween(logType, from, to);
             }
         }
         return logs;

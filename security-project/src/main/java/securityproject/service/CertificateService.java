@@ -102,6 +102,7 @@ public class CertificateService {
         X509Certificate cert = createCertificateObject(data,dto.owner);
         keyStoreWriter.writeCertificate(dto.email,cert);
         fileService.writeCerFile(cert, dto.email);
+
     }
 
     private X509Certificate createCertificateObject(CertificateData data, Boolean isOwner) {
@@ -160,4 +161,7 @@ public class CertificateService {
     }
 
 
+    public CertificateData getCertificateById(Long id) {
+        return certificateRepository.findCertificateDataById(id);
+    }
 }

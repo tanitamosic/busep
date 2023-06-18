@@ -13,7 +13,7 @@ export function ReportForm({setReportFunc}) {
     const [reportSource, setReportSource] = useState(""); // empty for all users, 0 for all houses
     const [logType, setMessageType] = useState("");
 
-    const possibleLogTypes = ["", "WARN", "ERROR", "ALL"];
+    const possibleLogTypes = ["", "WARN", "ERROR", "ALARM"];
 
     const [isAdmin, setIsAdmin] = useState(false);
     const [placeholder, setPlaceholder] = useState("houseId/ 0")

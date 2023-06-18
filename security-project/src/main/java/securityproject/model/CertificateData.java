@@ -23,7 +23,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "valid=true")
 public class CertificateData {
     @Id
     @Column(name="cert_id")
@@ -67,7 +66,7 @@ public class CertificateData {
     @Column(name = "valid", nullable = false)
     private Boolean valid;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     private List<Extension> extensions;
 
 

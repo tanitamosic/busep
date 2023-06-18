@@ -247,16 +247,17 @@ export default function LogsPage(){
 
     // when open the page
     useEffect(() => {
-        getPreviosLogs({}).then(
-            (response) => {
-                if (!!response && response.data) {
-                    setLogs(response.data);
-                } else {
-                setLogs(dummyLogs);
-                }
-            }
-        )
+        // getPreviosLogs({houseId, deviceType, logType, regex}).then(
+        //     (response) => {
+        //         if (!!response && response.data) {
+        //             setLogs(response.data);
+        //         } else {
+        //         setLogs(dummyLogs);
+        //         }
+        //     }
+        // )
         // }
+        setLogs([])
     }, [])
   
     const validateInput = () => {

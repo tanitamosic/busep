@@ -19,21 +19,15 @@ export default function ListedCertificate({certificate}){
                         {certificate.email}
                     </Col>
                     <Col sm="2">
-                        {certificate.endDate}
+                        {certificate.endDate.slice(0, 10)}
                     </Col>
                     <Col sm="1">
                         {certificate.valid.toString()}
                     </Col>
                     
-                    <Col sm="1">
+                    <Col sm="2">
                         <div className='mt-4'>
                             <FixedWidthRegButton href={detViewUrl} text='Preview' onClickFunction={''}/>
-                        </div>
-                        
-                    </Col>
-                    <Col sm="1">
-                        <div className='mt-4'>
-                            <FixedWidthRegButton href={objectsViewUrl} text='Objects' onClickFunction={''}/>
                         </div>
                         
                     </Col>

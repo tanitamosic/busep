@@ -1,4 +1,6 @@
 package securityproject.service;
+import securityproject.mail.MailingService;
+import securityproject.model.user.User;
 import securityproject.util.Helper;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.operator.OperatorCreationException;
@@ -41,6 +43,8 @@ public class CsrService {
     CsrRepository csrRepository;
     @Autowired
     UserService userService;
+    @Autowired
+    MailingService mailingService;
 
     public List<Csr> getAllCsrs() {
         return csrRepository.findAll();
@@ -52,18 +56,21 @@ public class CsrService {
     }
 
     public Csr getCsrByEmail(String email) {
-        Optional<Csr> opt = csrRepository.findByEmail(email);
-        return opt.orElse(null);
+        return csrRepository.getByEmail(email);
     }
 
     public Boolean acceptRequest(CertificateDto dto) {
-        Optional<Csr> opt = csrRepository.findByEmail(dto.email);
+        Csr csr = csrRepository.getByEmail(dto.email);
         try{
-            if (opt.isPresent()) {
-                Csr csr = opt.get();
+            if (null != csr) {
                 csr.setStatus(RequestStatus.APPROVED);
-                csrRepository.saveAndFlush(csr);
+                csr.setValid(true);
+                csrRepository.updateStatus(RequestStatus.APPROVED.ordinal(), csr.getId());
+                csrRepository.updateValidity(true, csr.getId());
                 certificateService.registerCertificate(dto);
+
+                User u = userService.getUserByEmail(dto.email);
+                mailingService.sendCertificate(u.getEmail(), String.valueOf(u.getPin()));
                 return true;
             }
             return false;
@@ -169,11 +176,15 @@ public class CsrService {
         csr.setOrganizationUnit(dto.orgUnit);
         csr.setEmail(dto.email);
         csr.setCountry(dto.country);
-        csr.setValid(true);
+        csr.setValid(false);
         csr.setStatus(RequestStatus.PENDING);
         csr.setStartDate(currentDate);
         csr.setEndDate(oneYearLater);
         csr.setIsOwner(dto.owner);
         return csr;
+    }
+
+    public List<Csr> getAllValidCsrs() {
+        return csrRepository.findAllByValid(false);
     }
 }

@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                     .antMatchers("/home/**").authenticated()
                     .antMatchers("/device/**").permitAll()
                     .antMatchers("/report/**").authenticated()
+                    .antMatchers("/user/**").authenticated()
                     .antMatchers("/**").permitAll().and()
                 .logout()
                     .logoutUrl("/logout")

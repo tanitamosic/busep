@@ -60,6 +60,16 @@ export async function getRequests(id){
     }
   }
 
+  export async function getCertificateById(id){
+    try {
+        const responseData = await getApiCall().get(`/admin/get-certificate-by-id/` + id);
+        return responseData;
+    } catch (err) {
+        console.log(err.message);
+        return err.message
+    }
+  }
+
   export async function deactivateCertificate(id, reason){
     try {
         const responseData = await getApiCall().delete(`/admin/invalidate-certificate-`+ id+`/reason=`+reason);

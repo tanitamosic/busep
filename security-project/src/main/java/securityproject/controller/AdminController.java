@@ -33,7 +33,7 @@ public class AdminController {
 
     @GetMapping(value="/get-all-csrs")
     public ResponseEntity<List<Csr>> getCSRRequests() {
-        List<Csr> retval = csrService.getAllCsrs();
+        List<Csr> retval = csrService.getAllValidCsrs();
         return new ResponseEntity<>(retval, HttpStatus.OK);
     }
 
@@ -74,6 +74,12 @@ public class AdminController {
         return new ResponseEntity<>(certificates, HttpStatus.OK);
     }
 
+    @GetMapping(value="/get-certificate-by-id/{id}")
+    public ResponseEntity<CertificateData> getCertificateById(@PathVariable Long id) {
+        CertificateData certificates = certificateService.getCertificateById(id);
+        return new ResponseEntity<>(certificates, HttpStatus.OK);
+    }
+
     @GetMapping(value="/check-certificate-validity-{id}")
     public ResponseEntity<Boolean> isCertValid(@PathVariable Long id) {
         Boolean isValid = certificateService.isCertificateValid(id);
@@ -82,10 +88,10 @@ public class AdminController {
 
 
     private static class FilterParams {
-        Long houseId;
-        DeviceType deviceType;
-        LogType logType;
-        String regex;
+        public Long houseId;
+        public DeviceType deviceType;
+        public LogType logType;
+        public String regex;
     }
 
     @PostMapping(value="filter-logs")

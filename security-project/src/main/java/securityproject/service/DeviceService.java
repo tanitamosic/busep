@@ -147,7 +147,9 @@ public class DeviceService {
         String message = Objects.requireNonNull(Helper.convertToJson(genericLog));
         messagingTemplate.convertAndSend("/topic/log/" + owner.getEmail(), message);
         messagingTemplate.convertAndSend("/topic/log/" + renter.getEmail(), message);
-        messagingTemplate.convertAndSend("/topic/log", message);
+        for (User u: userService.getAllAdmins()) {
+            messagingTemplate.convertAndSend("/topic/log/" + u.getEmail(), message);
+        }
     }
 
     private void logToConsole(DeviceLog log) {

@@ -30,7 +30,7 @@ rule "Custom Alarm @{row.rowNumber}"
         for(Object $log : $logs) {
            DeviceLog dl = (DeviceLog) $log;
            alarmService.raiseErrorAlarm(dl.getDeviceId(), dl.getMessage(),
-           dl.getTimestamp(), AlarmSeverity.MEDIUM);
+           dl.getTimestamp(), AlarmSeverity.MEDIUM, dl.getDeviceType());
         }
 end 
 

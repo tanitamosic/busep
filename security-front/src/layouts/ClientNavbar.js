@@ -16,7 +16,7 @@ export default function ClientNavbar(){
 
     useEffect(() => {
         const connectAndSubscribe = () => {
-            const socket = new SockJS('http://localhost:8081/ws');
+            const socket = new SockJS('https://localhost:8081/ws');
             const stompClient = Stomp.over(socket);
     
             stompClient.connect({}, () => {

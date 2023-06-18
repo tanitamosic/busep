@@ -4,7 +4,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import FixedWidthRegButton from '../buttons/FixedWidthRegButton';
 import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import {isCertificateValid, deactivateCertificate } from '../../services/api/CertificatesApi';
+import {isCertificateValid, deactivateCertificate, getCertificateById    } from '../../services/api/CertificatesApi';
 import LabeledTextarea from '../forms/LabeledTextarea';
 import { useNavigate  } from "react-router-dom";
 import { getRole } from '../../services/utils/AuthService';
@@ -17,14 +17,14 @@ export default function CertificatePreview(){
 
     // TODO use this when apis available on backend
     //
-    // useEffect(() => {
-    //     async function fetchCertificate(){
-    //         const requestData = await getCertificateById(id);
-    //         setCertificate(!!requestData ? requestData.data : {});
-    //         return requestData;
-    //     }
-    //     fetchCertificate();
-    // }, [id])
+    useEffect(() => {
+        async function fetchCertificate(){
+            const requestData = await getCertificateById(id);
+            setCertificate(!!requestData ? requestData.data : {});
+            return requestData;
+        }
+        fetchCertificate();
+    }, [id])
 
     const userRole = getRole();
     const navigate = useNavigate();
@@ -125,7 +125,7 @@ export default function CertificatePreview(){
     const getIsValidRequest = useCallback(
         (e) => {
             e.preventDefault();
-            isCertificateValid().then(
+            isCertificateValid(id).then(
                 (response) => {
                     console.log(response);
                     if (response.data === true){
@@ -187,21 +187,21 @@ export default function CertificatePreview(){
                             Organization: {certificate.organization}
                         </Row>
                         <Row>
-                            Organizational unit: {certificate.orgUnit}
+                            Organizational unit: {certificate.organizationUnit}
                         </Row>
                         <Row>
                             Country: {certificate.country}
                         </Row>
                     </Col>
                     <Col sm="4">
-                        <Row>
+                        {/* <Row>
                             {certificate && <p>Is property owner: {certificate.owner.toString()}</p>}
+                        </Row> */}
+                        <Row>
+                            Start date: {certificate.startDate.slice(0, 10)}
                         </Row>
                         <Row>
-                            Start date: {certificate.startDate}
-                        </Row>
-                        <Row>
-                            End date: {certificate.endDate}
+                            End date: {certificate.endDate.slice(0, 10)}
                         </Row>
                     </Col>
                 </Row>

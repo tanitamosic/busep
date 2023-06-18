@@ -56,7 +56,7 @@ public class FileService {
     public void writeCerFile(X509Certificate cert, String alias) {
         try{
             String cerString = Helper.toPemFormat(cert);
-            String filename = "src/main/resources/data/cer/" + alias + CERTIFICATE_SUFFIX + ".cer";
+            String filename = "src/main/resources/data/cer/" + alias + ".cer";
             FileOutputStream out = new FileOutputStream(filename);
             out.write(cerString.getBytes());
             out.close();

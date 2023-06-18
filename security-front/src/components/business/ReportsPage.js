@@ -10,14 +10,7 @@ export default function ReportsPage(){
     const [report, setReport] = useState();
 
     useEffect(() => {
-        const _report = [
-            {"source": "house1", "numOfLogs": 5},
-            {"source": "house2", "numOfLogs": 8},
-            {"source": "apartment1", "numOfLogs": 3},
-            {"source": "office1", "numOfLogs": 10},
-            {"source": "store1", "numOfLogs": 2},
-            {"source": "building1", "numOfLogs": 6}
-          ];
+        const _report = [];
           
           setReport(_report);
     }, [])

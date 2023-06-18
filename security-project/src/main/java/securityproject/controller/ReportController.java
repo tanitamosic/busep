@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import securityproject.service.ReportService;
 import securityproject.util.containers.SourceReport;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -23,10 +25,10 @@ public class ReportController {
     ReportService reportService;
 
     private static class ReportDTO {
-        String reportSource;
-        String logType;
-        String fromDate;
-        String toDate;
+        public String reportSource;
+        public String logType;
+        public String fromDate;
+        public String toDate;
     }
 
     @PostMapping(value="/all-houses")
@@ -34,8 +36,12 @@ public class ReportController {
     public ResponseEntity<List<SourceReport>> allHouses(@RequestBody ReportDTO dto) {
         try {
             String type = dto.logType;
-            LocalDateTime from = LocalDateTime.from(formatter.parse(dto.fromDate));
-            LocalDateTime to = LocalDateTime.from(formatter.parse(dto.toDate));
+            LocalDate date1 = LocalDate.parse(dto.fromDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime from = LocalDateTime.of(date1, LocalTime.MIDNIGHT);
+
+            LocalDate date2 = LocalDate.parse(dto.toDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime to = LocalDateTime.of(date2, LocalTime.MIDNIGHT);
+
             List<SourceReport> reports = reportService.allHouses(type, from, to);
             return ResponseEntity.ok().body(reports);
         } catch (Exception e) {
@@ -47,8 +53,11 @@ public class ReportController {
     public ResponseEntity<List<SourceReport>> allDevices(@RequestBody ReportDTO dto) {
         try {
             String type = dto.logType;
-            LocalDateTime from = LocalDateTime.from(formatter.parse(dto.fromDate));
-            LocalDateTime to = LocalDateTime.from(formatter.parse(dto.toDate));
+            LocalDate date1 = LocalDate.parse(dto.fromDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime from = LocalDateTime.of(date1, LocalTime.MIDNIGHT);
+
+            LocalDate date2 = LocalDate.parse(dto.toDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime to = LocalDateTime.of(date2, LocalTime.MIDNIGHT);
             List<SourceReport> reports = reportService.allDevices(type, from, to);
             return ResponseEntity.ok().body(reports);
         } catch (Exception e) {
@@ -60,8 +69,11 @@ public class ReportController {
         try {
             String source = dto.reportSource;
             String type = dto.logType;
-            LocalDateTime from = LocalDateTime.from(formatter.parse(dto.fromDate));
-            LocalDateTime to = LocalDateTime.from(formatter.parse(dto.toDate));
+            LocalDate date1 = LocalDate.parse(dto.fromDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime from = LocalDateTime.of(date1, LocalTime.MIDNIGHT);
+
+            LocalDate date2 = LocalDate.parse(dto.toDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime to = LocalDateTime.of(date2, LocalTime.MIDNIGHT);
             List<SourceReport> reports = reportService.userHousesReports(source, type, from, to);
             return ResponseEntity.ok().body(reports);
         } catch (Exception e) {
@@ -74,8 +86,11 @@ public class ReportController {
         try {
             Long houseId = Long.valueOf(dto.reportSource);
             String type = dto.logType;
-            LocalDateTime from = LocalDateTime.from(formatter.parse(dto.fromDate));
-            LocalDateTime to = LocalDateTime.from(formatter.parse(dto.toDate));
+            LocalDate date1 = LocalDate.parse(dto.fromDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime from = LocalDateTime.of(date1, LocalTime.MIDNIGHT);
+
+            LocalDate date2 = LocalDate.parse(dto.toDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime to = LocalDateTime.of(date2, LocalTime.MIDNIGHT);
             List<SourceReport> reports = reportService.houseDevices(houseId, type, from, to);
             return ResponseEntity.ok().body(reports);
         } catch (Exception e) {
@@ -88,8 +103,11 @@ public class ReportController {
         try {
             Long houseId = Long.valueOf(dto.reportSource);
             String type = dto.logType;
-            LocalDateTime from = LocalDateTime.from(formatter.parse(dto.fromDate));
-            LocalDateTime to = LocalDateTime.from(formatter.parse(dto.toDate));
+            LocalDate date1 = LocalDate.parse(dto.fromDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime from = LocalDateTime.of(date1, LocalTime.MIDNIGHT);
+
+            LocalDate date2 = LocalDate.parse(dto.toDate, DateTimeFormatter.ISO_DATE);
+            LocalDateTime to = LocalDateTime.of(date2, LocalTime.MIDNIGHT);
             List<SourceReport> reports = reportService.userHouseReports(houseId, email, type, from, to);
             return ResponseEntity.ok().body(reports);
         } catch (Exception e) {

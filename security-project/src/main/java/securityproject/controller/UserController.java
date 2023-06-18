@@ -3,6 +3,7 @@ package securityproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import securityproject.dto.FilterDTO;
 import securityproject.dto.HouseDTO;
@@ -37,6 +38,7 @@ public class UserController {
     }
 
     @GetMapping(value="all-clients")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllClients() {
        List<User> clients = userService.getAllClients();
        List<UserResponse> responses = userService.makeUserResponses(clients);
@@ -45,6 +47,7 @@ public class UserController {
     }
 
     @PostMapping(value="filter-clients")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> filterClients(@RequestBody FilterDTO filterDto) {
         List<User> clients = userService.filterClients(filterDto);
         List<UserResponse> responses = userService.makeUserResponses(clients);
@@ -53,6 +56,7 @@ public class UserController {
     }
 
     @PostMapping(value="delete-client/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteClient(@PathVariable String email) {
         try {
             userService.deleteClient(email);
@@ -64,6 +68,7 @@ public class UserController {
     }
 
     @PostMapping(value="change-client-role/{email}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> changeClientRole(@PathVariable String email) {
         try {
             userService.changeClientRole(email);
@@ -75,10 +80,10 @@ public class UserController {
     }
 
     private static class FilterParams {
-        Long houseId;
-        DeviceType deviceType;
-        LogType logType;
-        String regex;
+        public Long houseId;
+        public DeviceType deviceType;
+        public LogType logType;
+        public String regex;
     }
 
     @PostMapping(value="filter-logs/{email}")

@@ -2,8 +2,8 @@ package securityproject.util.containers;
 
 
 public class SourceReport {
-    String source;
-    Integer numOfLogs;
+    public String source;
+    public Integer numOfLogs;
 
     public SourceReport(String source, Integer amount) {
         this.source = source;

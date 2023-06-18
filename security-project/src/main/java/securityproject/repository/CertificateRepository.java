@@ -6,4 +6,6 @@ import securityproject.model.CertificateData;
 
 @Repository
 public interface CertificateRepository extends JpaRepository<CertificateData, Long> {
+
+    CertificateData findCertificateDataById(Long id);
 }

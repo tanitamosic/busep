@@ -46,7 +46,7 @@ export default function CreateAlarmForm(){
             postCreateAlarmRequest(alarmDto).then(
                 (response) => {
                     console.log(response);
-                    window.location.reload();
+                    alert('Alarm created!')
                 }
             )
         }, []
